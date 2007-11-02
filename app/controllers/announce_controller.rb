@@ -85,7 +85,7 @@ class AnnounceController < ApplicationController
     @peer_id      = params[:peer_id]
     @uploaded     = params[:uploaded].to_i
     @downloaded   = params[:downloaded].to_i
-    @left         = params[:left]
+    @left         = params[:left].to_i
     @key          = params[:key]
     
     @event = params[:event]

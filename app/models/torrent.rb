@@ -5,7 +5,14 @@ class Torrent < ActiveRecord::Base
   has_many :torrent_files
   has_many :peers
   
+  before_save :ensure_non_negative
+  
   serialize :orig_announce_list  # An Array of announce URLs
+  
+  def ensure_non_negative
+    self.seeders = 0 if self.seeders < 0
+    self.leechers = 0 if self.leechers < 0
+  end
   
   def tkey
     "torrent_#{self.id}"
