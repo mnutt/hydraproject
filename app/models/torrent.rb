@@ -16,7 +16,7 @@ class Torrent < ActiveRecord::Base
     
     peers = CACHE.get(self.tkey)
     if peers.nil?
-      CACHE.set(self.tkey => {peer.id => remote_ip})
+      CACHE.set(self.tkey, {peer.id => remote_ip})
     else
       if peers.has_key?(peer.id)
         # Maybe they've changed IPs
@@ -56,7 +56,7 @@ class Torrent < ActiveRecord::Base
 
     peers = CACHE.get(self.tkey)
     if peers.nil?
-      CACHE.set(self.tkey => {peer.id => remote_ip})
+      CACHE.set(self.tkey, {peer.id => remote_ip})
     elsif peers && !peers.has_key?(peer.id)
       # Add the peer
       peers[peer.ip] = remote_ip
