@@ -30,5 +30,6 @@ production:
   adapter: mysql
   database: hydra_production
   username: root
-  password: 
+  password:
+  socket: /var/lib/mysql/mysql.sock 
 #  socket: /tmp/mysql.sock
