@@ -32,15 +32,11 @@ class AnnounceController < ApplicationController
     if @event
       case @event
       when 'started'
-      
-        @torrent.peer_started!(@peer, remote_ip)
-      
+        @torrent.peer_started!(@peer, @remote_ip)
       when 'stopped'
-
-        @torrent.peer_stopped!(@peer, remote_ip)
-      
+        @torrent.peer_stopped!(@peer, @remote_ip)
       when 'completed'
-        @torrent.peer_completed!(@peer, remote_ip)
+        @torrent.peer_completed!(@peer, @remote_ip)
       end
     end
     
