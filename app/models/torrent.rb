@@ -37,7 +37,7 @@ class Torrent < ActiveRecord::Base
   def peer_stopped!(peer, remote_ip)
     peer.seeder? ? self.seeders -= 1 : self.leechers -= 1
     
-    peers = CACHE.get(key)
+    peers = CACHE.get(self.tkey)
     if peers && peers.has_key?(peer.id)
       # The MemCache does indeed have this Peer in its cache
       peers.delete(peer.id)
