@@ -153,7 +153,7 @@ class AnnounceController < ApplicationController
     if [1214, 4662, 6699].include?(@port)   # kazaa, emule & winmx
       render_error("Port not allowed (please use uTorrent or a supported client): #{@remote_ip}"); return false
     end
-    å
+    
     @blacklisted_ports.each do |ports|
       p_start, p_end = *ports
       if (@port >= p_start) && (@port <= p_end)
