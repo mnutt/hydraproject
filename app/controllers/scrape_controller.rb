@@ -9,7 +9,7 @@ class ScrapeController < ApplicationController
     
     hex_hash    = @info_hash.unpack('H*')
     
-    @torrent = Torrent.find_by_info_hash(hex_hash) rescue nil
+    @torrent = Torrent.find(:first, :conditions => ['info_hash = ?', hex_hash])
     
     if !@torrent
       render_error("Could not find torrent with info_hash: #{hex_hash}"); return

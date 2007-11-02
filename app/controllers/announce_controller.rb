@@ -8,7 +8,7 @@ class AnnounceController < ApplicationController
     set_vars
     log_vars
 
-    @torrent = Torrent.find_by_info_hash(@info_hash) rescue nil
+    @torrent = Torrent.find(:first, :conditions => ['info_hash = ?', @info_hash])
 
     if @torrent.nil?
       render_error("Could not find torrent with info_hash: #{@info_hash}"); return
@@ -53,12 +53,13 @@ class AnnounceController < ApplicationController
 
     if !peer_ip_hash.nil? && !peer_ip_hash.empty?
       @torrent.peers.reload.each do |p|
-        next unless peer_ip_hash.has_key?(p.id)
+        next unless !peer_ip_hash.has_key?(p.id)
+        next if p.peer_id == @peer_id  # do not send a peer to itself
         @peer_list << {'ip' => peer_ip_hash[p.id], 'peer id' => p.peer_id, 'port' => p.port}
       end
     end
     
-    @response = {'interval' => 30,
+    @response = {'interval' => 20,
                  'complete' => @torrent.seeders,
                  'incomplete' => @torrent.leechers,
                  'peers' => @peer_list }
