@@ -4,6 +4,6 @@ domain: change-me.org
 domain_with_port: change-me.org
 tagline: Yet another Hydra Tracker
 items_per_page: 10
-webmaster_email: hydratracker@gmail.com
+webmaster_email: webmaster@change-me.org
 webmaster_name: Webmaster
-notifiction_email: noreply@mongoose.com
+notifiction_email: noreply@change-me.org
