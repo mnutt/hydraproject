@@ -13,8 +13,8 @@ class AnnounceController < ApplicationController
     if @torrent.nil?
       render_error("Could not find torrent with info_hash: #{@info_hash}"); return
     end
+    logger.warn "\n\nListing all peers:\n"
     Peer.find(:all).each do |p|
-      logger.warn "\n\nListing all peers:\n"
       logger.warn "\t#{p.id} :: #{p.peer_id} :: #{p.ip} :: #{p.port}"
     end
     logger.warn "\n\n"
@@ -86,6 +86,7 @@ class AnnounceController < ApplicationController
   private
   
   def log_vars
+    logger.warn "\n"
     logger.warn "     info_hash: #{@info_hash}"
     logger.warn "         event: #{@event}" if @event
     logger.warn "       peer_id: #{@peer_id}"
@@ -96,6 +97,7 @@ class AnnounceController < ApplicationController
     logger.warn "          port: #{@port}"
     logger.warn "           key: #{@key}"
     logger.warn "     remote IP: #{@remote_ip}"
+    logger.warn ""
   end
   
   def set_vars
