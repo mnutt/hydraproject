@@ -13,7 +13,7 @@ class AnnounceController < ApplicationController
     if @torrent.nil?
       render_error("Could not find torrent with info_hash: #{@info_hash}"); return
     end
-    Peer.find(:all),each do |p|
+    Peer.find(:all).each do |p|
       logger.warn "\n\nListing all peers:\n"
       logger.warn "\t#{p.id} :: #{p.peer_id} :: #{p.ip} :: #{p.port}"
     end
