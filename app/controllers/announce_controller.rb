@@ -135,7 +135,7 @@ class AnnounceController < ApplicationController
     @port         = (params[:port] || 0).to_i
     
     @blacklisted_ports = [ [411, 413],    # direct connect
-                           [6881, 6889],  # Official BitTorrent
+#                           [6881, 6889],  # Official BitTorrent
                            [6346, 6347]]  # gnutella
                            
     if [1214, 4662, 6699].include?(@port)   # kazaa, emule & winmx
