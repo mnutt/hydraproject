@@ -13,7 +13,11 @@ class AnnounceController < ApplicationController
     if @torrent.nil?
       render_error("Could not find torrent with info_hash: #{@info_hash}"); return
     end
-    
+    Peer.find(:all),each do |p|
+      logger.warn "\n\nListing all peers:\n"
+      logger.warn "\t#{p.id} :: #{p.peer_id} :: #{p.ip} :: #{p.port}"
+    end
+    logger.warn "\n\n"
     # Find the Peer.  If it's not in the DB yet, create the record.
     @peer = @torrent.peers.find(:first, :conditions => ['peer_id = ?', @peer_id])
     if !@peer
@@ -41,11 +45,19 @@ class AnnounceController < ApplicationController
     end
     
     @torrent.save!
+
     # TODO: ratio throttling
     @peer_list = []
-    @torrent.peers.reload.each do |p|
-      @peer_list << {'ip' => @remote_ip, 'peer id' => @peer_id, 'port' => @port}
+
+    peer_ip_hash = CACHE.get(@torrent.tkey)
+
+    if !peer_ip_hash.nil? && !peer_ip_hash.empty?
+      @torrent.peers.reload.each do |p|
+        next unless peer_ip_hash.has_key?(p.id)
+        @peer_list << {'ip' => peer_ip_hash[p.id], 'peer id' => p.peer_id, 'port' => p.port}
+      end
     end
+    
     @response = {'interval' => 30,
                  'complete' => @torrent.seeders,
                  'incomplete' => @torrent.leechers,
@@ -141,7 +153,7 @@ class AnnounceController < ApplicationController
     if [1214, 4662, 6699].include?(@port)   # kazaa, emule & winmx
       render_error("Port not allowed (please use uTorrent or a supported client): #{@remote_ip}"); return false
     end
-    
+    å
     @blacklisted_ports.each do |ports|
       p_start, p_end = *ports
       if (@port >= p_start) && (@port <= p_end)
