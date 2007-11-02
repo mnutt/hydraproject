@@ -3,6 +3,7 @@ class Torrent < ActiveRecord::Base
   belongs_to :category
   
   has_many :torrent_files
+  has_many :peers
   
   serialize :orig_announce_list  # An Array of announce URLs
   

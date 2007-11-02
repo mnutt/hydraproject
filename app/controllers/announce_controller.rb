@@ -11,6 +11,15 @@ class AnnounceController < ApplicationController
       render_error("Could not find torrent with info_hash: #{@info_hash}"); return
     end
     
+    resp = {'files' => {@info_hash => {'complete' => @torrent.times_completed,
+                                          'downloaded' => @torrent.leechers,
+                                          'incomplete' => @torrent.seeders}}}
+    
+    
+    @response = {'interval' => 30,
+                 'complete' => @torrent.seeders,
+                 'incomplete' => @torrent.leechers,
+                 'peers' => {}}
   end
 
   private
