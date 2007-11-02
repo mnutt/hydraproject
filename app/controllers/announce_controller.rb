@@ -51,11 +51,24 @@ class AnnounceController < ApplicationController
 
     peer_ip_hash = CACHE.get(@torrent.tkey)
 
+    if peer_ip_hash.nil?
+      logger.warn "\n\n\tpeer_ip_hash is NIL\n for: #{@torrent.tkey}\n\n"
+    else
+      logger.warn "\n\n\tpeer_ip_hash = #{peer_ip_hash.inspect}\n\n"
+    end
+    
     if !peer_ip_hash.nil? && !peer_ip_hash.empty?
       @torrent.peers.reload.each do |p|
-        next unless !peer_ip_hash.has_key?(p.id)
-        next if p.peer_id == @peer_id  # do not send a peer to itself
-        @peer_list << {'ip' => peer_ip_hash[p.id], 'peer id' => p.peer_id, 'port' => p.port}
+        if p.peer_id == @peer_id
+          logger.warn "\n\n\t Found Requesting Peer ID: #{p.id} in Cache (#{p.ip}:#{p.port}) --- NOT sending to this client\n"
+          next
+        end
+        if !peer_ip_hash.has_key?(p.id)
+          logger.warn "\n\n\t WARNING :: CACHE leak.  peer_ip_hash does not have Peer ID: #{p.id}\n\n"
+        else
+          logger.warn "\n\n\t ADDING to @peer_list: #{peer_ip_hash[p.id]}:#{p.port} -- #{p.id} -- #{p.peer_id}"
+          @peer_list << {'ip' => peer_ip_hash[p.id], 'peer id' => p.peer_id, 'port' => p.port}
+        end
       end
     end
     
