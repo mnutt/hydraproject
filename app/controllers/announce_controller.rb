@@ -53,16 +53,6 @@ class AnnounceController < ApplicationController
       end
     end
     return true
-#    $req = "info_hash:peer_id:!ip:port:uploaded:downloaded:left:!event:!passkey";
-  end
-  
-  def render_error(msg)
-    render :text => error(msg)
-  end
-  
-  def error(msg)
-#    array("failure reason" => array(type => "string", value => $msg))
-    {'failure reason' => msg}.to_bencoding
   end
   
   def get_remote_ip

@@ -16,6 +16,14 @@ class ApplicationController < ActionController::Base
   
   protected
   
+  def render_error(msg)
+    render :text => error(msg)
+  end
+  
+  def error(msg)
+    {'failure reason' => msg}.to_bencoding
+  end
+  
   # Memcached Helpers
   def get_cache(key)
     CACHE.get(key)
