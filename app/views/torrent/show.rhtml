@@ -1,0 +1,44 @@
+<style>
+#show_torrent tr td { border: 1px dotted #ccc; padding: 2px; padding-left: 6px;}
+.tlabel{text-align: right; font-weight: bold; padding: 4px;}
+#show_torrents tr th { text-align: left;}
+</style>
+
+<h1><%= @torrent.name %></h1>
+
+<table id="show_torrent" width="90%" style="border: 1px solid #ccc;" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="120px;" class="tlabel">Download</td>
+			<td><%= link_to(@torrent.filename, @torrent.torrent_url) %></td>
+		</tr>
+		<tr>
+			<td class="tlabel">Info hash</td>
+			<td><%= @torrent.info_hash %></td>
+		</tr>
+		<tr>
+			<td class="tlabel">Description</td>
+			<td><%= auto_link(simple_format(@torrent.description)) %></td>
+		</tr>
+		<tr>
+			<td class="tlabel">Size</td>
+			<td><%= number_to_human_size(@torrent.size)%> (<%= number_with_delimiter(@torrent.size) %> bytes)</td>
+		</tr>
+		<tr>
+			<td class="tlabel">Added</td>
+			<td><%= @torrent.created_at %></td>
+		</tr>
+		<tr>
+			<td class="tlabel">Views</td>
+			<td><%= @torrent.views %></td>
+		</tr>
+		<tr>
+			<td class="tlabel">Snatched</td>
+			<td><%= pluralize(@torrent.times_completed, 'time') %></td>
+		</tr>
+		<tr>
+			<td>Num files</td>
+			<td><%= pluralize(@torrent.numfiles, 'file') %> <i><%= link_to_remote('[See full list]', :update => 'file_list', :url => {:action => 'file_list', :id => @torrent.id}) %></i>
+				<div id="file_list"></div>
+			</td>
+		</tr>
+</table>

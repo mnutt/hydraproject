@@ -1,0 +1,6 @@
+<% if flash && flash[:notice] %>
+	<div class="notice-text" id="status"><%= flash[:notice] %></div>
+<% else %>
+  <div class="notice-text" id="status" style="display:none;"> </div>
+<% end %>
+<div class="notice-text" id="ajax-notice" style="display:none;"> </div>

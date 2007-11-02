@@ -1,0 +1,37 @@
+<h1>Upload</h1>
+<%= form_tag({:controller => 'torrent', :action => 'upload' }, { :multipart => true, :id => 'upload-form' }) %>
+	<center>
+	<table cellspacing="2" cellpadding="2" width="500px" style="border: 1px dotted #ccc">
+		<tr>
+			<td><label for="torrent_file">Torrent file:</label></td>
+			<td>
+				<input type="file" name="the_torrent" class="nice-field required"/>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="torrent_name">Torrent name:</label></td>
+			<td>
+				<%= text_field :torrent, :name, :size => 40, :maxlength => 90,	:class => '' %> <br/>
+				<i>(taken from filename if not specified)</i>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="torrent_description">Description:</label></td>
+			<td>
+				<%= text_area :torrent, :description, :style => 'width: 90%; height: 120px' %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div style="margin-left: 200px;"><input type="Submit" value="Upload It  &#187; " class="submit-box"><br/>
+				</div>
+			</td>
+		</tr>
+	</table>
+	</center>
+</form>
+
+<script type="text/javascript">
+  new Validation('upload-form');
+</script>
+

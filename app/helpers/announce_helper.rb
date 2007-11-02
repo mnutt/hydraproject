@@ -1,0 +1,2 @@
+module AnnounceHelper
+end

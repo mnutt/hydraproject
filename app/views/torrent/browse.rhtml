@@ -1,0 +1,33 @@
+<style>
+#browse_torrents tr td { border: 1px dotted #ccc;}
+#browse_torrents tr th { text-align: left;}
+</style>
+<h1>Browse Torrents</h1>
+<% if @torrents.empty? %>
+	<p>There are currently no torrents to display.
+<% else %>
+	<table id="browse_torrents" width="90%" style="border: 1px solid #ccc;">
+		<tr>
+			<th>Torrent</th>
+			<th width="110px"><small>Download .torrent</small></th>
+			<th width="60px"># Files</th>
+			<th width="90px"> Size</th>
+			<th width="74px">Snatched</th>
+			<th width="74px">Seeders</th>
+			<th width="76px">Leechers</th>
+			<th width="100px">Added On</th>
+		</tr>
+		<% @torrents.each do |t| %>
+			<tr>
+				<td><%= link_to(truncate(t.name, 50), {:action => 'show', :id => t.id}) %></td>
+				<td><%= link_to('download', t.torrent_url) %></td>
+				<td><%= t.numfiles %></td>
+				<td><%= number_to_human_size(t.size)%></td>
+				<td><%= t.times_completed %></td>
+				<td><%= t.seeders %></td>
+				<td><%= t.leechers %></td>
+				<td><%= t.created_at.nice_print %></td>
+			</tr>
+		<% end %>
+	</table>
+<% end %>

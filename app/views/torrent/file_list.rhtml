@@ -1,0 +1,11 @@
+<table cellspacing="0" cellpadding="0" style="padding-top: 5px; padding-bottom: 8px;">
+	<tr>
+		<td>Path</td><td width="100px">Size</td>
+	</tr>
+	<% @torrent.torrent_files.each do |tf| %>
+		<tr>
+			<td><%= tf.filename %></td>
+			<td><%= number_to_human_size(tf.size)%></td>
+		</tr>
+	<% end %>
+</table>
