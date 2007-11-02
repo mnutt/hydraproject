@@ -7,6 +7,63 @@ class Torrent < ActiveRecord::Base
   
   serialize :orig_announce_list  # An Array of announce URLs
   
+  def tkey
+    "torrent_#{self.id}"
+  end
+  
+  def peer_started!(peer, remote_ip)
+    peer.seeder? ? self.seeders +=1 : self.leechers += 1
+    
+    peers = CACHE.get(self.tkey)
+    if peers.nil?
+      CACHE.set(self.tkey => {peer.id => remote_ip})
+    else
+      if peers.has_key?(peer.id)
+        # Maybe they've changed IPs
+        if !peers[peer.id] == remote_ip
+          # they have, changed IPs
+          peers.delete(peer.id)
+          peers[peer.id] = remote_ip
+          CACHE.set(self.tkey, peers)
+        end
+      else
+        # IF the Peer IP does not already exists in the memcache
+        peers[peer.id] = remote_ip
+        CACHE.set(self.tkey, peers)
+      end
+    end
+  end
+
+  def peer_stopped!(peer, remote_ip)
+    peer.seeder? ? self.seeders -= 1 : self.leechers -= 1
+    
+    peers = CACHE.get(key)
+    if peers && peers.has_key?(peer.id)
+      # The MemCache does indeed have this Peer in its cache
+      peers.delete(peer.id)
+      if peers.empty?
+        CACHE.delete(self.tkey)
+      else
+        CACHE.set(self.tkey, peers)
+      end
+    end
+    # Destroy the peer (it's no longer active)
+    peer.destroy
+  end
+
+  def peer_completed!(peer, remote_ip)
+    self.leechers += 1
+
+    peers = CACHE.get(self.tkey)
+    if peers.nil?
+      CACHE.set(self.tkey => {peer.id => remote_ip})
+    elsif peers && !peers.has_key?(peer.id)
+      # Add the peer
+      peers[peer.ip] = remote_ip
+      CACHE.set(self.tkey, peers)
+    end
+  end
+  
   def torrent_url
     "/torrents/#{self.filename}"
   end
