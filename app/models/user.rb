@@ -25,15 +25,15 @@ class User < ActiveRecord::Base
   def ratio_friendly
     r = self.ratio
     return "&#8734;" if r.zero?
-    return r.number_format
+    return number_with_precision(r, 2)
   end
   
   def downloaded_friendly
-    number_to_human_size(self.downloaded)
+    human_size(self.downloaded)
   end
 
   def uploaded_friendly
-    number_to_human_size(self.uploaded)
+    human_size(self.uploaded)
   end
   
   def tracker_url

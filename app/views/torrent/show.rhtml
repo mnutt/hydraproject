@@ -7,7 +7,7 @@
 <table width="90%" cellpadding="0" cellspacing="0">
 		<tr>
 			<td width="120px;" class="tlabel">Download</td>
-			<td><%= link_to(@torrent.filename, download_url(:id => @torrent.id, :filename => @torrent.filename)) %></td>
+			<td><%= link_to(@torrent.filename, torrent_dl(@torrent)) %></td>
 		</tr>
 		<tr>
 			<td class="tlabel">Info hash</td>

@@ -24,18 +24,6 @@ class ApplicationController < ActionController::Base
     {'failure reason' => msg}.to_bencoding
   end
   
-  # Memcached Helpers
-  def get_cache(key)
-    CACHE.get(key)
-#    data = CACHE.get(key)
-#    return data unless data.nil?
-    #CACHE.set(:foo, {1 => '192.168.1.1', 2 => '222.555.12.34'}) 
-  end
-  
-  def set_cache(key, data)
-    CACHE.set(key, data) # optional ttl 
-  end
-
   def current_user
     @_current_user
   end
