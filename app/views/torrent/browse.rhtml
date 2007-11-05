@@ -1,4 +1,5 @@
 <h1>Browse Torrents</h1>
+<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
 <% if @torrents.empty? %>
 	<p>There are currently no torrents to display.
 <% else %>
@@ -16,8 +17,12 @@
 		</tr>
 		<% @torrents.each do |t| %>
 			<tr>
-				<td><%= link_to(truncate(t.name, 50), {:action => 'show', :id => t.id}) %></td>
-				<td><%= link_to(image_tag('arrow_down.png', :border => '0'), t.torrent_url, :title => "Download #{t.filename}") %></td>
+				<td><%= link_to(truncate(t.name, 50), {:action => 'show', :id => t.id}) %>  
+						<% if moderator_logged_in? %>
+							&nbsp;&nbsp;&nbsp;<%= link_to(image_tag('icons/trash.png', :border => '0'), {:action => :destroy, :id => t.id}, :post => true, :confirm => 'Are you sure?') %>
+						<% end %>
+				</td>
+				<td><%= link_to(image_tag('icons/arrow_down.png', :border => '0'), t.torrent_url, :title => "Download #{t.filename}") %></td>
 				<td><%= t.numfiles %></td>
 				<td><%= number_to_human_size(t.size)%></td>
 				<td><%= t.times_completed %></td>

@@ -60,11 +60,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :user_logged_in?
 
-  def editor_logged_in?
+  def moderator_logged_in?
     return false if !user_logged_in?
-    return current_user.is_editor?
+    return current_user.moderator?
   end
-  helper_method :editor_logged_in?
+  helper_method :moderator_logged_in?
 
   def admin_logged_in?
     return false if !user_logged_in?
@@ -119,8 +119,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def editor_required
-    unless editor_logged_in?
+  def moderator_required
+    unless moderator_logged_in?
       flash[:notice] = "Access denied.  Contact admin if you believe this was in error."
       redirect_to index_url; return false
     end

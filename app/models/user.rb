@@ -25,12 +25,12 @@ class User < ActiveRecord::Base
     save!
   end
   
-  def self.admin_user
-    User.find_by_login('admin')
+  def moderator?
+    self.is_moderator? || self.is_admin?
   end
   
-  def self.system_user
-    User.find_by_login('system')
+  def self.admin_user
+    User.find_by_login('admin')
   end
   
   def set_password!(pass)

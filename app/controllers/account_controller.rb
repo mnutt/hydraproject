@@ -56,7 +56,7 @@ class AccountController < ApplicationController
       # If this is the first account created, make the user a sysop
       if 1 == @user.id
         @user.is_admin = true
-        @user.is_editor = true
+        @user.is_moderator = true
         @user.save
         flash[:notice] = "Welcome to your new installation of The Hydra Project, rails edition.  You have automatically been made an admin/sysop of this server."
       end

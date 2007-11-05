@@ -75,6 +75,14 @@ class TorrentController < AuthenticatedController
     render :layout => false
   end
   
+  def destroy #AJAX & ADMIN only
+    moderator_required
+    @torrent = Torrent.find(params[:id])
+    @torrent.destroy
+    flash[:notice] = "Torrent removed."
+    redirect_to :back; return
+  end
+  
   private
   
   def get_tmp_path(the_file)
