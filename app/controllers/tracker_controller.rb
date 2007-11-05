@@ -1,4 +1,4 @@
-class AnnounceController < ApplicationController
+class TrackerController < ApplicationController
   
   before_filter :check_required_params
   before_filter :get_remote_ip
@@ -17,7 +17,7 @@ class AnnounceController < ApplicationController
         
     logger.warn "\n\nListing all peers:\n"
     Peer.find(:all).each do |p|
-      logger.warn "\t#{p.id} :: #{p.torrent_id} :: #{p.peer_id} ::  #{p.ip}:#{p.port}"
+      logger.warn "\t#{p.id} :: #{p.torrent_id} :: #{p.peer_id} ::  Port:#{p.port}"
     end
     logger.warn "\n\n"
     # Find the Peer.  If it's not in the DB yet, create the record.
@@ -61,24 +61,24 @@ class AnnounceController < ApplicationController
     end
     
     if !peer_ip_hash.nil? && !peer_ip_hash.empty?
-      @torrent.connectable_peers.reload.each do |p|
+      @torrent.connectable_peers.each do |p|
         # Requesuting Peer ID check?
         if p.peer_id == @peer_id
-          logger.warn "\n\n\t Found Requesting Peer ID: #{p.id} in Cache (#{p.ip}:#{p.port}) --- NOT sending to this client\n"
+          logger.warn "\n\n\t Found Requesting Peer ID: #{p.id} in Cache (#{@remote_ip}:#{@port}) --- NOT sending to this client\n"
           next
         end
         if !peer_ip_hash.has_key?(p.id)
           logger.warn "\n\n\t WARNING :: CACHE leak.  peer_ip_hash does not have Peer ID: #{p.id}\n\n"
         else
           @hashed_ip = peer_ip_hash[p.id]
-          if (@remote_ip == @hashed_ip) && (@port)
+          next if (@remote_ip == @hashed_ip) && (@port == p.port)  # Don't send back to itself
           logger.warn "\n\n\t ADDING to @peer_list: #{@hashed_ip}:#{p.port} -- #{p.id} -- #{p.peer_id}"
           @peer_list << {'ip' => @hashed_ip, 'peer id' => p.peer_id, 'port' => p.port}
         end
       end
     end
     
-    @response = {'interval'   => C[:num_announce_interval_minutes],
+    @response = {'interval'   => 30,  # C[:num_announce_interval_minutes].minutes,
                  'complete'   => @torrent.seeders,
                  'incomplete' => @torrent.leechers,
                  'peers'      => @peer_list }
@@ -119,8 +119,12 @@ class AnnounceController < ApplicationController
   def update_xfer_stats
     @uploaded_since_last   = [0, @uploaded - @peer.uploaded].max
     @downloaded_since_last = [0, @downloaded - @peer.downloaded].max
-    unless @uploaded_since_last.zero && @downloaded_since_last.zero
-      # Only update if 
+    
+    logger.warn "\n\tUploaded Since Last: #{@uploaded_since_last}"
+    logger.warn "\n\tDownloaded Since Last: #{@downloaded_since_last}\n"
+    
+    unless @uploaded_since_last.zero? && @downloaded_since_last.zero?
+      # Only update if there has been a change in number of bytes uploaded/downloaded
       @user.uploaded += @uploaded_since_last
       @user.downloaded += @downloaded_since_last
       @user.save!
@@ -200,6 +204,7 @@ class AnnounceController < ApplicationController
   end
   
   def valid_ip?
+    return true if RAILS_ENV == 'development'
     @reserved_ips = [ ['0.0.0.0','2.255.255.255'],
                       ['10.0.0.0','10.255.255.255'],
                       ['127.0.0.0','127.255.255.255'],

@@ -18,7 +18,7 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.with_options :controller => 'torrent' do |m|
-    m.download          'download/:id/:filename',               :action => 'download'
+    m.download          'download/:id/:filename',               :action => 'download', :requirements => { :filename => /.*/ }
   end
 
   map.with_options :controller => 'tracker' do |m|

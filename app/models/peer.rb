@@ -10,7 +10,7 @@ class Peer < ActiveRecord::Base
   end
   
   def remove_from_memcache
-    peers = CACHE.get(@torrent.tkey)
+    peers = CACHE.get(self.torrent.tkey)
     
     return if peers.nil? || peers.empty?
     

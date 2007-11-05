@@ -91,7 +91,7 @@ class Torrent < ActiveRecord::Base
   end
   
   def torrent_url
-    "/download/#{self.id}/#{self.filename}"
+    CGI.escape("/download/#{self.id}/#{self.filename}")
   end
   
   def num_peers

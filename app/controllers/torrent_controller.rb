@@ -7,7 +7,12 @@ class TorrentController < AuthenticatedController
   def download
     @torrent = Torrent.find(params[:id])
     @meta_info = @torrent.meta_info
-    send_data @bencoded, :filename => @torrent.original_filename, :type => 'application/x-bittorrent'
+    @meta_info.key = current_user.passkey
+    @meta_info.announce = URI.parse("#{BASE_URL}tracker/#{current_user.passkey}/announce")
+    
+    @bencoded = @meta_info.to_bencoding
+    logger.warn "\n\nDownload: #{@torrent.id} ::  #{@torrent.filename}\n\n\tBencoding:\n#{@bencoded}\n\n"
+    send_data @bencoded, :filename => @torrent.filename, :type => 'application/x-bittorrent'; return
   end
   
   def upload
