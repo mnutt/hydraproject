@@ -29,11 +29,11 @@ class User < ActiveRecord::Base
   end
   
   def downloaded_friendly
-    human_size(self.downloaded)
+    number_to_human_size(self.downloaded)
   end
 
   def uploaded_friendly
-    human_size(self.uploaded)
+    number_to_human_size(self.uploaded)
   end
   
   def tracker_url
