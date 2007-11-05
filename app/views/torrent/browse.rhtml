@@ -19,7 +19,7 @@
 			<tr>
 				<td><%= link_to(truncate(t.name, 50), {:action => 'show', :id => t.id}) %>  
 						<% if moderator_logged_in? %>
-							&nbsp;&nbsp;&nbsp;<%= link_to(image_tag('icons/trash.png', :border => '0'), {:action => :destroy, :id => t.id}, :post => true, :confirm => 'Are you sure?') %>
+							&nbsp;&nbsp;&nbsp;<%= link_to(image_tag('icons/trash.png', :border => '0'), {:action => :destroy, :id => t.id}, :method => 'post', :confirm => 'Are you sure?') %>
 						<% end %>
 				</td>
 				<td><%= link_to(image_tag('icons/arrow_down.png', :border => '0'), torrent_dl(t), :title => "Download #{t.filename}") %></td>

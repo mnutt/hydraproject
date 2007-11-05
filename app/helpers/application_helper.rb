@@ -6,7 +6,6 @@ module ApplicationHelper
   end
   
   def navclass(controller, action, except = '')
-    puts "\n\n #{@controller_name} (cname) \n\n"
     cmatch = (@controller_name == controller)
     if cmatch && (action == '*') && !except.include?(@action_name)
       return 'current_page_item' 
