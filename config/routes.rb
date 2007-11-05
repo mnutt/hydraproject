@@ -16,6 +16,10 @@ ActionController::Routing::Routes.draw do |map|
   map.with_options :controller => 'home' do |m|
     m.index             '',                                     :action => 'index'
   end
+
+  map.with_options :controller => 'torrent' do |m|
+    m.download          'download/:id/:filename',               :action => 'download'
+  end
   
   # Allow downloading Web Service WSDL as a file with an extension
   # instead of a file named 'wsdl'

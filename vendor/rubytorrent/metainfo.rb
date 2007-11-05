@@ -138,12 +138,14 @@ class MetaInfoInfo
 end
 
 class MetaInfo
+  attr_accessor :dict, :s
+  
   def initialize(dict=nil)
     raise TypeError, "argument must be a Hash (maybe see MetaInfo.from_location)" unless dict.is_a? Hash
     @s = TypedStruct.new do |s|
       s.field :info => MetaInfoInfo, :announce => URI::HTTP,
               :announce_list => Array, :creation_date => Time,
-              :comment => String, :created_by => String, :encoding => String
+              :comment => String, :created_by => String, :encoding => String, :key => String
       s.label :announce_list => "announce-list", :creation_date => "creation date",
               :created_by => "created by"
       s.array :announce_list
@@ -205,7 +207,7 @@ class MetaInfo
 
   def to_bencoding
     check
-    (@dict || @s).to_bencoding
+    (@s || @dict).to_bencoding
   end
 
   def trackers

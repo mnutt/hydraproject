@@ -97,3 +97,5 @@ C = c
 
 APP_URL = C[:domain]
 
+class TorrentFileNotFoundError < StandardError; end
+

@@ -1,7 +1,13 @@
-class TorrentController < ApplicationController
+class TorrentController < AuthenticatedController
     
   def browse
     @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
+  end
+  
+  def download
+    @torrent = Torrent.find(params[:id])
+    @meta_info = @torrent.meta_info
+    send_data @bencoded, :filename => @torrent.original_filename, :type => 'application/x-bittorrent'
   end
   
   def upload
@@ -28,7 +34,8 @@ class TorrentController < ApplicationController
           flash[:notice] = "There was an error processing your upload.  Please contact the admins if this problem persists."
           return false
         end
-        @torrent.original_filename = the_file.original_filename
+
+        @torrent.filename = the_file.original_filename
         
         
         info_str = Torrent.dump_metainfo(meta_info)
@@ -57,6 +64,7 @@ class TorrentController < ApplicationController
     if @torrent.nil?
       redirect_to :back; return
     end
+    @torrent.increment!(:views)
   end
   
   def file_list #AJAX

@@ -6,12 +6,22 @@ class Torrent < ActiveRecord::Base
   has_many :peers
   
   before_save :ensure_non_negative
+  before_destroy :cleanup
   
   serialize :orig_announce_list  # An Array of announce URLs
   
   # For the will_paginate plugin.  See: http://plugins.require.errtheblog.com/browser/will_paginate/README
   cattr_reader :per_page
   @@per_page = 10
+  
+  def cleanup
+    File.unlink(self.torrent_path) if File.exist?(self.torrent_path)
+  end
+  
+  def meta_info
+    raise TorrentFileNotFoundError unless File.exist?(self.torrent_path)
+    RubyTorrent::MetaInfo.from_location(self.torrent_path)
+  end
   
   def ensure_non_negative
     self.seeders = 0 if self.seeders < 0
@@ -77,7 +87,7 @@ class Torrent < ActiveRecord::Base
   end
   
   def torrent_url
-    "/torrents/#{self.filename}"
+    "/download/#{self.id}/#{self.filename}"
   end
   
   def num_peers
@@ -85,42 +95,17 @@ class Torrent < ActiveRecord::Base
   end
   
   def base_dir
-    File.join(RAILS_ROOT, 'public', 'torrents')
+    File.join(RAILS_ROOT, 'torrents') # We keep torrent files outside of the web root
   end
   
   def move!(from_path)
-    self.filename = get_ok_filename()
-    FileUtils.mv(from_path, File.join(base_dir, self.filename))
+    FileUtils.mv(from_path, self.torrent_path)
   end
   
   def torrent_path
-    File.join(base_dir, self.filename)
+    File.join(base_dir, "#{self.id}.torrent")
   end
-  
-  def get_ok_filename
-    dir = base_dir
-    default_path = File.join(dir, self.original_filename)
-    return self.original_filename if !File.exist?(default_path)
     
-    without_ext = self.original_filename.gsub(/\.torrent$/, '')
-    1.upto(20) do |i|
-      new_fname = "#{without_ext}_#{i}.torrent"
-      new_path = File.join(dir, new_fname)
-      return new_fname if !File.exist?(new_path)
-    end
-    return rand_ok_fname(without_ext)
-  end
-  
-  # Always make sure we have a unique .torrent filename
-  def rand_ok_fname(without_ext)
-    path = File.join(base_dir, "#{without_ext}_#{rand(10000)}.torrent")
-    if !File.exist?(path)
-      return path
-    else
-      return rand_ok_fname(without_ext)
-    end
-  end
-  
   def set_metainfo!(mi)
     total_size = 0
     mii = mi.info  # MetaInfoInfo
@@ -148,8 +133,8 @@ class Torrent < ActiveRecord::Base
     self.torrent_comment = mi.comment
     self.orig_announce_url = mi.announce.to_s
     if !mi.announce_list.nil?
-      puts "Announce List class: #{mi.announce_list.class}"
-      puts "Announce List: #{mi.announce_list.inspect}"
+      #puts "Announce List class: #{mi.announce_list.class}"
+      #puts "Announce List: #{mi.announce_list.inspect}"
       self.orig_announce_list = mi.anounce_list
     end
     self.created_by = mi.created_by unless mi.created_by.nil?
@@ -161,7 +146,7 @@ class Torrent < ActiveRecord::Base
   end
   
   def set_name_from_torrent_filename
-    f = self.original_filename.dup
+    f = self.filename.dup
     # Underscores => spaces
     f = f.gsub(/_/, ' ')
     # Now strip off ".torrent" from the end

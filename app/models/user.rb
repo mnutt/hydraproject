@@ -7,12 +7,23 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of     :login,       :on => :create
 
-  validates_length_of         :login,       :within => 3..20
-  validates_length_of         :password,    :within => 5..40
-
+  validates_length_of         :login,       :within => 3..20, :on => :create
+  validates_length_of         :password,    :within => 5..40, :on => :create
+  
+  before_create :generate_passkey
+  
   HARD_SALT = 'TheHydraProject--123456789@!#%@^^#@'
 
   attr_accessor :password_confirmation
+  
+  def generate_passkey
+    self.passkey = Digest::SHA1.hexdigest("#{self.login}--#{Time.now}--#{rand(10000)}").slice(0, 10)
+  end
+  
+  def generate_passkey!
+    generate_passkey
+    save!
+  end
   
   def self.admin_user
     User.find_by_login('admin')

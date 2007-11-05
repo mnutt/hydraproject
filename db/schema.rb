@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 3) do
+ActiveRecord::Schema.define(:version => 4) do
 
   create_table "categories", :force => true do |t|
     t.column "name", :string
@@ -43,7 +43,6 @@ ActiveRecord::Schema.define(:version => 3) do
     t.column "name",               :string
     t.column "user_id",            :integer
     t.column "filename",           :string
-    t.column "original_filename",  :string
     t.column "description",        :text
     t.column "category_id",        :integer
     t.column "size",               :integer
@@ -69,11 +68,12 @@ ActiveRecord::Schema.define(:version => 3) do
     t.column "hashed_password",        :string
     t.column "salt",                   :string
     t.column "is_admin",               :boolean,  :default => false
-    t.column "is_editor",              :boolean,  :default => false
+    t.column "is_moderator",           :boolean
     t.column "remember_token",         :string
     t.column "remember_token_expires", :datetime
     t.column "created_at",             :datetime
     t.column "updated_at",             :datetime
+    t.column "passkey",                :string
   end
 
 end
