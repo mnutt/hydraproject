@@ -24,4 +24,20 @@ class Peer < ActiveRecord::Base
     
   end
   
+  def connectable_check!(ip, port)
+    begin
+      Timeout.timeout(8) do
+        TCPSocket.new(ip, port)
+      end
+
+      # If we got here, the peer *IS* connectable!
+      self.connectable = true
+      save!
+
+    rescue Timeout::Error
+      # NOT connectable -- do nothing because the default is already false
+      return
+    end
+  end
+  
 end

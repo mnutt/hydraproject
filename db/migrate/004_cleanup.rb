@@ -8,11 +8,16 @@ class Cleanup < ActiveRecord::Migration
       u.generate_passkey!
     end
     
+    add_column :users, :uploaded, :integer, :default => 0
+    add_column :users, :downloaded, :integer, :default => 0
+    
   end
 
   def self.down
     add_column :torrents, :original_filename,  :string
-    rename_column :users, :is_moderator
+    rename_column :users, :is_moderator, :is_editor
     remove_column :users, :passkey
+    remove_column :users, :uploaded
+    remove_column :users, :downloaded
   end
 end

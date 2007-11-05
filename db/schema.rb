@@ -11,7 +11,6 @@ ActiveRecord::Schema.define(:version => 4) do
   create_table "peers", :force => true do |t|
     t.column "torrent_id",      :integer
     t.column "peer_id",         :string
-    t.column "ip",              :string
     t.column "port",            :integer
     t.column "passkey",         :string
     t.column "uploaded",        :integer,  :default => 0
@@ -74,6 +73,8 @@ ActiveRecord::Schema.define(:version => 4) do
     t.column "created_at",             :datetime
     t.column "updated_at",             :datetime
     t.column "passkey",                :string
+    t.column "uploaded",               :integer,  :default => 0
+    t.column "downloaded",             :integer,  :default => 0
   end
 
 end

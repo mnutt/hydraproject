@@ -7,5 +7,7 @@ webmaster_email: webmaster@change-me.org
 webmaster_name: Webmaster
 notifiction_email: noreply@change-me.org
 num_items_per_page: 10
+num_max_peers: 10
 num_announce_interval_minutes: 30
 num_dead_torrent_hours: 24
+num_torrent_days_to_live: 28

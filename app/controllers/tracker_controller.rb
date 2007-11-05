@@ -3,6 +3,7 @@ class AnnounceController < ApplicationController
   before_filter :check_required_params
   before_filter :get_remote_ip
   before_filter :port_allowed?
+  before_filter :check_passkey
   
   def announce
     set_vars
@@ -13,6 +14,7 @@ class AnnounceController < ApplicationController
     if @torrent.nil?
       render_error("Could not find torrent with info_hash: #{@info_hash}"); return
     end
+        
     logger.warn "\n\nListing all peers:\n"
     Peer.find(:all).each do |p|
       logger.warn "\t#{p.id} :: #{p.torrent_id} :: #{p.peer_id} ::  #{p.ip}:#{p.port}"
@@ -23,14 +25,15 @@ class AnnounceController < ApplicationController
     if !@peer
       @peer = Peer.create(:torrent_id     => @torrent.id,
                           :peer_id        => @peer_id,
-                          :ip             => @remote_ip,
                           :port           => @port,
-                          :passkey        => @key,
+                          :passkey        => @passkey,
                           :uploaded       => @uploaded,
                           :downloaded     => @downloaded,
                           :to_go          => @left,
                           :seeder         => @seeder,
                           :agent          => request.env['HTTP_USER_AGENT'])
+      
+      @peer.connectable_check!(@remote_ip, @port)
     end
     
     if @event
@@ -58,7 +61,8 @@ class AnnounceController < ApplicationController
     end
     
     if !peer_ip_hash.nil? && !peer_ip_hash.empty?
-      @torrent.peers.reload.each do |p|
+      @torrent.connectable_peers.reload.each do |p|
+        # Requesuting Peer ID check?
         if p.peer_id == @peer_id
           logger.warn "\n\n\t Found Requesting Peer ID: #{p.id} in Cache (#{p.ip}:#{p.port}) --- NOT sending to this client\n"
           next
@@ -66,24 +70,29 @@ class AnnounceController < ApplicationController
         if !peer_ip_hash.has_key?(p.id)
           logger.warn "\n\n\t WARNING :: CACHE leak.  peer_ip_hash does not have Peer ID: #{p.id}\n\n"
         else
-          logger.warn "\n\n\t ADDING to @peer_list: #{peer_ip_hash[p.id]}:#{p.port} -- #{p.id} -- #{p.peer_id}"
-          @peer_list << {'ip' => peer_ip_hash[p.id], 'peer id' => p.peer_id, 'port' => p.port}
+          @hashed_ip = peer_ip_hash[p.id]
+          if (@remote_ip == @hashed_ip) && (@port)
+          logger.warn "\n\n\t ADDING to @peer_list: #{@hashed_ip}:#{p.port} -- #{p.id} -- #{p.peer_id}"
+          @peer_list << {'ip' => @hashed_ip, 'peer id' => p.peer_id, 'port' => p.port}
         end
       end
     end
     
-    @response = {'interval' => 20,
-                 'complete' => @torrent.seeders,
+    @response = {'interval'   => C[:num_announce_interval_minutes],
+                 'complete'   => @torrent.seeders,
                  'incomplete' => @torrent.leechers,
-                 'peers' => @peer_list }
+                 'peers'      => @peer_list }
     
     logger.warn "\nNow sending response: "
     logger.warn "\t#{@response.inspect}\n\n"
+    
+    update_xfer_stats
+    
     render :text => @response.to_bencoding
     return
   end
 
-  def index
+  def scrape
     @info_hash = params[:info_hash]
     # Do not support site-wide scrape for now...
     if !@info_hash
@@ -106,6 +115,22 @@ class AnnounceController < ApplicationController
   end
 
   private
+  
+  def update_xfer_stats
+    @uploaded_since_last   = [0, @uploaded - @peer.uploaded].max
+    @downloaded_since_last = [0, @downloaded - @peer.downloaded].max
+    unless @uploaded_since_last.zero && @downloaded_since_last.zero
+      # Only update if 
+      @user.uploaded += @uploaded_since_last
+      @user.downloaded += @downloaded_since_last
+      @user.save!
+    end
+    # Update the peer's stats
+    @peer.uploaded    = @uploaded
+    @peer.downloaded  = @downloaded
+    @peer.to_go       = @left
+    @peer.save!
+  end
   
   def log_vars
     logger.warn "\n"
@@ -153,6 +178,18 @@ class AnnounceController < ApplicationController
     return true
   end
   
+  def check_passkey
+    @passkey = params[:passkey]
+    if @passkey.nil?
+      render_error("Missing passkey portion of the URL: /tracker/**********/announce"); return false
+    end
+    
+    @user = User.find(:first, :conditions => ["passkey = ?", @passkey])
+    if @user.nil?
+      render_error("Invalid passkey: #{passkey}"); return false
+    end
+  end
+  
   def get_remote_ip
     e = request.env
     @remote_ip = e['HTTP_X_FORWARDED_FOR'] || e['HTTP_CLIENT_IP'] || e['REMOTE_ADDR'] || nil
@@ -188,7 +225,7 @@ class AnnounceController < ApplicationController
 #                           [6881, 6889],  # Official BitTorrent
                            [6346, 6347]]  # gnutella
                            
-    if [1214, 4662, 6699].include?(@port)   # kazaa, emule & winmx
+    if [0, 1214, 4662, 6699].include?(@port)   # kazaa, emule & winmx
       render_error("Port not allowed (please use uTorrent or a supported client): #{@remote_ip}"); return false
     end
     

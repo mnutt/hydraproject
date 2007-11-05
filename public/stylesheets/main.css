@@ -59,6 +59,17 @@
   margin-bottom: 8px;
 }
 
+.highlight {
+  color: #777;
+  padding:  4px;
+  margin:  1px ;
+  width: 60%;
+  background-color: #ffc;
+  border: 1px dotted #ccc;
+  text-align: left;
+  margin-bottom: 8px;
+}
+
 /*  Table Styling */
 
 table,td,th{

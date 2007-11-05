@@ -1,7 +1,8 @@
 require 'digest/sha1'
 
 class User < ActiveRecord::Base
-
+  include ActionView::Helpers::NumberHelper
+  
   validates_presence_of       :login,       :on => :create
   validates_presence_of       :password,    :on => :create
 
@@ -15,6 +16,29 @@ class User < ActiveRecord::Base
   HARD_SALT = 'TheHydraProject--123456789@!#%@^^#@'
 
   attr_accessor :password_confirmation
+
+  def ratio
+    return 0 if self.uploaded.zero? || self.downloaded.zero?
+    return (self.uploaded.to_f / self.downloaded.to_f)
+  end
+  
+  def ratio_friendly
+    r = self.ratio
+    return "&#8734;" if r.zero?
+    return r.number_format
+  end
+  
+  def downloaded_friendly
+    number_to_human_size(self.downloaded)
+  end
+
+  def uploaded_friendly
+    number_to_human_size(self.uploaded)
+  end
+  
+  def tracker_url
+    "#{BASE_URL}tracker/#{self.passkey}/announce"
+  end
   
   def generate_passkey
     self.passkey = Digest::SHA1.hexdigest("#{self.login}--#{Time.now}--#{rand(10000)}").slice(0, 10)

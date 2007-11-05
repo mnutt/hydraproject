@@ -14,6 +14,10 @@ class Torrent < ActiveRecord::Base
   cattr_reader :per_page
   @@per_page = C[:num_items_per_page]
   
+  def connectable_peers
+    Peer.find(:all, :conditions => ["torrent_id = ? AND connectable = ? ", self.id, true], :limit => (C[:num_max_peers]+5))
+  end
+  
   def cleanup
     File.unlink(self.torrent_path) if File.exist?(self.torrent_path)
   end
