@@ -3,9 +3,9 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <% if @page_title %>
-    <title>The Hydra Project :: <%= @page_title %></title>
+    <title><%= C[:app_name] %> :: <%= @page_title %></title>
   <% else %>
-    <title>The Hydra Project</title>
+    <title><%= C[:app_name] %></title>
   <% end %>
   
   <%= javascript_include_tag :defaults %>
@@ -16,40 +16,6 @@
    <%= stylesheet_link_tag 'ie6_hacks'%>
   <![endif]-->
   <style type='text/css'>
-
-  /* IDs */
-
-  #masthead {	float: left; width: 160px;}
-  
-  #site-title {
-  	font: bold 1.6em Arial, Sans-Serif;
-  	letter-spacing: -1px; 
-  	color: #0189b3;
-  	text-decoration: none;
-  	font-weight: bold;
-  }
-  
-  #tagline {
-  	font:  normal 1.4em;
-  	margin-left: 5px;
-  	color: #999;
-  	vertical-align: middle;
-  }
-  
-  #nav {
-  	float: left;
-  	margin: 4px auto;
-  	padding-left: 30px;
-  	margin-top: 10px;
-  }
-  
-  #nav ul { margin:0; list-style:none; padding: 0; }
-  #nav a, #nav strong, #nav span { display:block; font: bold 1em Arial, sans-serif; padding: 0 10px 5px 10px; text-decoration:none; font-weight: bold;}
-  #nav a { float:none; }
-  #nav li { float:left; margin:0; padding:0 0 0 0px; }
-  #nav a:hover, .current_page_item a { float:left; color:#0189b3; padding: 0 10px 5px 10px; border-bottom: 2px solid #01afc7;}	
-  
-  /* Classes */
    
   </style>
 </head>
@@ -59,7 +25,7 @@
 	<div>
 
 		<div id="masthead">
-			<a href="/" id="site-title">THP</a> &nbsp;&nbsp; :: <span id="tagline">Tagline</span>
+			<a href="/" id="site-title"><%= C[:app_name] %></a> <!-- &nbsp;&nbsp; :: <span id="tagline">Tagline</span> -->
 		</div>
 
 		<div id="nav">
@@ -72,6 +38,9 @@
 					<li class="<%= navclass('torrent', 'browse') %>"><a href="/torrent/browse" title="Browse">Browse</a></li>
 					<li class="<%= navclass('torrent', 'upload') %>"><a href="/torrent/upload" title="Upload Torrent">Upload</a></li>
 					<li>&nbsp;&nbsp; Hi, <%= current_user.login %>. &nbsp;&nbsp;</li>
+					<% if admin_logged_in? %>
+						<li class="<%= navclass('admin', 'index') %>"><a href="/admin" title="Admin">Admin</a></li>
+					<% end %>
 					<li class="<%= navclass('account', 'index') %>"><a href="/account" title="My Home">My Account</a></li>
 					<li class="<%= navclass('account', 'logout') %>"><a href="/account/logout" title="My Home">Logout</a></li>
 				<% end %>

@@ -4,7 +4,7 @@ class AnnounceController < ApplicationController
   before_filter :get_remote_ip
   before_filter :port_allowed?
   
-  def index
+  def announce
     set_vars
     log_vars
 

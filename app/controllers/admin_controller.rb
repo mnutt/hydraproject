@@ -14,7 +14,7 @@ class AdminController < ApplicationController
       f.puts @config.to_yaml
     end
     
-    flash[:notice] = "Config updated. Note: your mongrels / rails app server must be restarted for these changes to take effect."
+    flash[:notice] = "Configuration updated (config/config.yml). <br/><br/> Note: your mongrels / app server must be restarted for these changes to take effect."
     redirect_to :action => :index
   end
   

@@ -3,8 +3,9 @@ theme: default
 domain: change-me.org
 domain_base: change-me
 domain_with_port: change-me.org
-tagline: Yet another Hydra Tracker
-items_per_page: 10
 webmaster_email: webmaster@change-me.org
 webmaster_name: Webmaster
 notifiction_email: noreply@change-me.org
+num_items_per_page: 10
+num_announce_interval_minutes: 30
+num_dead_torrent_hours: 24

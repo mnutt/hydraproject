@@ -54,7 +54,7 @@ module LoginSystem
     store_location
     
     if !the_action.nil?
-      flash[:notice] = "Please signup or <a href=\"#{APP_URL}/login\">login</a> to #{the_action}."
+      flash[:notice] = "Please signup or <a href=\"/login\">login</a> to #{the_action}."
     end
     # call overwriteable reaction to unauthorized access
     access_denied

@@ -77,25 +77,9 @@ end
 
 c.symbolize_keys!
 
-if RAILS_ENV == 'development'
-  c[:domain] = c[:domain_base] + ".net"
-  c[:domain_with_port] = c[:domain] + ':3001'
-end
-
-# Now pull in any environment specific configs
-env_config_file = RAILS_ROOT + "/config/environments/#{RAILS_ENV}.yml"
-if File.exist?(env_config_file)
-  env_c = YAML.load(IO.read(env_config_file)).symbolize_keys!
-  # Hash.update overwrites dupliatekeys from another hash
-  c.update(env_c)
-end
-c.each_pair do |k, v|
-  c[k] = v.strip if v.is_a?(String)
-end
-
 C = c
 
-APP_URL = C[:domain]
+BASE_URL = "http://#{C[:domain_with_port]}/"
 
 class TorrentFileNotFoundError < StandardError; end
 

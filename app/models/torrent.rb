@@ -2,8 +2,8 @@ class Torrent < ActiveRecord::Base
   belongs_to :user
   belongs_to :category
   
-  has_many :torrent_files
-  has_many :peers
+  has_many :torrent_files, :dependent => :destroy
+  has_many :peers, :dependent => :destroy
   
   before_save :ensure_non_negative
   before_destroy :cleanup
@@ -12,7 +12,7 @@ class Torrent < ActiveRecord::Base
   
   # For the will_paginate plugin.  See: http://plugins.require.errtheblog.com/browser/will_paginate/README
   cattr_reader :per_page
-  @@per_page = 10
+  @@per_page = C[:num_items_per_page]
   
   def cleanup
     File.unlink(self.torrent_path) if File.exist?(self.torrent_path)
