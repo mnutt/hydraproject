@@ -129,11 +129,20 @@ class TrackerController < ApplicationController
       @user.downloaded += @downloaded_since_last
       @user.save!
     end
-    # Update the peer's stats
-    @peer.uploaded    = @uploaded
-    @peer.downloaded  = @downloaded
-    @peer.to_go       = @left
-    @peer.save!
+    
+    logger.warn "\n in update_xfer_stats, @peer = #{@peer.inspect} \n"
+    
+    logger.warn "\n uploaded, downloaded, left = #{@uploaded}, #{@downloaded}, #{@left} "
+    logger.warn "\n classes = #{@uploaded.class}, #{@downloaded.class}, #{@left.class} "
+    
+    if @uploaded > 0 || @downloaded > 0
+      # Update the peer's stats
+      @peer.uploaded    = @uploaded
+      @peer.downloaded  = @downloaded
+      @peer.to_go       = @left
+      @peer.save!
+    end
+    
   end
   
   def log_vars

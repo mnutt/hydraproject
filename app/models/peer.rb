@@ -29,7 +29,7 @@ class Peer < ActiveRecord::Base
       Timeout.timeout(8) do
         TCPSocket.new(ip, port)
       end
-
+      
       # If we got here, the peer *IS* connectable!
       self.connectable = true
       save!
