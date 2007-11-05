@@ -57,6 +57,7 @@ thead th{
 }
 tbody td{
   background:#e1e1e1;
+  text-align: left;
 }
 tbody th{
   background:#999;

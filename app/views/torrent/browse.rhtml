@@ -1,18 +1,12 @@
-<style>
-/*
-#browse_torrents tr td { border: 1px dotted #ccc;}
-#browse_torrents tr th { text-align: left;}
-*/
-</style>
 <h1>Browse Torrents</h1>
 <% if @torrents.empty? %>
 	<p>There are currently no torrents to display.
 <% else %>
 	<%= will_paginate @torrents %>
-	<table id="browse_torrents" width="90%" style="border: 1px solid #ccc;">
+	<table width="90%">
 		<tr>
 			<th>Torrent</th>
-			<th width="110px">D/L</th>
+			<th width="18px"></th>
 			<th width="60px"># Files</th>
 			<th width="90px"> Size</th>
 			<th width="74px">Snatched</th>
@@ -23,7 +17,7 @@
 		<% @torrents.each do |t| %>
 			<tr>
 				<td><%= link_to(truncate(t.name, 50), {:action => 'show', :id => t.id}) %></td>
-				<td><%= link_to('download', t.torrent_url) %></td>
+				<td><%= link_to(image_tag('arrow_down.png', :border => '0'), t.torrent_url, :title => "Download #{t.filename}") %></td>
 				<td><%= t.numfiles %></td>
 				<td><%= number_to_human_size(t.size)%></td>
 				<td><%= t.times_completed %></td>

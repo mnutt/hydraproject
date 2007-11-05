@@ -3,12 +3,6 @@
 <div id="content">
 	<h2 class="title">Account Signup</h2>
 	
-	Please note:
-	<ul>
-		<li>cookies are required to signup and login</li>
-		<li>since we only collect your username and <i>never</i> your email address, there is <i>absolutely no way</i> for you to recover your password if you ever forget it or lose it</li>
-		<li>thus if you cannot easily remember your password, it is highly recommended you use software like <a href="http://passwordsafe.sourceforge.net/" target="_blank">Password Safe</a> to store your passwords securely</li>
-	</ul>
 	
 	<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
 
@@ -54,7 +48,15 @@
 		</div>
 		</center>
 	</form>
+
+	<ul><b>Signup Notes</b>
+		<li>cookies are required to signup and login</li>
+		<li>since we only collect your username and <i>never</i> your email address, there is <i>absolutely no way</i> for you to recover your password if you ever forget it or lose it</li>
+		<li>thus if you cannot easily remember your password, it is highly recommended you use software like <a href="http://passwordsafe.sourceforge.net/" target="_blank">Password Safe</a> to store your passwords securely</li>
+	</ul>
+
 </div>
+
 
 
 <script type="text/javascript">
