@@ -7,7 +7,7 @@
 	<ul>
 		<li>cookies are required to signup and login</li>
 		<li>since we only collect your username and <i>never</i> your email address, there is <i>absolutely no way</i> for you to recover your password if you ever forget it or lose it</li>
-		<li>thus if you cannot easily remember your password, it is highly recommended you use software like <a href="http://passwordsafe.sourceforge.net/" target="_blank">Password Safe</a> to store you passwords securely</li>
+		<li>thus if you cannot easily remember your password, it is highly recommended you use software like <a href="http://passwordsafe.sourceforge.net/" target="_blank">Password Safe</a> to store your passwords securely</li>
 	</ul>
 	
 	<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
@@ -18,11 +18,12 @@
 			Please complete the following form to signup.	&nbsp;&nbsp;The person who invited you (<i><%= @invite.user.first_name %></i>) will automagically be added to your friends list.
 		<% end %>
 
-		<div id="signupform" class="form">
+		<center>
+		<div id="signupform" class="form" style="margin-right: 100px;">
 					
 			<%= error_messages_for 'user' %><br/>
 
-			<table cellspacing="2" cellpadding="2" width="80%">
+			<table cellspacing="2" cellpadding="2" width="400px">
 				<tr>
 					<td><label for="user_login">Username:</label></td>
 					<td>
@@ -47,11 +48,11 @@
 					<input type="checkbox" name="ageverify" value="yes" class="validate-is-checked" /> I am at least 13 years old.
 				</td></tr>
 				<tr>
-					<td colspan="2" align="center"><input type="Submit" value="Sign me up, chief" class="submit-box"></td>
+					<td colspan="2" align="center"><input type="Submit" value="Create Account" class="submit-box"></td>
 				</tr>
 			</table>
 		</div>
-
+		</center>
 	</form>
 </div>
 

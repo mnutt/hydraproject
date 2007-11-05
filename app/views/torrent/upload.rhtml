@@ -1,6 +1,8 @@
-<h1>Upload</h1>
+<h1>Upload a New Torrent</h1>
+
 <%= form_tag({:controller => 'torrent', :action => 'upload' }, { :multipart => true, :id => 'upload-form' }) %>
 	<center>
+	<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
 	<table cellspacing="2" cellpadding="2" width="500px" style="border: 1px dotted #ccc">
 		<tr>
 			<td><label for="torrent_file">Torrent file:</label></td>

@@ -1,0 +1,132 @@
+
+#ajax-indicator {
+  float: right ;
+  position: fixed;
+  top: 8%;
+  left: 85%;
+  right: 3%;
+  padding:  5px;
+  margin:  1px ;
+  font-weight:  bold ;
+}
+
+#ajax-indicator img {
+  vertical-align: middle ;
+  padding-left: 6px ;
+}
+
+#notice {
+  padding:  5px;
+  margin:  1px ;
+  width: 60%;
+  background-color: #ff9;
+  border: 1px solid #ccc;
+  text-align: left;
+  margin-bottom: 8px;
+}
+
+#notice_fixed {
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  right: 0%;
+  padding:  5px;
+  margin:  1px ;
+  width: 100%;
+  height: 60px;
+  background-color: #ff9;
+}
+
+/*  Table Styling */
+
+table,td,th{
+  border:1px solid #aaa;
+  border-collapse:collapse;
+  margin:0;
+  padding:0;
+}
+td,th{
+  padding:.2em .5em;
+  vertical-align:top;
+  font-weight:normal;
+}
+thead th{
+  text-transform:uppercase;
+  background:#666;
+  color:#fff;
+}
+tbody td{
+  background:#e1e1e1;
+}
+tbody th{
+  background:#999;
+  color: #fff;
+  text-decoration: underline; 
+  text-align: left;
+}
+tbody tr.odd td{
+  background:#eee;
+}
+tbody tr.odd th{
+  background:#ddd;
+}
+caption{
+  text-align:left;
+  font-size:140%;
+  text-transform:uppercase;
+  letter-spacing:-1px;
+}
+table th a:link{
+  color:#030;
+}
+table th a:visited{
+  color:#003;
+}
+table td a:link{
+  color:#369;
+}
+table td a:visited{
+  color:#000;
+}
+table a:hover{
+  text-decoration:none;
+}
+table a:active{
+  color:#000;
+}
+
+.tlabel{text-align: right; font-weight: bold; padding: 4px;}
+
+/* Pagination, Digg-style */
+
+.pagination {
+   padding: 5px;
+   margin: 5px;
+   font-size: .9em;
+  text-align: center;
+ }
+ .pagination a {
+   padding: 2px 5px 2px 5px;
+   margin: 2px;
+   border: 1px solid #aaaadd;
+   text-decoration: none;
+   color: #369;
+ }
+ .pagination a:hover, .pagination a:active {
+   border: 1px solid #369;
+   color: #000;
+ }
+ .pagination span.current {
+   padding: 2px 5px 2px 5px;
+   margin: 2px;
+   border: 1px solid #369;
+   font-weight: bold;
+   background-color: #369;
+   color: #FFF;
+ }
+ .pagination span.disabled {
+   padding: 2px 5px 2px 5px;
+   margin: 2px;
+   border: 1px solid #eee;
+   color: #ddd;
+ }

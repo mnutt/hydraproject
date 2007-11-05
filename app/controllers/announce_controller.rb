@@ -15,7 +15,7 @@ class AnnounceController < ApplicationController
     end
     logger.warn "\n\nListing all peers:\n"
     Peer.find(:all).each do |p|
-      logger.warn "\t#{p.id} :: #{p.peer_id} :: #{p.ip} :: #{p.port}"
+      logger.warn "\t#{p.id} :: #{p.torrent_id} :: #{p.peer_id} ::  #{p.ip}:#{p.port}"
     end
     logger.warn "\n\n"
     # Find the Peer.  If it's not in the DB yet, create the record.

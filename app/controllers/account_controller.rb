@@ -35,10 +35,8 @@ class AccountController < ApplicationController
         flash[:notice] = "Please enter a username."
         return false
       end
-      @user.login.gsub!(/\s/, '')
     end
     if request.post? and @user.save
-
       set_current_user(User.authenticate(@user.login, params[:user][:password]))
       
       ## SET THE AUTH TOKEN & COOKIE
@@ -53,13 +51,23 @@ class AccountController < ApplicationController
         end
       end
 
+      flash[:notice] = "Welcome, #{current_user.login}."
+
+      # If this is the first account created, make the user a sysop
+      if 1 == @user.id
+        @user.is_admin = true
+        @user.is_editor = true
+        @user.save
+        flash[:notice] = "Welcome to your new installation of The Hydra Project, rails edition.  You have automatically been made an admin/sysop of this server."
+      end
+      
       if location_stored?
-        flash[:notice] = "Welcome, #{current_user.login}."
         redirect_to_stored_location and return
       else
         redirect_to '/' and return
       end
 
+      
       redirect_back_or_default '/' and return
     end      
   end  

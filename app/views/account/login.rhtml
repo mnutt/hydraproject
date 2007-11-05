@@ -3,25 +3,28 @@
 <div id="content">
 	<h2 class="title">Sign In</h2>
 
-	<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
-
   <%= start_form_tag :action=> "login" %>
 
-	<table width="400" >
-		<tr>
-			<td align="right"><label for="user_login">Username:&nbsp;</label></td>
-			<td><input name="user_login" value="" type="text" size="10" maxlength="50" class="nice-field"></td>
-		</tr>
+		<center><div style="margin-right: 100px;">
+			<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
 
-		<tr>
-			<td align="right"><label for="user_password">Password:&nbsp;</label></td>
-			<td><input name="user_password" value="" type="password" size="7" maxlength="15" class="nice-field"></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="center">
-				<input type="Submit" value="Go get 'em, tiger" class="submit-box">
-			</td>
-	</table>
+			<table width="200px">
+				<tr>
+					<td width="80px" align="right"><label for="user_login">Username:&nbsp;</label></td>
+					<td><input name="user_login" value="" type="text" size="10" maxlength="50" class="nice-field"></td>
+				</tr>
+
+				<tr>
+					<td align="right"><label for="user_password">Password:&nbsp;</label></td>
+					<td><input name="user_password" value="" type="password" size="7" maxlength="15" class="nice-field"></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="Submit" value="Login" class="submit-box">
+					</td>
+			</table>
+		</div>
+		</center>
 
   </form>
 

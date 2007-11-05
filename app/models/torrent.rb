@@ -9,6 +9,10 @@ class Torrent < ActiveRecord::Base
   
   serialize :orig_announce_list  # An Array of announce URLs
   
+  # For the will_paginate plugin.  See: http://plugins.require.errtheblog.com/browser/will_paginate/README
+  cattr_reader :per_page
+  @@per_page = 10
+  
   def ensure_non_negative
     self.seeders = 0 if self.seeders < 0
     self.leechers = 0 if self.leechers < 0

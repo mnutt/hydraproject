@@ -59,7 +59,6 @@ class User < ActiveRecord::Base
   #   @user = User.authenticate('bob', 'bobpass')
   #
   def self.authenticate(login, pass)
-    logger.warn "self.auth(#{login}, #{pass})"
     user = User.find(:first, :conditions => ["login = ?", login]) rescue nil
     return nil unless user
     return nil unless user.passwords_match?(pass)

@@ -1,15 +1,18 @@
 <style>
+/*
 #browse_torrents tr td { border: 1px dotted #ccc;}
 #browse_torrents tr th { text-align: left;}
+*/
 </style>
 <h1>Browse Torrents</h1>
 <% if @torrents.empty? %>
 	<p>There are currently no torrents to display.
 <% else %>
+	<%= will_paginate @torrents %>
 	<table id="browse_torrents" width="90%" style="border: 1px solid #ccc;">
 		<tr>
 			<th>Torrent</th>
-			<th width="110px"><small>Download .torrent</small></th>
+			<th width="110px">D/L</th>
 			<th width="60px"># Files</th>
 			<th width="90px"> Size</th>
 			<th width="74px">Snatched</th>
@@ -30,4 +33,6 @@
 			</tr>
 		<% end %>
 	</table>
+	<%= will_paginate @torrents %>
 <% end %>
+

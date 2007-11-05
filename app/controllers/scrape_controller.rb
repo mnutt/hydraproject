@@ -7,7 +7,7 @@ class ScrapeController < ApplicationController
       render_error("Does not currently support multiple info-hash scraping."); return
     end
     
-    hex_hash    = @info_hash.unpack('H*')
+    hex_hash = @info_hash.unpack('H*')
     
     @torrent = Torrent.find(:first, :conditions => ['info_hash = ?', hex_hash])
     
@@ -16,8 +16,8 @@ class ScrapeController < ApplicationController
     end
     
     resp = {'files' => {@info_hash => {'complete' => @torrent.times_completed,
-                                          'downloaded' => @torrent.leechers,
-                                          'incomplete' => @torrent.seeders}}}
+                                       'downloaded' => @torrent.leechers,
+                                       'incomplete' => @torrent.seeders}}}
 
     render :text => resp.to_bencoding; return
   end

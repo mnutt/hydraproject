@@ -98,7 +98,6 @@ class ApplicationController < ActionController::Base
   helper_method :current_domain
   
   def unset_auth_cookie
-    #, :domain => current_domain 
     cookies[:auth_token] = { :value => 'nil', :expires => Time.now - 1.year}
   end
   helper_method :unset_auth_cookie
@@ -116,24 +115,21 @@ class ApplicationController < ActionController::Base
     unless user_logged_in?
       session[:after_login_url] = request.request_uri
       flash[:notice] = "Please signup or #{link_to('login', login_url)} to continue."
-      redirect_to signup_url
-      return false
+      redirect_to signup_url; return false
     end
   end
 
   def editor_required
     unless editor_logged_in?
       flash[:notice] = "Access denied.  Contact admin if you believe this was in error."
-      redirect_to index_url
-      return false
+      redirect_to index_url; return false
     end
   end
 
   def admin_required
     unless admin_logged_in?
       flash[:notice] = "Access denied.  Contact admin if you believe this was in error."
-      redirect_to index_url
-      return false
+      redirect_to index_url; return false
     end
   end
   

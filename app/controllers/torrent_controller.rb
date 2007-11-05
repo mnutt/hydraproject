@@ -1,14 +1,14 @@
 class TorrentController < ApplicationController
-  
+    
   def browse
-    @torrents = Torrent.paginate :page => params[:page]
+    @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
   end
   
   def upload
     if request.post?
       @torrent = Torrent.new(params[:torrent])
       the_file = params[:the_torrent]
-      if !the_file || (the_file && the_file.original_filename.blank?)
+      if the_file.nil? || (the_file && the_file.original_filename.blank?)
         flash[:notice] = "Please select a torrent file to upload."
         return false
       end
