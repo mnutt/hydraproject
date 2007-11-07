@@ -76,10 +76,18 @@ c.each_pair do |k, v|
 end
 
 c.symbolize_keys!
-
 C = c
+
+if 'test' != RAILS_ENV
+  # For the Hydra Network; other trusted sites in this site's "federation"
+  fed_file = File.join(RAILS_ROOT, 'config', 'federation.yml')
+  if File.exist?(config_file)
+    TRUSTED_SITES = YAML.load(IO.read(fed_file))
+  else
+    TRUSTED_SITES = []
+  end
+end
 
 BASE_URL = "http://#{C[:domain_with_port]}/"
 
 class TorrentFileNotFoundError < StandardError; end
-

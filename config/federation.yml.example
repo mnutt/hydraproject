@@ -1,0 +1,8 @@
+--- 
+- domain: foo.org
+  passkey: wafflesandjam69
+  api_url: http://foo.org/api
+- domain: bar.net
+  passkey: pigsinablanket42
+  api_url: https://www.bar.net/hydra/api.php
+  ip_required: 66.29.132.45
