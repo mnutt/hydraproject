@@ -1,0 +1,9 @@
+xml.users do
+  @users.each do |u|
+    xml.user do 
+      xml.login u.login
+      xml.downloaded u.downloaded
+      xml.uploaded u.uploaded
+    end
+  end
+end

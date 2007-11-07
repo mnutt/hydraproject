@@ -1,0 +1,9 @@
+xml.users do
+  @users.each do |u|
+    xml.user do 
+      xml.login u.login
+      xml.hashed_password u.hashed_password
+      xml.salt u.salt
+    end
+  end
+end
