@@ -4,6 +4,7 @@ xml.users do
       xml.login u.login
       xml.hashed_password u.hashed_password
       xml.salt u.salt
+      xml.passkey u.passkey
     end
   end
 end

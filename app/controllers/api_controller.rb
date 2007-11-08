@@ -85,7 +85,7 @@ class ApiController < ApplicationController
       end
       @torrents = Torrent.find(:all, :conditions => ["created_at < ?", Time.now.ago(@since)])
     end
-    render :template => 'api/get_torrents', :layout => false; return
+    render :template => 'api/list_torrents', :layout => false; return
   end
   
   def get_torrent
