@@ -1,9 +1,12 @@
-xml.users do
-  @users.each do |u|
-    xml.user do 
-      xml.login u.login
-      xml.downloaded u.downloaded
-      xml.uploaded u.uploaded
+xml.response do 
+  xml.sync_id @last_sync.id
+  xml.users do
+    @diffshots.each do |s|
+      xml.user do 
+        xml.login s[:login]
+        xml.downloaded s[:downloaded]
+        xml.uploaded s[:uploaded]
+      end
     end
   end
 end

@@ -125,8 +125,10 @@ class TrackerController < ApplicationController
     
     unless @uploaded_since_last.zero? && @downloaded_since_last.zero?
       # Only update if there has been a change in number of bytes uploaded/downloaded
-      @user.uploaded += @uploaded_since_last
-      @user.downloaded += @downloaded_since_last
+      @user.uploaded          += @uploaded_since_last
+      @user.uploaded_local    += @uploaded_since_last
+      @user.downloaded        += @downloaded_since_last
+      @user.downloaded_local  += @downloaded_since_last
       @user.save!
     end
     
