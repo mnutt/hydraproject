@@ -2,6 +2,16 @@ class ApiController < ApplicationController
   
   before_filter :authenticate
   before_filter :set_vars
+  before_filter :allowed_method_check
+  
+  AllowedMethods = ['time', 'list_users', 'list_transfer_stats', 'list_torrents', 'get_torrent']
+
+  def index
+#    render :text => params.inspect; return
+    # By here, it's passed the 'allowed_method_check' -- so this should be safe:
+    send(@method)
+    return
+  end
   
   def time
     render :text => "<time>#{Time.now}</time>", :status => 200; return
@@ -13,12 +23,13 @@ class ApiController < ApplicationController
   
   def list_users
     if @first_load
-      @users = User.find(:all, :conditions => ['is_admin = ?', false])  # Do not send admin accounts
+      # Do not send admin accounts; only send accounts created locally
+      @users = User.find(:all, :conditions => ['is_admin = ? AND is_local = ?', false, true])
     else
       if @since < 0
         since_required; return
       end
-      @users = User.find(:all, :conditions => ['is_admin = ? AND created_at < ?', false, Time.now.ago(@since)])
+      @users = User.find(:all, :conditions => ['is_admin = ? AND is_local = ? AND created_at < ?', false, true, Time.now.ago(@since)])
     end
     render :template => 'api/list_users', :layout => false; return
   end
@@ -62,7 +73,7 @@ class ApiController < ApplicationController
       end
       
     end
-    render :template => 'api/list_users', :layout => false; return
+    render :template => 'api/list_transfer_stats', :layout => false; return
   end
   
   def list_torrents
@@ -94,8 +105,17 @@ class ApiController < ApplicationController
   
   private
   
+  def allowed_method_check
+    @method = (params[:method] || '').strip
+    unless AllowedMethods.include?(@method)
+      render_error(:invalid_method, "Invalid method called ('#{@method}').  Must be one of: #{AllowedMethods.to_sentence}")
+      return false
+    end
+    return true
+  end
+  
   def set_vars
-    @response.headers["Content-Type"] = "application/xml"
+    response.headers["Content-Type"] = "application/xml"
     @first_load   = params[:first_load]
     @data         = params[:data]
     @since        = (params[:since] || -1).to_i  # time ago in seconds

@@ -5,7 +5,7 @@ class RatioSync < ActiveRecord::Migration
       t.column :created_at, :datetime
     end
     
-    create_table :ratio_snapshot do |t|
+    create_table :ratio_snapshots do |t|
       t.column :ratio_sync_id, :integer
       t.column :user_id, :integer
       t.column :login, :string
@@ -26,6 +26,6 @@ class RatioSync < ActiveRecord::Migration
     drop_table :ratio_syncs
     drop_table :ratio_snapshot
     remove_column :users, :downloaded_local
-    remove_column :users, :downloaded_local
+    remove_column :users, :uploaded_local
   end
 end
