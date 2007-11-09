@@ -29,7 +29,7 @@ class ApiController < ApplicationController
       if @since < 0
         since_required; return
       end
-      @users = User.find(:all, :conditions => ['is_admin = ? AND is_local = ? AND created_at < ?', false, true, Time.now.ago(@since)])
+      @users = User.find(:all, :conditions => ['is_admin = ? AND is_local = ? AND created_at > ?', false, true, Time.now.ago(@since)])
     end
     render :template => 'api/list_users', :layout => false; return
   end
@@ -43,7 +43,7 @@ class ApiController < ApplicationController
       @diffshots = []  # Used by the rxml
       @users.each do |u|
         @snapshots << RatioSnapshot.create!(:ratio_sync_id => @last_sync.id, :user_id => u.id, :login => u.login, :downloaded => u.downloaded_local, :uploaded => u.uploaded_local)
-        @diffshots << {:login => u.login, :downloaded => u.downloaded_local, :uplaoded => u.uploaded_local}
+        @diffshots << {:login => u.login, :downloaded => u.downloaded_local, :uploaded => u.uploaded_local}
       end
     else
       @last_sync = RatioSync.find(@last_sync_id)
@@ -57,13 +57,14 @@ class ApiController < ApplicationController
       @users.collect {|u| @user_hash[u.id] = u }
       
       @diffshots = []  # Used by the rxml
-      @last_sync.ratio_snapshots.each do |rs|
+      @last_sync.ratio_snapshots(:include => [:user]).each do |rs|
+        u = rs.user
         dl_diff = @user_hash[rs.user_id].downloaded_local - rs.downloaded 
       	dl_diff = 0 if dl_diff < 0  # Cannot go down since last time...
         ul_diff = @user_hash[rs.user_id].uploaded_local - rs.uploaded 
       	ul_diff = 0 if ul_diff < 0  # Cannot go down since last time...
 
-      	@diffshots << {:login => u.login, :downloaded => u.dl_diff, :uplaoded => u.ul_diff}
+      	@diffshots << {:login => u.login, :downloaded => u.dl_diff, :uploaded => u.ul_diff}
       end
       
       # Now create a *NEW* @last_sync that is really the current sync
@@ -73,6 +74,8 @@ class ApiController < ApplicationController
       end
       
     end
+    
+    #puts "\n\n@diffshots = #{@diffshots.inspect}\n\n"
     render :template => 'api/list_transfer_stats', :layout => false; return
   end
   
@@ -83,14 +86,14 @@ class ApiController < ApplicationController
       if @since < 0
         since_required; return
       end
-      @torrents = Torrent.find(:all, :conditions => ["created_at < ?", Time.now.ago(@since)])
+      @torrents = Torrent.find(:all, :conditions => ["created_at > ?", Time.now.ago(@since)])
     end
     render :template => 'api/list_torrents', :layout => false; return
   end
   
   def get_torrent
     @info_hash = params[:info_hash] || ''
-    @torrent = Torrent.find(:all, :conditions => ["info_hash = ?", @info_hash])
+    @torrent = Torrent.find(:first, :conditions => ["info_hash = ?", @info_hash])
     if @torrent.nil?
       render_error(:not_found, "Torrent not found.  Passed info_hash: #{@info_hash}")
     end

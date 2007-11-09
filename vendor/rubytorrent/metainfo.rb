@@ -219,6 +219,38 @@ class MetaInfo
       [announce]
     end
   end
+  
+  def dump_metainfoinfo(mii)
+    if mii.single?
+        <<EOS
+         length: #{mii.length / 1024}kb
+       filename: #{mii.name}
+EOS
+    else
+      mii.files.map do |f|
+          <<EOS
+     - filename: #{File.join(mii.name, f.path)}
+         length: #{f.length}
+EOS
+      end.join + "\n"
+    end + <<EOS
+   piece length: #{mii.piece_length / 1024}kb 
+         pieces: #{mii.pieces.length / 20}
+EOS
+  end
+
+  def dump_info
+    mi = self
+      <<EOS
+  #{dump_metainfoinfo(mi.info).chomp}
+       announce: #{mi.announce}
+  announce-list: #{(mi.announce_list.nil? ? "<not specified>" : mi.announce_list.map { |x| x.join(', ') }.join('; '))}
+  creation date: #{mi.creation_date || "<not specified>"}
+     created by: #{mi.created_by || "<not specified>"}
+        comment: #{mi.comment || "<not specified>"}
+EOS
+  end
+
 end
 
 end
