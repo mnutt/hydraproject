@@ -4,12 +4,12 @@ class User < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
   
   validates_presence_of       :login,       :on => :create
-  validates_presence_of       :password,    :on => :create
+  validates_presence_of       :password,    :on => :create, :if => Proc.new { |user| user.hashed_password.nil? }
 
   validates_uniqueness_of     :login,       :on => :create
 
   validates_length_of         :login,       :within => 3..20, :on => :create
-  validates_length_of         :password,    :within => 5..40, :on => :create
+  validates_length_of         :password,    :within => 5..40, :on => :create, :if => Proc.new { |user| user.hashed_password.nil? }
   
   before_create :generate_passkey
   
@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   end
   
   def generate_passkey
+    return unless self.passkey.nil?
     self.passkey = Digest::SHA1.hexdigest("#{self.login}--#{Time.now}--#{rand(10000)}").slice(0, 10)
   end
   
