@@ -1,6 +1,7 @@
 class TorrentController < AuthenticatedController
     
   def browse
+    params[:page] ||= 1
     @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
   end
   

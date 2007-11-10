@@ -23,8 +23,13 @@ class Torrent < ActiveRecord::Base
   end
   
   def meta_info
+    puts "\n\nLooking for torrent in path: #{self.torrent_path}\n\n"
     raise TorrentFileNotFoundError unless File.exist?(self.torrent_path)
     RubyTorrent::MetaInfo.from_location(self.torrent_path)
+  end
+  
+  def print_meta_info
+    Torrent.dump_metainfo(self.meta_info)
   end
   
   def ensure_non_negative
@@ -89,10 +94,11 @@ class Torrent < ActiveRecord::Base
       CACHE.set(self.tkey, peers)
     end
   end
-  
-  def torrent_url
-    CGI.escape("/download/#{self.id}/#{self.filename}")
-  end
+ 
+# Not used 
+#  def torrent_url
+#    CGI.escape("/download/#{self.id}/#{self.filename}")
+#  end
   
   def num_peers
     self.seeders + self.leechers

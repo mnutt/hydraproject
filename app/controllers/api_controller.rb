@@ -95,7 +95,7 @@ class ApiController < ApplicationController
     @info_hash = params[:info_hash] || ''
     @torrent = Torrent.find(:first, :conditions => ["info_hash = ?", @info_hash])
     if @torrent.nil?
-      render_error(:not_found, "Torrent not found.  Passed info_hash: #{@info_hash}")
+      render_error(:not_found, "Torrent not found.  Passed info_hash: #{@info_hash}"); return
     end
     
     @meta_info = @torrent.meta_info

@@ -114,10 +114,14 @@ class HydraClient
     curl = "curl -d \"passkey=#{@passkey}\" -m 10 --output \"#{output_path}\" --user-agent \"#{UserAgent}\" --connect-timeout 10 \"#{url}\""
     puts "\n\tCURL: #{curl}"
     `#{curl}`
+    
     return false unless File.exist?(output_path)
     contents = IO.read(output_path)
+    puts "\n\n\nTorrent File Contents:\n#{contents}\n\n\n"
     if contents =~ /auth_failed/
       return false, 'Authentication failed'
+    elsif contents =~ /not_found/
+      return false, 'Torrent not found'
     end
     return true
   end
