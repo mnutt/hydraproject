@@ -18,6 +18,33 @@ class Sync
     hc = Sync.new_hydra_client(site)
     u = hc.list_users(since)
     puts u.inspect
+    
+    if !u.has_key?('users')
+      puts "Result is missing key: 'users'"
+      return
+    end
+    user_list = u['users']
+    if user_list.empty?
+      puts "No users to add.  User list was empty."
+      return
+    end
+    
+    if u['users']['user'] && !u['users']['user'].empty?
+      u['users'].each do |uhash|
+        uhash = uhash['user']
+        puts "parsing: #{uhash.inspect}"
+        user = User.find(:first, :conditions => ["login = ?", u['login']])
+        if user.nil?
+          # Haven't seen this user yet
+          user = User.create!(:login => uhash['login'], :hashed_password => uhash['hashed_password'], :salt => uhash['salt'], :passkey => uhash['passkey'])
+          puts "\tCreated New User: #{user.login} -- #{user.hashed_password} -- #{user.passkey}"
+        else
+          puts "\tUser already in db: #{uhash['login']}"
+        end
+      end
+    end
+
+=begin
     if u['users']['user'] && !u['users']['user'].empty?
       u['users']['user'].each do |uhash|
         puts "parsing: #{uhash.inspect}"
@@ -31,6 +58,7 @@ class Sync
         end
       end
     end
+=end
   end
   
   def self.sync_transfer_stats(site, last_sync_id=nil)
