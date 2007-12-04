@@ -40,15 +40,16 @@ class Sync
       end
       
       salt, hashed_password, passkey, login = uhash['salt'], uhash['hashed_password'], uhash
-      uhash = uhash['user']
-      puts "parsing: #{uhash.inspect}"
-      user = User.find(:first, :conditions => ["login = ?", u['login']])
+      
+      puts "salt, hashed_password, passkey, login = #{salt}, #{hashed_password}, #{passkey}, #{login}"
+      
+      user = User.find(:first, :conditions => ["login = ?", login])
       if user.nil?
         # Haven't seen this user yet
-        user = User.create!(:login => uhash['login'], :hashed_password => uhash['hashed_password'], :salt => uhash['salt'], :passkey => uhash['passkey'])
+        user = User.create!(:login =>login, :hashed_password => hashed_password, :salt => salt, :passkey => passkey)
         puts "\tCreated New User: #{user.login} -- #{user.hashed_password} -- #{user.passkey}"
       else
-        puts "\tUser already in db: #{uhash['login']}"
+        puts "\tUser already in db: #{login}"
       end
     end
 
