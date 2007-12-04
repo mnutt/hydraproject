@@ -30,6 +30,16 @@ class Sync
     end
     puts "user_list = #{user_list.inspect}"
     u['users'].each do |uhash|
+      puts "uhash = #{uhash.inspect}"
+      next unless uhash.is_a?(Array) && uhash.first == 'user'
+      burn, uhash = *uhash
+      
+      puts "NOW uhash = #{uhash.inspect}"
+      unless uhash.has_key?('salt') && uhash.has_key?('hashed_password') && uhash.has_key?('login') && uhash.has_key?('passkey')
+        raise ApiResponseMissingExpectedKeys, "User response hash missing a key or keys.  Keys present: #{uhash.keys}"
+      end
+      
+      salt, hashed_password, passkey, login = uhash['salt'], uhash['hashed_password'], uhash
       uhash = uhash['user']
       puts "parsing: #{uhash.inspect}"
       user = User.find(:first, :conditions => ["login = ?", u['login']])
