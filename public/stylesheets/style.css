@@ -1,0 +1,220 @@
+body {
+	color: #333;
+	background: #fff;
+	padding: 0px;
+	margin: 0px;
+	font: Arial, sans-serif;
+	font-family: arial, sans-serif;
+	font-size: .9em;
+}
+
+#header {
+	background: url(/images/header_back.gif) repeat-x;
+  height: 100px;
+	position: relative;
+	margin: 0px;
+	padding: 0px;
+	}
+
+.logo {
+	position: absolute;
+	left: 10px;
+	top: 37px;
+	}
+
+.logo img {
+	}
+
+h1 {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.tagline {
+	position: absolute;
+	left: 456px;
+	top: 60px;
+	font-size: 1em !important;
+	letter-spacing: 0px !important;
+	color: #999;
+	margin: 0px 0px 8px 0px;
+	padding: 0px;
+}
+
+.posted_at {
+  font-size: .8em;
+  color: #bbb;
+}
+
+
+#signin-bar {
+color:#CCCCCC;
+font-family:"trebuchet ms",sans-serif;
+font-size:0.9em;
+height:36px;
+padding:9px 6px 0px 12px;
+position:relative;
+}
+#signin-bar a {
+color:#CCCCCC;
+text-decoration: none;
+/*font: bold 1em Arial, sans-serif; */
+}
+#signin-bar a:hover {
+color:#FFFFFF;
+}
+#signin-bar strong a {
+color:#DDDDDD;
+}
+#signin-bar strong a:hover {
+color:#FFFFFF;
+}
+
+.signin-bar-right {
+  position:absolute;
+  right:12px;
+  top:9px;
+}
+
+#nav {
+}
+
+#nav ul { margin:0; list-style:none; padding: 0; }
+#nav a, #nav strong, #nav span { display:block; font: bold 1em Arial, sans-serif; padding: 0 10px 5px 10px; text-decoration:none; font-weight: bold;}
+#nav a { float:none; }
+#nav li { float:left; margin:0; padding:0 0 0 0px; }
+#nav a:hover, .current_page_item a { color:#fff; text-decoration: underline; font-weight: bold;}
+
+
+/* Indicators / Notices */
+
+#ajax-indicator {
+  float: right ;
+  position: fixed;
+  top: 8%;
+  left: 85%;
+  right: 3%;
+  padding:  5px;
+  margin:  1px ;
+  font-weight:  bold ;
+}
+
+#ajax-indicator img {
+  vertical-align: middle ;
+  padding-left: 6px ;
+}
+
+#notice {
+  padding:  5px;
+  margin:  1px ;
+  width: 60%;
+  background-color: #ff9;
+  border: 1px solid #ccc;
+  text-align: left;
+  margin-bottom: 8px;
+}
+
+.highlight {
+  color: #777;
+  padding:  4px;
+  margin:  1px ;
+  width: 60%;
+  background-color: #ffc;
+  border: 1px dotted #ccc;
+  text-align: left;
+  margin-bottom: 8px;
+}
+
+/*  Table Styling */
+
+table,td,th{
+  border:1px solid #aaa;
+  border-collapse:collapse;
+  margin:0;
+  padding:0;
+  margin-top: 4px;
+}
+td,th{
+  padding:.2em .5em;
+  vertical-align:top;
+  font-weight:normal;
+}
+thead th{
+  text-transform:uppercase;
+  background:#666;
+  color:#fff;
+}
+tbody td{
+  background:#e1e1e1;
+  text-align: left;
+}
+tbody th{
+  background:#999;
+  color: #fff;
+  text-decoration: underline; 
+  text-align: left;
+}
+tbody tr.odd td{
+  background:#eee;
+}
+tbody tr.odd th{
+  background:#ddd;
+}
+caption{
+  text-align:left;
+  font-size:140%;
+  text-transform:uppercase;
+  letter-spacing:-1px;
+}
+table th a:link{
+  color:#030;
+}
+table th a:visited{
+  color:#003;
+}
+table td a:link{
+  color:#369;
+}
+table td a:visited{
+  color:#000;
+}
+table a:hover{
+  text-decoration:none;
+}
+table a:active{
+  color:#000;
+}
+
+.tlabel{text-align: right; font-weight: bold; padding: 4px;}
+
+/* WILL PAGINATE PLUGIN - Digg Style */
+
+.pagination {
+   padding: 3px;
+   margin: 3px;
+ }
+ .pagination a {
+   padding: 2px 5px 2px 5px;
+   margin: 2px;
+   border: 1px solid #aaaadd;
+   text-decoration: none;
+   color: #000099;
+ }
+ .pagination a:hover, .pagination a:active {
+   border: 1px solid #000099;
+   color: #000;
+ }
+ .pagination span.current {
+   padding: 2px 5px 2px 5px;
+   margin: 2px;
+   border: 1px solid #000099;
+   font-weight: bold;
+   background-color: #000099;
+   color: #FFF;
+ }
+ .pagination span.disabled {
+   padding: 2px 5px 2px 5px;
+   margin: 2px;
+   border: 1px solid #eee;
+   color: #ddd;
+ }
