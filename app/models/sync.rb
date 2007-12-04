@@ -39,7 +39,7 @@ class Sync
         raise ApiResponseMissingExpectedKeys, "User response hash missing a key or keys.  Keys present: #{uhash.keys}"
       end
       
-      salt, hashed_password, passkey, login = uhash['salt'], uhash['hashed_password'], uhash
+      salt, hashed_password, passkey, login = uhash['salt'], uhash['hashed_password'], uhash['passkey'], uhash['login']
       
       puts "salt, hashed_password, passkey, login = #{salt}, #{hashed_password}, #{passkey}, #{login}"
       
