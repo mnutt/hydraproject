@@ -1,9 +1,7 @@
 require 'net/https'
 require 'digest/sha1'
 
-#require 'vendor/xml_simple'
 require 'rubygems'
-
 gem 'activesupport', '>= 1.3.1'
 
 require 'active_support'
@@ -16,9 +14,9 @@ class HydraClient
   UserAgent = 'Ruby HydraClient/1.0'
   
   # Usage:
-  #   sprout = Sproutit::Api.new('http://foo.org/api', 'passkey')
-  #   sprout.time                          # => {"time"=>"Sat Nov 18 08:41:44 UTC 2006"}
-  #   sprout.echo({"hello" => "world"})    # => {"hello"=>"world"}
+  #   client = HydraClient.new('http://tracker.org/api', 'my-passkey')
+  #   client.time # => "Sat Nov 18 08:41:44 UTC 2006"
+  #   client.list_torrents(500)  # lists torrents since 500 seconds ago
   def initialize(url, passkey, options = {})
     @url, @passkey, @options = url, passkey, options
     

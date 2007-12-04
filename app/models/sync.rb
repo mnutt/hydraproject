@@ -18,9 +18,6 @@ class Sync
     hc = Sync.new_hydra_client(site)
     u = hc.list_users(since)
     puts u.inspect
-    if (b = User.find_by_login('brianna'))
-      b.destroy
-    end
     if u['users']['user'] && !u['users']['user'].empty?
       u['users']['user'].each do |u|
         puts "parsing: #{u.inspect}"
@@ -37,16 +34,13 @@ class Sync
   end
   
   def self.sync_transfer_stats(site, last_sync_id=nil)
+    # TODO
   end
   
   def self.sync_torrents(site, since)
     hc = Sync.new_hydra_client(site)
     t = hc.list_torrents(since)
     puts t.inspect
-    if (b = Torrent.find_by_info_hash('671746d95b5a872cbaf50a9164b28750a98ed303'))
-      b.info_hash = 'delete_me'
-      b.save!
-    end
     if t['torrents']['torrent'] && !t['torrents']['torrent'].empty?
       t['torrents']['torrent'].each do |thash|
         puts "Processing: #{thash.inspect}"

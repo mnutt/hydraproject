@@ -41,7 +41,7 @@ class AccountController < ApplicationController
       
       ## SET THE AUTH TOKEN & COOKIE
       current_user.remember_me
-      set_auth_cookie(current_user)
+      set_auth_cookie(@user)
       
       email = params[:user][:email]
       if email && !email.blank?
@@ -66,7 +66,6 @@ class AccountController < ApplicationController
       else
         redirect_to '/' and return
       end
-
       
       redirect_back_or_default '/' and return
     end      

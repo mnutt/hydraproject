@@ -46,9 +46,7 @@ end
 
 # Include your application configuration below
 require 'core_class_extensions'
-
 require 'rubytorrent'
-
 require 'rubygems'
 gem 'memcache-client'
 

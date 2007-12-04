@@ -77,8 +77,8 @@ class TrackerController < ApplicationController
         end
       end
     end
-    @peer_list = @peer_list.slice(0, 7)
-    @response = {'interval'   => 30,  # C[:num_announce_interval_minutes].minutes,
+    @peer_list = @peer_list.slice(0, C[:num_max_peers))
+    @response = {'interval'   => C[:num_announce_interval_minutes].minutes,
                  'complete'   => @torrent.seeders,
                  'incomplete' => @torrent.leechers,
                  'peers'      => @peer_list }
