@@ -19,15 +19,15 @@ class Sync
     u = hc.list_users(since)
     puts u.inspect
     if u['users']['user'] && !u['users']['user'].empty?
-      u['users']['user'].each do |u|
-        puts "parsing: #{u.inspect}"
+      u['users']['user'].each do |uhash|
+        puts "parsing: #{uhash.inspect}"
         user = User.find(:first, :conditions => ["login = ?", u['login']])
         if user.nil?
           # Haven't seen this user yet
-          user = User.create!(:login => u['login'], :hashed_password => u['hashed_password'], :salt => u['salt'], :passkey => u['passkey'])
+          user = User.create!(:login => uhash['login'], :hashed_password => uhash['hashed_password'], :salt => uhash['salt'], :passkey => uhash['passkey'])
           puts "\tCreated New User: #{user.login} -- #{user.hashed_password} -- #{user.passkey}"
         else
-          puts "\tUser already in db: #{u['login']}"
+          puts "\tUser already in db: #{uhash['login']}"
         end
       end
     end
@@ -55,7 +55,7 @@ class Sync
             torrent.destroy
           end
         else
-          puts "\tTorrent already in DB: #{torrent.info_hash}"
+          puts "\tTorrent already in DB: #{thash['info_hash']}"
         end
       end
     end

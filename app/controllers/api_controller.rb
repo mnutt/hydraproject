@@ -60,11 +60,11 @@ class ApiController < ApplicationController
       @last_sync.ratio_snapshots(:include => [:user]).each do |rs|
         u = rs.user
         dl_diff = @user_hash[rs.user_id].downloaded_local - rs.downloaded 
-      	dl_diff = 0 if dl_diff < 0  # Cannot go down since last time...
+        dl_diff = 0 if dl_diff < 0  # Cannot go down since last time...
         ul_diff = @user_hash[rs.user_id].uploaded_local - rs.uploaded 
-      	ul_diff = 0 if ul_diff < 0  # Cannot go down since last time...
+        ul_diff = 0 if ul_diff < 0  # Cannot go down since last time...
 
-      	@diffshots << {:login => u.login, :downloaded => u.dl_diff, :uploaded => u.ul_diff}
+        @diffshots << {:login => u.login, :downloaded => u.dl_diff, :uploaded => u.ul_diff}
       end
       
       # Now create a *NEW* @last_sync that is really the current sync
