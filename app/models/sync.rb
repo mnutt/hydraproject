@@ -47,27 +47,12 @@ class Sync
       if user.nil?
         # Haven't seen this user yet
         user = User.create!(:login =>login, :hashed_password => hashed_password, :salt => salt, :passkey => passkey)
-        puts "\tCreated New User: #{user.login} -- #{user.hashed_password} -- #{user.passkey}"
+        puts "\tCreated New User: #{user.login} -- #{user.hashed_password} -- #{user.passkey} -- #{user.salt}"
       else
         puts "\tUser already in db: #{login}"
       end
     end
 
-=begin
-    if u['users']['user'] && !u['users']['user'].empty?
-      u['users']['user'].each do |uhash|
-        puts "parsing: #{uhash.inspect}"
-        user = User.find(:first, :conditions => ["login = ?", u['login']])
-        if user.nil?
-          # Haven't seen this user yet
-          user = User.create!(:login => uhash['login'], :hashed_password => uhash['hashed_password'], :salt => uhash['salt'], :passkey => uhash['passkey'])
-          puts "\tCreated New User: #{user.login} -- #{user.hashed_password} -- #{user.passkey}"
-        else
-          puts "\tUser already in db: #{uhash['login']}"
-        end
-      end
-    end
-=end
   end
   
   def self.sync_transfer_stats(site, last_sync_id=nil)

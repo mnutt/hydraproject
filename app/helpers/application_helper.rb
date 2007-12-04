@@ -2,7 +2,7 @@
 module ApplicationHelper
   
   def torrent_dl(torrent)
-    download_url(:id => torrent.id, :filename => torrent.filename)
+    url_for(:controller => 'torrent', :action => 'download', :id => torrent.id, :filename => torrent.filename)
   end
   
   def navclass(controller, action, except = '')
