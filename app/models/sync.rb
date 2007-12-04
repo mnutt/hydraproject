@@ -28,19 +28,17 @@ class Sync
       puts "No users to add.  User list was empty."
       return
     end
-    
-    if u['users']['user'] && !u['users']['user'].empty?
-      u['users'].each do |uhash|
-        uhash = uhash['user']
-        puts "parsing: #{uhash.inspect}"
-        user = User.find(:first, :conditions => ["login = ?", u['login']])
-        if user.nil?
-          # Haven't seen this user yet
-          user = User.create!(:login => uhash['login'], :hashed_password => uhash['hashed_password'], :salt => uhash['salt'], :passkey => uhash['passkey'])
-          puts "\tCreated New User: #{user.login} -- #{user.hashed_password} -- #{user.passkey}"
-        else
-          puts "\tUser already in db: #{uhash['login']}"
-        end
+    puts "user_list = #{user_list.inspect}"
+    u['users'].each do |uhash|
+      uhash = uhash['user']
+      puts "parsing: #{uhash.inspect}"
+      user = User.find(:first, :conditions => ["login = ?", u['login']])
+      if user.nil?
+        # Haven't seen this user yet
+        user = User.create!(:login => uhash['login'], :hashed_password => uhash['hashed_password'], :salt => uhash['salt'], :passkey => uhash['passkey'])
+        puts "\tCreated New User: #{user.login} -- #{user.hashed_password} -- #{user.passkey}"
+      else
+        puts "\tUser already in db: #{uhash['login']}"
       end
     end
 
