@@ -24,7 +24,7 @@ class Sync
       return
     end
     user_list = u['users']
-    if user_list.empty?
+    if user_list.nil? || user_list.empty?
       puts "No users to add.  User list was empty."
       return
     end
