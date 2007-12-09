@@ -10,10 +10,20 @@ class TorrentController < AuthenticatedController
     @torrent = Torrent.find(params[:id])
     @meta_info = @torrent.meta_info
     @meta_info.key = current_user.passkey
-    @meta_info.announce = URI.parse("#{BASE_URL}tracker/#{current_user.passkey}/announce")
-    
+    @announce_url = URI.parse("#{BASE_URL}tracker/#{current_user.passkey}/announce")
+    @meta_info.announce = @announce_url
+
+    # Here's where the announce-list magic happens
+    # Set not only this announce URL, but announce URLs for all trackers in the federation
+    @announce_list = [@announce_url]
+    TRUSTED_SITES.each do |site|
+      announce_url = site[:announce_url].gsub('{{passkey}}', current_user.passkey)
+      @announce_list << URI.parse(announce_url)
+    end
+    #puts "\n\n #{@announce_list.inspect}\n\n"
+    @meta_info.announce_list = [@announce_list]
     @bencoded = @meta_info.to_bencoding
-    logger.warn "\n\nDownload: #{@torrent.id} ::  #{@torrent.filename}\n\n\tBencoding:\n#{@bencoded}\n\n"
+    #logger.warn "\n\nDownload: #{@torrent.id} ::  #{@torrent.filename}\n\n\tBencoding:\n#{@bencoded}\n\n"
     send_data @bencoded, :filename => @torrent.filename, :type => 'application/x-bittorrent'; return
   end
   

@@ -2,7 +2,9 @@
 - domain: foo.org
   passkey: wafflesandjam69
   api_url: http://foo.org/api
+  announce_url: http://foo.org/tracker/{{passkey}}/announce
 - domain: bar.net
   passkey: pigsinablanket42
   api_url: https://www.bar.net/hydra/api.php
+  announce_url: http://www.bar.net/hydra/announce.php/{{passkey}}
   ip_required: 66.29.132.45

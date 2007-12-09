@@ -7,10 +7,8 @@ class ApiController < ApplicationController
   AllowedMethods = ['time', 'list_users', 'list_transfer_stats', 'list_torrents', 'get_torrent']
 
   def index
-#    render :text => params.inspect; return
     # By here, it's passed the 'allowed_method_check' -- so this should be safe:
-    send(@method)
-    return
+    send(@method); return
   end
   
   def time
@@ -137,9 +135,9 @@ class ApiController < ApplicationController
   def authenticate
     @passkey = params[:passkey]
     TRUSTED_SITES.each do |site|
-      if @passkey == site['passkey']
+      if @passkey == site[:passkey]
         @site = site
-        @domain = site['domain']
+        @domain = site[:domain]
         return true 
       end
     end

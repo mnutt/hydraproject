@@ -3,10 +3,10 @@ class Sync
   
   def self.first_sync
     TRUSTED_SITES.each do |site|
-      unless site['domain'] && site['passkey'] && site['api_url']
+      unless site[:domain] && site[:passkey] && site[:api_url]
         raise InvalidTrustedSiteFormat, "Site must have keys 'domain', 'passkey' and 'api_url' : #{site.inspect}"
       end
-      puts "Testing if we can connect to #{site['domain']}:"
+      puts "Testing if we can connect to #{site[:domain]}:"
       t = Sync.time(site)
       puts "\t#{t}"
       Sync.sync_users(site, -1)
@@ -133,7 +133,7 @@ class Sync
   end
   
   def self.new_hydra_client(site)
-    HydraClient.new(site['api_url'], site['passkey'])
+    HydraClient.new(site[:api_url], site[:passkey])
   end
   
 end

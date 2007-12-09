@@ -80,7 +80,12 @@ if 'test' != RAILS_ENV
   # For the Hydra Network; other trusted sites in this site's "federation"
   fed_file = File.join(RAILS_ROOT, 'config', 'federation.yml')
   if File.exist?(config_file)
-    TRUSTED_SITES = YAML.load(IO.read(fed_file))
+    sites = YAML.load(IO.read(fed_file))
+    symbolized = []
+    sites.each do |hash|
+      symbolized << hash.symbolize_keys
+    end
+     TRUSTED_SITES = symbolized.freeze
   else
     TRUSTED_SITES = []
   end
