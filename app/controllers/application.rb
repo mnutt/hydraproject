@@ -43,11 +43,6 @@ class ApplicationController < ActionController::Base
   end
   helper_method :user_logged_in?
   
-  def user_logged_in?
-    !@_current_user.nil?
-  end
-  helper_method :user_logged_in?
-
   def moderator_logged_in?
     return false if !user_logged_in?
     return current_user.moderator?
