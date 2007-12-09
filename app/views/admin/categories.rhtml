@@ -1,0 +1,25 @@
+<h1>Manage Categories</h1>
+
+<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
+
+<%= render :partial => 'admin/menu' %>
+
+<br/>
+<% form_for :category, Category.new, :url => {:action => :categories} do |f| %>
+	Add New Category: <%= f.text_field :name %> <%= submit_tag "Submit" %>
+<% end %>
+<br/>
+<table width="400px">
+	<tr>
+		<th>ID</th>
+		<th>Category Name</th>
+		<th></th>
+	</tr>
+	<% @categories.each do |cat| %>
+		<tr>
+			<td width="10px"><%= cat.id %></td>
+			<td><%= cat.name %></td>
+			<td width="18px"><%= link_to(image_tag('icons/trash.png', :border => '0'), {:action => :destroy_category, :id => cat.id}, :method => 'post', :confirm => 'Are you sure?') %></td>
+		</tr>
+	<% end %>
+</table>

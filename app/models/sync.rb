@@ -68,13 +68,26 @@ class Sync
         puts "Processing: #{thash.inspect}"
         torrent = Torrent.find(:first, :conditions => ["info_hash = ?", thash['info_hash']])
         if torrent.nil?
-          torrent = Torrent.create!(:info_hash => thash['info_hash'], :name => thash['name'], :description => thash['description'])
+          torrent = Torrent.create!(:info_hash => thash['info_hash'], :name => thash['name'].unescape_xml, :description => thash['description'].unescape_xml)
           puts "\tCreated New Torrent: #{torrent.info_hash} -- #{torrent.name}"
           # Now we need to grab the actual .torrent file
           grabbed = Sync.grab_torrent(site, torrent)
           if !grabbed
             puts "Grab failed, destroying: #{torrent.inspect}"
             torrent.destroy
+          end
+          if thash['category'] && !thash['category'].blank?
+            # Now find the category
+            cat = Category.find(:first, :conditions => ["name = ?", thash['category'])
+            if cat
+              torrent.category_id = cat.id
+              torrent.save!
+            elsif C[:auto_add_categories]
+              # If the config setting has enabled auto-adding of categories, add it automatically here:
+              cat = Category.create!(:name => thash['category'])
+              torrent.category_id = cat.id
+              torrent.save!
+            end
           end
         else
           puts "\tTorrent already in DB: #{thash['info_hash']}"

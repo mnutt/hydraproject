@@ -1,0 +1,11 @@
+<h1>Most Active</h1>
+
+<%= render :partial => 'torrent/list', :locals => {:torrents => @active} %>
+
+<h1>Best Seeded</h1>
+
+<%= render :partial => 'torrent/list', :locals => {:torrents => @best_seeded} %>
+
+<h1>Most Snatched</h1>
+
+<%= render :partial => 'torrent/list', :locals => {:torrents => @most_snatched} %>

@@ -1,0 +1,11 @@
+
+shantibraford - 12/9/2007:
+* new installs now get some default categories
+* Category.create_music creates some default music categories (can be expanded)
+* User IDs are associated with torrents when they are first uploaded -- this is to track abuse.  After 3 days, the user_id field is wiped from the torrent (and there should be no permanent record of this).  The wiping is triggered by visiting the main apps homepage, so as long as people visit that URL periodically, the wiping occurs.
+* Uploads now get categories associated with them (choosing a category is required)
+* Duplicate info_hash checking -- a .torrent with an info_hash that has already been upped, cannot be reuploaded
+* The config value 'layout' now tells the app which rails layout to use (app/views/layouts). default is 'application'
+* Main logged in page displays Top 10 stats: most active, most seeded, & most snatched
+* Admin controller gets Manage Categories functionality
+* fun with XML escaping/unescaping in the Sync API

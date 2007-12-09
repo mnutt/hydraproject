@@ -21,6 +21,13 @@
 			</td>
 		</tr>
 		<tr>
+			<td><label for="torrent_category">Category:</label></td>
+			<td>
+				<input type="hidden" value="dummy" class="category-required-123">
+				<%= select_tag("torrent[category_id]", "<option>(Select)</option>" + options_from_collection_for_select(@categories, :id, :name), :class => 'category-required') %>
+			</td>
+		</tr>
+		<tr>
 			<td><label for="torrent_description">Description:</label></td>
 			<td>
 				<%= text_area :torrent, :description, :style => 'width: 90%; height: 120px' %>
@@ -37,6 +44,16 @@
 </form>
 
 <script type="text/javascript">
+
+	category_selected = function(value, element) {
+		var idx = element.selectedIndex;
+		if (0 == idx) {
+			return false
+		}
+		return true;
+	}
+	Validation.add('category-required', 'Please select a category.', category_selected);
+
   new Validation('upload-form');
 </script>
 

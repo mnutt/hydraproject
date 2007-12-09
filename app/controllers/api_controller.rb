@@ -86,14 +86,14 @@ class ApiController < ApplicationController
       if @since < 0
         since_required; return
       end
-      @torrents = Torrent.find(:all, :conditions => ["created_at > ?", Time.now.ago(@since)])
+      @torrents = Torrent.find(:all, :conditions => ["created_at > ?", Time.now.ago(@since)], :include => :category)
     end
     render :template => 'api/list_torrents', :layout => false; return
   end
   
   def get_torrent
     @info_hash = params[:info_hash] || ''
-    @torrent = Torrent.find(:first, :conditions => ["info_hash = ?", @info_hash])
+    @torrent = Torrent.find(:first, :conditions => ["info_hash = ?", @info_hash], :include => :category)
     if @torrent.nil?
       render_error(:not_found, "Torrent not found.  Passed info_hash: #{@info_hash}"); return
     end

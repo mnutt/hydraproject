@@ -18,4 +18,20 @@ class AdminController < ApplicationController
     redirect_to :action => :index
   end
   
+  def categories
+    @categories = Category.find(:all, :order => 'name ASC')
+    if request.post?
+      Category.create!(params[:category])
+      flash[:notice] = "Category created."
+      redirect_to :back
+    end
+  end
+  
+  verify :only => :destroy_category, :method=>:post
+  def destroy_category
+    Category.find(params[:id]).destroy
+    flash[:notice] = "Category destroyed."
+    redirect_to :back
+  end
+  
 end

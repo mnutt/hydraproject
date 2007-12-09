@@ -1,11 +1,12 @@
 app_name: Another Hydra Site
-theme: default
+layout: application
 domain: change-me.org
 domain_base: change-me
 domain_with_port: change-me.org
 webmaster_email: webmaster@change-me.org
 webmaster_name: Webmaster
 notifiction_email: noreply@change-me.org
+auto_add_categories: false
 num_items_per_page: 10
 num_max_peers: 10
 num_announce_interval_minutes: 30

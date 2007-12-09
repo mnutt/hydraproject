@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   # Pick a unique cookie name to distinguish our session data from others'
   session :session_key => '_hydra_session_id'
   
-  layout 'application'
+  layout C[:layout]
   
   before_filter :login_from_cookie
   before_filter :authenticate

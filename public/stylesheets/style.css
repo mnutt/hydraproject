@@ -125,6 +125,15 @@ color:#FFFFFF;
   margin-bottom: 8px;
 }
 
+.validation-advice {
+  border: 1px dotted #ccc;
+  background-color: #ffa;
+  color: #ff2233;
+  font-weight: bold;
+  padding: 4px;
+  margin-top: 4px;
+  margin-right: 40px;
+}
 /*  Table Styling */
 
 table,td,th{

@@ -16,4 +16,11 @@ module ApplicationHelper
     return 'page_item'
   end
   
+  def toggle_div(div_id, show_text, hide_text,initially_present_show_link=true)
+    show_link_id = "#{div_id}_show_link"
+    hide_link_id = "#{div_id}_hide_link"
+    return "<a id=\"#{show_link_id}\" href=\"#\" onclick=\"$('#{show_link_id}').hide();$('#{div_id}').show();$('#{hide_link_id}').show();return(false);\" #{ initially_present_show_link ? "" : "style=\"display:none;\""}>#{show_text}</a>" +
+    "<a id=\"#{hide_link_id}\" href=\"#\" onclick=\"$('#{hide_link_id}').hide();$('#{show_link_id}').show();$('#{div_id}').hide();return(false);\" #{ initially_present_show_link ? "style=\"display:none;\"" : ''}>#{hide_text}</a>";
+  end
+  
 end

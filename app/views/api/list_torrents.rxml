@@ -2,8 +2,9 @@ xml.torrents do
   @torrents.each do |t|
     xml.torrent do 
       xml.info_hash t.info_hash
-      xml.name t.name
-      xml << "<description><![CDATA[#{t.description}]]></description>"
+      xml.name t.name.escape_xml
+      xml << "<description><![CDATA[#{t.description.gsub(']]>', '')}]]></description>"
+      xml.category t.category.name.escape_xml
     end
   end
 end

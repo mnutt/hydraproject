@@ -1,5 +1,6 @@
 class TorrentController < AuthenticatedController
-    
+  include ApplicationHelper
+
   def browse
     params[:page] ||= 1
     @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
@@ -17,6 +18,8 @@ class TorrentController < AuthenticatedController
   end
   
   def upload
+    @categories = Category.find(:all, :order => 'name ASC')
+    
     if request.post?
       @torrent = Torrent.new(params[:torrent])
       the_file = params[:the_torrent]
@@ -51,13 +54,21 @@ class TorrentController < AuthenticatedController
         # First save the torrent so that it gets an ID set
         @torrent.save
         @torrent.set_metainfo!(meta_info)
-
-        @torrent.move!(tmp_path)
         
-        @torrent.user = current_user
-        @torrent.save!
-        flash[:notice] = "Success!  Torrent uploaded."
-        @torrent = Torrent.new
+        # Check for existing torrents with this info_hash
+        existing = Torrent.find(:first, :conditions => ["info_hash = ?", @torrent.info_hash])
+        if existing
+          File.unlink(tmp_path) rescue nil
+          flash[:notice] = "A torrent with this info_hash already exists: #{torrent_dl(existing)}<br/><br/>Please seed this torrent instead of uploading a new one."
+        else
+          @torrent.move!(tmp_path)
+
+          @torrent.user = current_user
+          @torrent.save!
+          flash[:notice] = "Success!  Torrent uploaded."
+          @torrent = Torrent.new
+        end
+        
       end
       
     else
@@ -80,6 +91,8 @@ class TorrentController < AuthenticatedController
     end
     render :layout => false
   end
+  
+  verify :only=>:destroy, :method=>:post
   
   def destroy #AJAX & ADMIN only
     moderator_required

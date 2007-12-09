@@ -1,3 +1,23 @@
+module StringExtensions
+  
+  def escape_xml
+    tmp = self.dup
+    tmp.gsub!('&', '&amp;')
+    tmp.gsub!('<', '&lt;')
+    tmp.gsub!('>', '&gt;')
+    return tmp
+  end
+  
+  def unescape_xml
+    tmp = self.dup
+    tmp.gsub!('&lt;', '<')
+    tmp.gsub!('&gt;', '>')
+    tmp.gsub!('&amp;', '&')
+    return tmp
+  end
+  
+end
+
 module NumberExtensions
 
   def to_ordinal
@@ -57,6 +77,10 @@ module ArrayExtensions
     replace randomize
   end
 
+end
+
+class String
+  include StringExtensions
 end
 
 class Time

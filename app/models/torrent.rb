@@ -1,5 +1,5 @@
 class Torrent < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user  # This is only set for the first few days, so the administrator can police new uploads
   belongs_to :category
   
   has_many :torrent_files, :dependent => :destroy
@@ -162,6 +162,13 @@ class Torrent < ActiveRecord::Base
     # Now strip off ".torrent" from the end
     f = f.gsub(/\.torrent$/, '')
     self.name = f
+  end
+  
+  def self.clear_user_ids
+    Torrent.find(:all, :conditions => ["user_id IS NOT NULL AND created_at > ?", 3.days.ago]).each do |t|
+      t.user_id = nil
+      t.save!
+    end
   end
   
   def self.dump_metainfoinfo(mii)
