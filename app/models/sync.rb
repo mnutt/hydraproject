@@ -78,7 +78,7 @@ class Sync
           end
           if thash['category'] && !thash['category'].blank?
             # Now find the category
-            cat = Category.find(:first, :conditions => ["name = ?", thash['category'])
+            cat = Category.find(:first, :conditions => ["name = ?", thash['category']])
             if cat
               torrent.category_id = cat.id
               torrent.save!
