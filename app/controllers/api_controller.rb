@@ -145,6 +145,7 @@ class ApiController < ApplicationController
           return true if '127.0.0.0' == @ip
           return true if site[:ip_required] == @ip
           # Otherwise DENY access
+          render_error(:auth_failed, "Authentication failed. Invalid IP Address.")
           return false
         end
         return true 
