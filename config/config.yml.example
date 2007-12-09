@@ -1,7 +1,6 @@
 app_name: Another Hydra Site
 layout: application
 domain: change-me.org
-domain_base: change-me
 domain_with_port: change-me.org
 webmaster_email: webmaster@change-me.org
 webmaster_name: Webmaster
