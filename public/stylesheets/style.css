@@ -134,6 +134,11 @@ color:#FFFFFF;
   margin-top: 4px;
   margin-right: 40px;
 }
+.submit_button {
+  text-align: right;
+  padding-right: 66px;
+}
+
 /*  Table Styling */
 
 table,td,th{
