@@ -68,7 +68,8 @@ class Sync
         puts "Processing: #{thash.inspect}"
         torrent = Torrent.find(:first, :conditions => ["info_hash = ?", thash['info_hash']])
         if torrent.nil?
-          torrent = Torrent.create!(:info_hash => thash['info_hash'], :name => thash['name'].unescape_xml, :description => thash['description'].unescape_xml)
+          torrent = Torrent.create!(:info_hash => thash['info_hash'], :name => thash['name'].unescape_xml,
+                                    :filename => thahs['filename'], :description => thash['description'].unescape_xml)
           puts "\tCreated New Torrent: #{torrent.info_hash} -- #{torrent.name}"
           # Now we need to grab the actual .torrent file
           grabbed = Sync.grab_torrent(site, torrent)
@@ -91,12 +92,19 @@ class Sync
           end
           
           begin
-            meta_info = RubyTorrent::MetaInfo.from_location(tmp_path)
-            torrent.set_metainfo!(meta_info)
+            # IMPORTANT: Set the meta info (things like filesize, list of files, etc)
+            torrent.set_metainfo!
+            
           rescue RubyTorrent::MetaInfoFormatError => e
-            Mailer.deliver_notice('Sync Received Invalid .torrent', "From site: #{site.inspect}\n\nThe error: #{e.to_s}\n\nTorrent Hash: #{thash.inspect}")
+            subject, msg = 'Sync Received Invalid .torrent', "From site: #{site.inspect}\n\nThe error: #{e.to_s}\n\nTorrent Hash: #{thash.inspect}"
+            Mailer.deliver_notice(subject, msg)
+            puts "\n\n\n !!!!!!! \n\n #{subject}\n\n#{msg}\n\n"
+            sleep 5
           rescue StandardError => e
-            Mailer.deliver_notice('Sync Rescued an Error While Grabbing a .torrent', "From site: #{site.inspect}\n\nThe error: #{e.to_s}\n\nTorrent Hash: #{thash.inspect}")
+            subject, msg = 'Sync Rescued an Error While Grabbing a .torrent', "From site: #{site.inspect}\n\nThe error: #{e.to_s}\n\nTorrent Hash: #{thash.inspect}"
+            Mailer.deliver_notice(subject, msg)
+            puts "\n\n\n !!!!!!! \n\n #{subject}\n\n#{msg}\n\n"
+            sleep 5
           end
           
         else

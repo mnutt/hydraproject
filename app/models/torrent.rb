@@ -111,7 +111,11 @@ class Torrent < ActiveRecord::Base
     File.join(base_dir, "#{self.id}.torrent")
   end
     
-  def set_metainfo!(mi)
+  def set_metainfo!(mi = nil)
+    if mi.nil?
+      mi = self.meta_info
+    end
+    
     total_size = 0
     mii = mi.info  # MetaInfoInfo
     if mii.single?
