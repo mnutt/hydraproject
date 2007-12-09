@@ -1,5 +1,9 @@
 <% if flash && flash[:notice] %>
 	<div class="notice-text" id="notice"><%= flash[:notice] %></div>
+	<% 
+	# forcibly clear it out here
+	flash[:notice] = nil
+	%>
 <% else %>
   <div class="notice-text" id="notice" style="display:none;"> </div>
 <% end %>

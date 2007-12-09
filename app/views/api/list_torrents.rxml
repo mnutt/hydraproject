@@ -3,8 +3,9 @@ xml.torrents do
     xml.torrent do 
       xml.info_hash t.info_hash
       xml.name t.name.escape_xml
-      xml << "<description><![CDATA[#{t.description.gsub(']]>', '')}]]></description>"
+      xml.filename t.filename.escape_xml
       xml.category t.category.name.escape_xml
+      xml << "<description><![CDATA[#{t.description.gsub(']]>', '')}]]></description>"
     end
   end
 end

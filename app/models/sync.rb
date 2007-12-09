@@ -89,6 +89,16 @@ class Sync
               torrent.save!
             end
           end
+          
+          begin
+            meta_info = RubyTorrent::MetaInfo.from_location(tmp_path)
+            torrent.set_metainfo!(meta_info)
+          rescue RubyTorrent::MetaInfoFormatError => e
+            Mailer.deliver_notice('Sync Received Invalid .torrent', "From site: #{site.inspect}\n\nThe error: #{e.to_s}\n\nTorrent Hash: #{thash.inspect}")
+          rescue StandardError => e
+            Mailer.deliver_notice('Sync Rescued an Error While Grabbing a .torrent', "From site: #{site.inspect}\n\nThe error: #{e.to_s}\n\nTorrent Hash: #{thash.inspect}")
+          end
+          
         else
           puts "\tTorrent already in DB: #{thash['info_hash']}"
         end

@@ -12,7 +12,7 @@ class Mailer < ActionMailer::Base
   def notice(subject, body = '')
     @from                         = "<#{C[:notifiction_email]}>"
     @recipients                   = C[:webmaster_email]
-    @subject                      = "#{C[:C[:app_name]]} Notice: #{subject}"
+    @subject                      = "#{C[:app_name]} Notice: #{subject}"
     @sent_on                      = sent_on
     @body['text']                 = body
   end

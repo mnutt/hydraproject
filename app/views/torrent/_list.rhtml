@@ -16,7 +16,7 @@
 		</tr>
 		<% torrents.each do |t| %>
 			<tr>
-				<td><%= link_to(truncate(t.name, 50), {:action => 'show', :id => t.id}) %>  
+				<td><%= link_to(truncate(t.name, 50), {:controller => 'torrent', :action => 'show', :id => t.id}) %>  
 						<% if moderator_logged_in? %>
 							&nbsp;&nbsp;&nbsp;<%= link_to(image_tag('icons/trash.png', :border => '0'), {:action => :destroy, :id => t.id}, :method => 'post', :confirm => 'Are you sure?') %>
 						<% end %>

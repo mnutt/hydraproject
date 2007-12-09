@@ -23,7 +23,7 @@ class Torrent < ActiveRecord::Base
   end
   
   def meta_info
-    puts "\n\nLooking for torrent in path: #{self.torrent_path}\n\n"
+    #puts "\n\nLooking for torrent in path: #{self.torrent_path}\n\n"
     raise TorrentFileNotFoundError unless File.exist?(self.torrent_path)
     RubyTorrent::MetaInfo.from_location(self.torrent_path)
   end
@@ -95,11 +95,6 @@ class Torrent < ActiveRecord::Base
     end
   end
  
-# Not used 
-#  def torrent_url
-#    CGI.escape("/download/#{self.id}/#{self.filename}")
-#  end
-  
   def num_peers
     self.seeders + self.leechers
   end
