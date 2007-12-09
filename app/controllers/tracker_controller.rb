@@ -1,7 +1,7 @@
 class TrackerController < ApplicationController
   
   before_filter :check_required_params
-  before_filter :get_remote_ip
+  before_filter :check_remote_ip
   before_filter :port_allowed?
   before_filter :check_passkey
   
@@ -193,6 +193,11 @@ class TrackerController < ApplicationController
     return true
   end
   
+  def check_remote_ip
+    get_remote_ip # See: application.rb
+    valid_ip?
+  end
+  
   def check_passkey
     @passkey = params[:passkey]
     if @passkey.nil?
@@ -203,15 +208,6 @@ class TrackerController < ApplicationController
     if @user.nil?
       render_error("Invalid passkey: #{passkey}"); return false
     end
-  end
-  
-  def get_remote_ip
-    e = request.env
-    @remote_ip = e['HTTP_X_FORWARDED_FOR'] || e['HTTP_CLIENT_IP'] || e['REMOTE_ADDR'] || nil
-    if @remote_ip.nil?
-      render_error("Could not determine remote IP Address."); return false
-    end
-    return valid_ip?
   end
   
   def valid_ip?

@@ -1,5 +1,9 @@
 
 shantibraford - 12/9/2007:
+* another piece of the puzzle comes together: multiple tracker URLs embedded in the .torrent download
+* actually verify remote IP if the 'ip_required' field is set in federation.yml
+
+shantibraford - 12/8/2007:
 * new installs now get some default categories
 * Category.create_music creates some default music categories (can be expanded)
 * User IDs are associated with torrents when they are first uploaded -- this is to track abuse.  After 3 days, the user_id field is wiped from the torrent (and there should be no permanent record of this).  The wiping is triggered by visiting the main apps homepage, so as long as people visit that URL periodically, the wiping occurs.

@@ -138,6 +138,15 @@ class ApiController < ApplicationController
       if @passkey == site[:passkey]
         @site = site
         @domain = site[:domain]
+        if site[:ip_required]
+          # Also check IP
+          @ip = get_remote_ip
+          # Let through localhost -- TODO: investigate this more
+          return true if '127.0.0.0' == @ip
+          return true if site[:ip_required] == @ip
+          # Otherwise DENY access
+          return false
+        end
         return true 
       end
     end
