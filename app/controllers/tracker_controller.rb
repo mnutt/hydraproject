@@ -234,7 +234,6 @@ class TrackerController < ApplicationController
   end
   
   def port_allowed?
-    return true
     
     @port         = (params[:port] || 0).to_i
     
@@ -242,9 +241,9 @@ class TrackerController < ApplicationController
 #                           [6881, 6889],  # Official BitTorrent
                            [6346, 6347]]  # gnutella
                            
-    if [0, 1214, 4662, 6699].include?(@port)   # kazaa, emule & winmx
-      render_error("Port not allowed (please use uTorrent or a supported client): #{@remote_ip}"); return false
-    end
+#    if [0, 1214, 4662, 6699].include?(@port)   # kazaa, emule & winmx
+#      render_error("Port not allowed (please use uTorrent or a supported client): #{@remote_ip}"); return false
+#    end
     
     @blacklisted_ports.each do |ports|
       p_start, p_end = *ports
