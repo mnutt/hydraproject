@@ -41,7 +41,7 @@ class AccountController < ApplicationController
       
       ## SET THE AUTH TOKEN & COOKIE
       current_user.remember_me
-      set_auth_cookie(@user)
+      set_auth_cookie(@user.reload)
       
       email = params[:user][:email]
       if email && !email.blank?

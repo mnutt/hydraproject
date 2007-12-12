@@ -1,4 +1,7 @@
 
+shantibraford - 12/12/2007:
+* fixed a nasty bug that was causing signups to fail silently (fixed by doing a @user.reload to get the generated remember_token)
+
 shantibraford - 12/9/2007:
 * another piece of the puzzle comes together: multiple tracker URLs embedded in the .torrent download
 * actually verify remote IP if the 'ip_required' field is set in federation.yml
