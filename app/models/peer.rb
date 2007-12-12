@@ -19,7 +19,7 @@ class Peer < ActiveRecord::Base
       self.connectable = true
       save!
 
-    rescue Timeout::Error
+    rescue StandardError, Timeout::Error, TimeoutError, Exception, Interrupt, SignalException
       # NOT connectable -- do nothing because the default is already false
       return
     end

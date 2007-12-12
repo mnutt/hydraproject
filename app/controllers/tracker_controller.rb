@@ -120,8 +120,8 @@ class TrackerController < ApplicationController
     @uploaded_since_last   = [0, @uploaded - @peer.uploaded].max
     @downloaded_since_last = [0, @downloaded - @peer.downloaded].max
     
-    logger.warn "\n\tUploaded Since Last: #{@uploaded_since_last}"
-    logger.warn "\n\tDownloaded Since Last: #{@downloaded_since_last}\n"
+    #logger.warn "\n\tUploaded Since Last: #{@uploaded_since_last}"
+    #logger.warn "\n\tDownloaded Since Last: #{@downloaded_since_last}\n"
     
     unless @uploaded_since_last.zero? && @downloaded_since_last.zero?
       # Only update if there has been a change in number of bytes uploaded/downloaded
@@ -132,10 +132,10 @@ class TrackerController < ApplicationController
       @user.save!
     end
     
-    logger.warn "\n in update_xfer_stats, @peer = #{@peer.inspect} \n"
+    #logger.warn "\n in update_xfer_stats, @peer = #{@peer.inspect} \n"
     
-    logger.warn "\n uploaded, downloaded, left = #{@uploaded}, #{@downloaded}, #{@left} "
-    logger.warn "\n classes = #{@uploaded.class}, #{@downloaded.class}, #{@left.class} "
+    #logger.warn "\n uploaded, downloaded, left = #{@uploaded}, #{@downloaded}, #{@left} "
+    #logger.warn "\n classes = #{@uploaded.class}, #{@downloaded.class}, #{@left.class} "
     
     if @uploaded > 0 || @downloaded > 0
       # Update the peer's stats
