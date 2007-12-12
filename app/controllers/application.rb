@@ -95,13 +95,8 @@ class ApplicationController < ActionController::Base
   helper_method :unset_auth_cookie
   
   def set_auth_cookie(user)
-    puts user.inspect
-    puts "Token: #{user.remember_token}"
-#    cookies[:auth_token] = { :value => user.remember_token, :expires => 2.weeks.from_now.utc, :domain => current_domain }
-#    chash = { :value => user.remember_token, :expires => 1.week.from_now.utc }
-#    logger.warn "cookie hash: #{chash.inspect}"
     cookies[:auth_token] = { :value => user.remember_token, :expires => 1.week.from_now.utc }
-    logger.warn "cookies = #{cookies.inspect}"
+    #logger.warn "cookies = #{cookies.inspect}"
   end
   helper_method :set_auth_cookie
   
