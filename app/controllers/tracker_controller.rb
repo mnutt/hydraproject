@@ -1,6 +1,6 @@
 class TrackerController < ApplicationController
   
-  before_filter :check_required_params
+  before_filter :check_required_params, :only => :announce
   before_filter :check_remote_ip
   before_filter :port_allowed?
   before_filter :check_passkey
