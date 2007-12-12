@@ -16,6 +16,25 @@ module StringExtensions
     return tmp
   end
   
+  def guidify
+    guid = self
+    if !guid.nil?
+      # First take out the Special Characters
+      guid = guid.gsub(/[^A-Za-z0-9\s]/, '')
+      # Next make the whitespace into underscores
+      guid = guid.gsub(/[\s\t\r\n\f]/, '_')
+      # Now make double-underscores (in case we have any) into single ones
+      guid = guid.gsub(/__/, '_')
+    
+      # Now make sure it's a reasonable length
+      guid = guid.first(40)
+
+      # Now strip any excess underscores off the end
+      guid = guid.gsub(/(_)+$/, '')
+    end
+    return guid
+  end
+  
 end
 
 module NumberExtensions

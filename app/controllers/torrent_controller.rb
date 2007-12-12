@@ -33,15 +33,27 @@ class TorrentController < AuthenticatedController
     if request.post?
       @torrent = Torrent.new(params[:torrent])
       the_file = params[:the_torrent]
-      if the_file.nil? || (the_file && the_file.original_filename.blank?)
+
+      if the_file.nil?
         flash[:notice] = "Please select a torrent file to upload."
         return false
       end
       
-      tmp_path = get_tmp_path(the_file)
-      logger.warn "\n#{tmp_path}\n"
+      if the_file.is_a?(String)
+        # CASE: Safari
+        tmp_path = File.join(RAILS_ROOT, 'tmp', 'uploads', "#{current_user.id}_#{rand(100000)}.torrent")
+        contents = the_file
+        original_filename = (@torrent.name && !@torrent.name.blank?) ? "#{@torrent.name.guidify}.torrent" : 'unknown.torrent'
+      else
+        # CASE: all other sane browsers
+        tmp_path = get_tmp_path(the_file)
+        contents = the_file.read
+        original_filename = the_file.original_filename
+      end
       
-      File.open(tmp_path, "w") { |f| f.write(the_file.read) }
+      #logger.warn "\n#{tmp_path}\n"
+      File.open(tmp_path, "w") { |f| f.write(contents) }
+
       if File.exists?(tmp_path)
         # Get the MetaInfo, confirm that it's a legit torrent
         begin
@@ -54,7 +66,7 @@ class TorrentController < AuthenticatedController
           return false
         end
 
-        @torrent.filename = the_file.original_filename
+        @torrent.filename = original_filename
         
         
         info_str = Torrent.dump_metainfo(meta_info)
@@ -65,11 +77,13 @@ class TorrentController < AuthenticatedController
         @torrent.save
         @torrent.set_metainfo!(meta_info)
         
-        # Check for existing torrents with this info_hash
-        existing = Torrent.find(:first, :conditions => ["info_hash = ?", @torrent.info_hash])
+        # Check for existing torrents with this info_hash, that are, you know, *NOT* this torrent
+        existing = Torrent.find(:first, :conditions => ["id != ? AND info_hash = ?", @torrent.id, @torrent.info_hash])
         if existing
           File.unlink(tmp_path) rescue nil
           flash[:notice] = "A torrent with this info_hash already exists: #{torrent_dl(existing)}<br/><br/>Please seed this torrent instead of uploading a new one."
+          @torrent.destroy
+          redirect_to :action => 'upload'; return
         else
           @torrent.move!(tmp_path)
 

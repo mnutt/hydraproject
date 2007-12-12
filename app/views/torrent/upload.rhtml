@@ -1,8 +1,12 @@
 <h1>Upload a New Torrent</h1>
 
-<center><div class="highlight" style="width: 600px;">Please use your personalized tracker URL when creating the torrent: <br/
-	<div style="padding-top: 5px;"><i><b><%= current_user.tracker_url %></i></b></div>
-</div></center>
+<center>
+	<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
+	
+	<div class="highlight" style="width: 600px;">Please use your personalized tracker URL when creating the torrent: <br/
+		<div style="padding-top: 5px;"><i><b><%= current_user.tracker_url %></i></b></div>
+	</div>
+</center>
 <%= form_tag({:controller => 'torrent', :action => 'upload' }, { :multipart => true, :id => 'upload-form' }) %>
 	<center>
 	<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>

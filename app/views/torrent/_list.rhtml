@@ -7,8 +7,8 @@
 		<tr>
 			<th>Torrent</th>
 			<th width="18px"></th>
-			<th width="50px"># Files</th>
-			<th width="60px"> Size</th>
+			<th width="60px"># Files</th>
+			<th width="80px">Size</th>
 			<th width="60px">Snatched</th>
 			<th width="60px">Seeders</th>
 			<th width="62px">Leechers</th>
@@ -21,9 +21,9 @@
 							&nbsp;&nbsp;&nbsp;<%= link_to(image_tag('icons/trash.png', :border => '0'), {:action => :destroy, :id => t.id}, :method => 'post', :confirm => 'Are you sure?') %>
 						<% end %>
 				</td>
-				<td><%= link_to(image_tag('icons/arrow_down.png', :border => '0'), torrent_dl(t), :title => "Download #{t.filename}") %></td>
+				<td width="18px"><%= link_to(image_tag('icons/arrow_down.png', :border => '0'), torrent_dl(t), :title => "Download #{t.filename}") %></td>
 				<td><%= t.numfiles %></td>
-				<td><%= number_to_human_size(t.size)%></td>
+				<td width="80px"><%= number_to_human_size(t.size)%></td>
 				<td><%= t.times_completed %></td>
 				<td><%= t.seeders %></td>
 				<td><%= t.leechers %></td>
