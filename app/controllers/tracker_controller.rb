@@ -140,8 +140,9 @@ class TrackerController < ApplicationController
     #logger.warn "\n uploaded, downloaded, left = #{@uploaded}, #{@downloaded}, #{@left} "
     #logger.warn "\n classes = #{@uploaded.class}, #{@downloaded.class}, #{@left.class} "
     
-    if @uploaded > 0 || @downloaded > 0
-      @peer.reload
+    if (@event != 'stopped') && (@uploaded > 0 || @downloaded > 0)
+      @peer = @peer.reload rescue nil
+      return if @peer.nil?
       logger.warn "\ntracker_controller ~ line 145: @peer is a: #{@peer.class}"
       logger.warn "\n\npeer: #{@peer.inspect}\n"
       # Update the peer's stats
