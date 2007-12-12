@@ -36,7 +36,7 @@ class TrackerController < ApplicationController
       logger.warn "\nConnectable check on: #{@remote_ip}, #{@port}  (#{@remote_ip.class}, #{@port.class})"
       is_connectable = @peer.connectable_check!(@remote_ip, @port)
       @peer.reload if is_connectable
-      puts "\nConnectable Check Result: #{is_connectable} (#{@peer.connectable})\n"
+      logger.warn "\nConnectable Check Result: #{is_connectable} (#{@peer.connectable})\n"
     end
     
     if @event
@@ -141,6 +141,8 @@ class TrackerController < ApplicationController
     #logger.warn "\n classes = #{@uploaded.class}, #{@downloaded.class}, #{@left.class} "
     
     if @uploaded > 0 || @downloaded > 0
+      logger.warn "\ntracker_controller ~ line 145: @peer is a: #{@peer.class}"
+      logger.warn "\n\npeer: #{@peer.inspect}\n"
       # Update the peer's stats
       @peer.uploaded    = @uploaded
       @peer.downloaded  = @downloaded
