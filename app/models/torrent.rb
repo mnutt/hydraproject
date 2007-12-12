@@ -15,7 +15,7 @@ class Torrent < ActiveRecord::Base
   @@per_page = C[:num_items_per_page]
   
   def connectable_peers
-    Peer.find(:all, :conditions => ["torrent_id = ? AND connectable = ? ", self.id, true], :limit => (C[:num_max_peers]+5))
+    Peer.find(:all, :conditions => ["torrent_id = ? AND connectable = ? ", self.id, true])
   end
   
   def cleanup

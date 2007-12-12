@@ -32,8 +32,11 @@ class TrackerController < ApplicationController
                           :to_go          => @left,
                           :seeder         => @seeder,
                           :agent          => request.env['HTTP_USER_AGENT'])
-      
-      @peer.connectable_check!(@remote_ip, @port)
+      logger.warn "\nCreated new Peer: #{@peer.id} (#{@peer.torrent.name})"
+      logger.warn "\nConnectable check on: #{@remote_ip}, #{@port}  (#{@remote_ip.class}, #{@port.class})"
+      is_connectable = @peer.connectable_check!(@remote_ip, @port)
+      @peer.reload if is_connectable
+      puts "\nConnectable Check Result: #{is_connectable} (#{@peer.connectable})\n"
     end
     
     if @event

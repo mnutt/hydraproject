@@ -18,11 +18,11 @@ class Peer < ActiveRecord::Base
       # If we got here, the peer *IS* connectable!
       self.connectable = true
       save!
-
+      return true
     rescue StandardError, Timeout::Error, TimeoutError, Exception, Interrupt, SignalException
       # NOT connectable -- do nothing because the default is already false
-      return
     end
+    return false
   end
   
   def cleanup
