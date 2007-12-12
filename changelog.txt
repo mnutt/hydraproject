@@ -2,6 +2,7 @@
 shantibraford - 12/12/2007:
 * fixed a nasty bug that was causing signups to fail silently (fixed by doing a @user.reload to get the generated remember_token)
 * Safari Uploading bug fixes
+* Core (non distributed) tracker testing and debugging complete - have successfully uploaded/seeded from one machine, downloaded from another.  xfer stats get updated, and stopping the torrents no longer results in any server errrors.
 
 shantibraford - 12/9/2007:
 * another piece of the puzzle comes together: multiple tracker URLs embedded in the .torrent download
