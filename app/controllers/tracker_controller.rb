@@ -231,6 +231,8 @@ class TrackerController < ApplicationController
   end
   
   def port_allowed?
+    return true
+    
     @port         = (params[:port] || 0).to_i
     
     @blacklisted_ports = [ [411, 413],    # direct connect
