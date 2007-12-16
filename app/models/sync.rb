@@ -69,7 +69,7 @@ class Sync
     if last_sync_id.nil? && !force_first
       # Find the previous Sync (if it exists) and use that
       rs = RatioSync.last(site[:domain])
-      last_sync_id = (rs.nil?) ? nil : rs.id
+      last_sync_id = (rs.nil?) ? nil : rs.sync_id
     end
     
     hc = Sync.new_hydra_client(site)

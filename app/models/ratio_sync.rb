@@ -1,5 +1,9 @@
 class RatioSync < ActiveRecord::Base
-  has_many :ratio_snapshots
+  #has_many :ratio_snapshots
+  
+  def ratio_snapshots
+    RatioSnapshot.find(:all, :conditions => ["ratio_sync_id = ?", self.sync_id])
+  end
   
   def self.last(domain)
     RatioSync.find(:first, :conditions => ["domain = ?", domain], :order => 'sync_id DESC')
