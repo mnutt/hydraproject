@@ -47,9 +47,9 @@ class ApiController < ApplicationController
     else
       @last_sync = RatioSync.find(@last_sync_id) rescue nil
       if @last_sync.nil?
-        render_error(:since_sync_required, "Could not find last sync with last_sync_id: #{params[:last_sync_id]}")
+        render_error(:since_sync_required, "Could not find last sync with last_sync_id: #{params[:last_sync_id]}"); return
       elsif (@domain != @last_sync.domain)
-        render_error(:sync_id_domain_mismatch, "The ID for the sync that you passed (#{params[:last_sync_id]}) does not correspond to the requesting site's domain: #{@domain}")
+        render_error(:sync_id_domain_mismatch, "The ID for the sync that you passed (#{params[:last_sync_id]}) does not correspond to the requesting site's domain: #{@domain}"); return
       end
       @users = User.find(:all, :conditions => ['is_admin = ?', false])  # Do not send admin accounts
       @user_hash = {}
