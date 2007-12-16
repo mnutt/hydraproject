@@ -45,7 +45,7 @@ class ApiController < ApplicationController
         @diffshots << {:login => u.login, :downloaded => u.downloaded_local, :uploaded => u.uploaded_local}
       end
     else
-      @last_sync = RatioSync.find(@last_sync_id) rescue nil
+      @last_sync = RatioSync.find(:first, :conditions => ["sync_Id = ?", @last_sync_id])
       if @last_sync.nil?
         render_error(:since_sync_required, "Could not find last sync with last_sync_id: #{params[:last_sync_id]}"); return
       elsif (@domain != @last_sync.domain)
