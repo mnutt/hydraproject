@@ -57,12 +57,15 @@ class ApiController < ApplicationController
       @diffshots = []  # Used by the rxml
       @last_sync.ratio_snapshots(:include => [:user]).each do |rs|
         u = rs.user
+        logger.warn "\n\n !!! User: #{u.login}"
+        logger.warn "\t u.downloaded_local: #{@user_hash[rs.user_id].downloaded_local}, rs.downloaded: #{rs.downloaded}"
         dl_diff = @user_hash[rs.user_id].downloaded_local - rs.downloaded 
+        logger.warn "\t dl_diff: #{dl_diff}"
         dl_diff = 0 if dl_diff < 0  # Cannot go down since last time...
         ul_diff = @user_hash[rs.user_id].uploaded_local - rs.uploaded 
         ul_diff = 0 if ul_diff < 0  # Cannot go down since last time...
 
-        @diffshots << {:login => u.login, :downloaded => u.dl_diff, :uploaded => u.ul_diff}
+        @diffshots << {:login => u.login, :downloaded => dl_diff, :uploaded => ul_diff}
       end
       
       # Now create a *NEW* @last_sync that is really the current sync

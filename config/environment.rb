@@ -96,4 +96,4 @@ BASE_URL = "http://#{C[:domain_with_port]}/"
 class TorrentFileNotFoundError < StandardError; end
 class InvalidTrustedSiteFormat < StandardError; end
 class ApiResponseMissingExpectedKeys < StandardError; end
-
+class SyncXmlToHashError < StandardError; end

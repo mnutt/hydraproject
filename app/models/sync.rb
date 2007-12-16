@@ -28,13 +28,18 @@ class Sync
       puts "No users to add.  User list was empty."
       return
     end
-    puts "user_list = #{user_list.inspect}"
-    u['users'].each do |uhash|
-      puts "uhash = #{uhash.inspect}"
-      next unless uhash.is_a?(Array) && uhash.first == 'user'
-      burn, uhash = *uhash
-      
-      puts "NOW uhash = #{uhash.inspect}"
+
+    #puts "\n\n user_list Class: #{user_list.class}\n\n"
+    #puts "user_list: #{user_list.inspect}\n\n"
+    #sleep 5
+    
+    users = user_list['user']
+    
+    users.each do |uhash|
+      #puts "\n\n uhash Class: #{uhash.class}\n\n"
+      #puts "uhash: #{uhash.inspect}\n\n"
+      #sleep 5
+
       unless uhash.has_key?('salt') && uhash.has_key?('hashed_password') && uhash.has_key?('login') && uhash.has_key?('passkey')
         raise ApiResponseMissingExpectedKeys, "User response hash missing a key or keys.  Keys present: #{uhash.keys}"
       end
@@ -51,12 +56,51 @@ class Sync
       else
         puts "\tUser already in db: #{login}"
       end
+
     end
 
   end
   
-  def self.sync_transfer_stats(site, last_sync_id=nil)
-    # TODO
+  # Usage:
+  #  Sync.sync_transfer_stats(site, nil, true) -- forces the first load
+  #  Sync.sync_transfer_stats(site) -- will attempt to find the previous Sync ID for this site and perform the next sync
+  #
+  def self.sync_transfer_stats(site, last_sync_id=nil, force_first = false)
+    if last_sync_id.nil? && !force_first
+      # Find the previous Sync (if it exists) and use that
+      rs = RatioSync.find(:first, :conditions => ["domain = ?", site[:domain]], :order => 'id DESC')
+      last_sync_id = (rs.nil?) ? nil : rs.id
+    end
+    
+    hc = Sync.new_hydra_client(site)
+    stats = hc.list_transfer_stats(last_sync_id)
+    puts stats.inspect
+    if !stats.is_a?(Hash)
+      raise SyncXmlToHashError, "XML to Hash in Sync.sync_transfer_stats di not get back hash"
+    end
+    
+    if !stats.has_key?('response')
+      raise ApiResponseMissingExpectedKeys, "Missing key in Sync.sync_transfer_stats: 'response'"
+    end
+    response = stats['response']
+    if !response.has_key?('sync_id') || !response.has_key?('users')
+      raise ApiResponseMissingExpectedKeys, "Missing key in Sync.sync_transfer_stats (response Hash): 'users' or 'sync_id'"
+    end
+    sync_id = response['sync_id']
+    users = response['users']
+    stats = users['user']
+    if stats.empty?
+      return
+    end
+    ratio_sync = RatioSync.create!(:domain => site[:domain])
+    stats.each do |stat|
+      puts "user stat: #{stat.inspect}"
+      user = User.find(:first, :conditions => ["login = ?", stat['login']])
+      rs = RatioSnapshot.create!(:ratio_sync_id => ratio_sync.id, :user_id => user.id, :login => user.login,
+                                 :downloaded => stat['downloaded'], :uploaded => stat['uploaded'])
+      
+      puts "\tCreated new Ratio Snapshot: #{rs.ratio_sync_id} :: #{rs.user_id} :: #{rs.login} :: UL, DL: #{rs.downloaded} :: #{rs.uploaded}"
+    end
   end
   
   def self.sync_torrents(site, since)
