@@ -101,6 +101,11 @@ class Sync
       
       puts "\tCreated new Ratio Snapshot: #{rs.ratio_sync_id} :: #{rs.user_id} :: #{rs.login} :: UL, DL: #{rs.downloaded} :: #{rs.uploaded}"
       # Now increase the actual users D/L and U/L totals if there is new
+      if (rs.downloaded > 0) || (rs.uploaded > 0)
+        user.downloaded += rs.downloaded
+        user.uploaded += rs.uploaded
+        user.save!
+      end
     end
   end
   
