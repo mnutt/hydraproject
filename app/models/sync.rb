@@ -68,7 +68,7 @@ class Sync
   def self.sync_transfer_stats(site, last_sync_id=nil, force_first = false)
     if last_sync_id.nil? && !force_first
       # Find the previous Sync (if it exists) and use that
-      rs = RatioSync.find(:first, :conditions => ["domain = ?", site[:domain]], :order => 'id DESC')
+      rs = RatioSync.last(site[:domain])
       last_sync_id = (rs.nil?) ? nil : rs.id
     end
     
