@@ -1,5 +1,5 @@
 xml.response do 
-  xml.sync_id @current_sync.id
+  xml.sync_id @current_sync.sync_id
   xml.users do
     @diffshots.each do |s|
       xml.user do 
