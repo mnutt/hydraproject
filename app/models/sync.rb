@@ -92,14 +92,15 @@ class Sync
     if stats.empty?
       return
     end
-    ratio_sync = RatioSync.create!(:domain => site[:domain])
+    ratio_sync = RatioSync.create!(:domain => site[:domain], :sync_id => sync_id)
     stats.each do |stat|
       puts "user stat: #{stat.inspect}"
       user = User.find(:first, :conditions => ["login = ?", stat['login']])
-      rs = RatioSnapshot.create!(:ratio_sync_id => ratio_sync.id, :user_id => user.id, :login => user.login,
+      rs = RatioSnapshot.create!(:ratio_sync_id => ratio_sync.sync_id, :user_id => user.id, :login => user.login,
                                  :downloaded => stat['downloaded'], :uploaded => stat['uploaded'])
       
       puts "\tCreated new Ratio Snapshot: #{rs.ratio_sync_id} :: #{rs.user_id} :: #{rs.login} :: UL, DL: #{rs.downloaded} :: #{rs.uploaded}"
+      # Now increase the actual users D/L and U/L totals if there is new
     end
   end
   

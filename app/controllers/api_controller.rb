@@ -35,8 +35,8 @@ class ApiController < ApplicationController
   def list_transfer_stats
     if @first_load
       @users = User.find(:all, :conditions => ['is_admin = ?', false])  # Do not send admin accounts
-      
-      @last_sync = RatioSync.create!(:domain => @domain)
+      next_id = RatioSync.next_id(@domain)
+      @last_sync = RatioSync.create!(:domain => @domain, :sync_id => next_id)
       @snapshots = []
       @diffshots = []  # Used by the rxml
       @users.each do |u|
@@ -44,7 +44,7 @@ class ApiController < ApplicationController
         @diffshots << {:login => u.login, :downloaded => u.downloaded_local, :uploaded => u.uploaded_local}
       end
     else
-      @last_sync = RatioSync.find(@last_sync_id)
+      @last_sync = RatioSync.find(@last_sync_id) rescue nil
       if @last_sync.nil?
         render_error(:since_sync_required, "Could not find last sync with last_sync_id: #{params[:last_sync_id]}")
       elsif (@domain != @last_sync.domain)
@@ -68,15 +68,14 @@ class ApiController < ApplicationController
         @diffshots << {:login => u.login, :downloaded => dl_diff, :uploaded => ul_diff}
       end
       
-      # Now create a *NEW* @last_sync that is really the current sync
-      @last_sync = RatioSync.create!(:domain => @domain)
+      # Now create a *NEW* Sync (the current one for this transaction)
+      
+      @current_sync = RatioSync.create!(:domain => @domain, :sync_id => RatioSync.next_id(@domain))
       @users.each do |u|
-        RatioSnapshot.create!(:ratio_sync_id => @last_sync.id, :user_id => u.id, :login => u.login, :downloaded => u.downloaded_local, :uploaded => u.uploaded_local)
+        RatioSnapshot.create!(:ratio_sync_id => @current_sync.id, :user_id => u.id, :login => u.login, :downloaded => u.downloaded_local, :uploaded => u.uploaded_local)
       end
       
     end
-    
-    #puts "\n\n@diffshots = #{@diffshots.inspect}\n\n"
     render :template => 'api/list_transfer_stats', :layout => false; return
   end
   
