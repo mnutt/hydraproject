@@ -56,7 +56,7 @@ class ApiController < ApplicationController
       @users.collect {|u| @user_hash[u.id] = u }
       
       @diffshots = []  # Used by the rxml
-      @last_sync.ratio_snapshots(:include => [:user]).each do |rs|
+      @last_sync.ratio_snapshots.each do |rs|
         u = rs.user
         logger.warn "\n\n !!! User: #{u.login}"
         logger.warn "\t u.downloaded_local: #{@user_hash[rs.user_id].downloaded_local}, rs.downloaded: #{rs.downloaded}"
