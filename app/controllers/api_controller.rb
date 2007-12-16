@@ -37,11 +37,11 @@ class ApiController < ApplicationController
       @users = User.find(:all, :conditions => ['is_admin = ?', false])  # Do not send admin accounts
       next_id = RatioSync.next_id(@domain)
       next_id = (next_id.nil?) ? 1 : next_id.sync_id + 1
-      @last_sync = RatioSync.create!(:domain => @domain, :sync_id => next_id)
+      @current_sync = RatioSync.create!(:domain => @domain, :sync_id => next_id)
       @snapshots = []
       @diffshots = []  # Used by the rxml
       @users.each do |u|
-        @snapshots << RatioSnapshot.create!(:ratio_sync_id => @last_sync.id, :user_id => u.id, :login => u.login, :downloaded => u.downloaded_local, :uploaded => u.uploaded_local)
+        @snapshots << RatioSnapshot.create!(:ratio_sync_id => @current_sync.sync_id, :user_id => u.id, :login => u.login, :downloaded => u.downloaded_local, :uploaded => u.uploaded_local)
         @diffshots << {:login => u.login, :downloaded => u.downloaded_local, :uploaded => u.uploaded_local}
       end
     else
