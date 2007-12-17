@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   include LoginSystem
   
   # Pick a unique cookie name to distinguish our session data from others'
-  session :session_key => '_hydra_session_id'
+#  session :session_key => '_hydra_session_id', :secret => 'hydra project super s3333kr333t session secret'
   
   layout C[:layout]
   
