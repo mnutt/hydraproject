@@ -31,7 +31,7 @@ class TorrentController < AuthenticatedController
     end
     #puts "\n\n #{@announce_list.inspect}\n\n"
     @announce_list = @announce_urls.collect { |url| [url] }
-    @meta_info.announce_list = [@announce_list]
+    @meta_info.announce_list = @announce_list
     @bencoded = @meta_info.to_bencoding
     #logger.warn "\n\nDownload: #{@torrent.id} ::  #{@torrent.filename}\n\n\tBencoding:\n#{@bencoded}\n\n"
     send_data @bencoded, :filename => @torrent.filename, :type => 'application/x-bittorrent'; return
