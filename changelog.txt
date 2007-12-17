@@ -1,6 +1,10 @@
 shantibraford - 12/17/2007:
 * show/hide full file list
 * comments (with pagination)
+* config.yml gets a new field 'enable_rss' which defaults to false
+* added support for authenticated RSS feeds, using uTorrents HTTP Basic Auth format, i.e: http://username:dc92360e30@foo.org/feed
+* feeds authenticate using a login/passkey pair
+* .torrent downloads via feeds are authenticated via passkey
 
 shantibraford - 12/16/2007:
 * fixes in Sync.sync_users

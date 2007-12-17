@@ -4,6 +4,10 @@ module ApplicationHelper
   def torrent_dl(torrent)
     url_for(:controller => 'torrent', :action => 'download', :id => torrent.id, :filename => torrent.filename)
   end
+
+  def torrent_dl_passkey(torrent, passkey)
+    url_for(:only_path => false, :controller => 'torrent', :action => 'download', :id => torrent.id, :filename => torrent.filename, :passkey => passkey)
+  end
   
   def navclass(controller, action, except = '')
     cmatch = (@controller_name == controller)

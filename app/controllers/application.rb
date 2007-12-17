@@ -16,6 +16,13 @@ class ApplicationController < ActionController::Base
   
   protected
   
+  def check_logged_in
+    return true if user_logged_in?
+    flash[:notice] = "#{C[:app_name]} is a private tracker.  Please <a href=\"/account/signup\">Signup</a> or <a href=\"/account/login\">Login</a> to continue."
+    redirect_to :controller => :account, :action => :signup
+    return false
+  end
+  
   def get_remote_ip
     e = request.env
     @remote_ip = e['HTTP_X_FORWARDED_FOR'] || e['HTTP_CLIENT_IP'] || e['REMOTE_ADDR'] || nil

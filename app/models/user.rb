@@ -101,6 +101,11 @@ class User < ActiveRecord::Base
     return user
   end  
   
+  # Authenticate using the username & passkey
+  def self.feed_auth(login, passkey)
+    User.find(:first, :conditions => ["login = ? AND passkey = ?", login, passkey])
+  end
+  
   def passwords_match?(pass)
     self.hashed_password == User.encrypted_password(pass, self.salt)
   end

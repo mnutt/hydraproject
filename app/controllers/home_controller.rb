@@ -8,11 +8,4 @@ class HomeController < ApplicationController
     Torrent.clear_user_ids
   end
   
-  def check_logged_in
-    return true if user_logged_in?
-    flash[:notice] = "#{C[:app_name]} is a private tracker.  Please <a href=\"/account/signup\">Signup</a> or <a href=\"/account/login\">Login</a> to continue."
-    redirect_to :controller => :account, :action => :signup
-    return false
-  end
-  
 end

@@ -1,15 +1,29 @@
-class TorrentController < AuthenticatedController
+class TorrentController < ApplicationController
   include ApplicationHelper
-
+  
+  before_filter :check_logged_in, :except => [:download]
+  
   def browse
     params[:page] ||= 1
     @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
   end
   
   def download
+    if params[:passkey]
+      user = User.find(:first, :conditions => ["passkey = ?", params[:passkey]])
+      if user.nil?
+        check_logged_in; return false
+      else
+        set_current_user(user)
+      end
+    else
+      if !user_logged_in?
+        check_logged_in; return false
+      end
+    end
     @torrent = Torrent.find(params[:id])
     @meta_info = @torrent.meta_info
-    @meta_info.key = current_user.passkey
+    @meta_info.key = current_user.passkey # || params[:passk
     @announce_url = URI.parse("#{BASE_URL}tracker/#{current_user.passkey}/announce")
     @meta_info.announce = @announce_url
 
