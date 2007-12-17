@@ -85,6 +85,7 @@ class Torrent < ActiveRecord::Base
   def peer_completed!(peer, remote_ip)
     self.seeders += 1
     self.leechers -= 1
+    self.times_completed += 1
     
     peers = CACHE.get(self.tkey)
     if peers.nil?

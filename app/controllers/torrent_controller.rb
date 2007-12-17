@@ -6,6 +6,7 @@ class TorrentController < ApplicationController
   def browse
     params[:page] ||= 1
     @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
+    @page_title = "Browse Latest (page #{params[:page]})"
   end
   
   def download
@@ -52,6 +53,7 @@ class TorrentController < ApplicationController
   end
   
   def upload
+    @page_title = "Upload"
     @categories = Category.find(:all, :order => 'name ASC')
     
     if request.post?
@@ -131,6 +133,7 @@ class TorrentController < ApplicationController
     end
     @torrent.increment!(:views)
     @comments = Comment.paginate(:conditions => ["torrent_id = ?", @torrent.id], :order => 'id ASC', :page => params[:page])
+    @page_title = @torrent.name
   end
   
   def file_list #AJAX
