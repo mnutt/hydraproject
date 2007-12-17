@@ -1,5 +1,5 @@
 class FeedController < ApplicationController
-
+  before_filter { C[:enable_rss] }
   requires_authentication :using => Proc.new{ |username, passkey| @user = User.feed_auth(username, passkey) },
                           :realm => "#{C[:app_name]} Feeds"
                            
