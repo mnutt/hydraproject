@@ -91,6 +91,12 @@ if 'test' != RAILS_ENV
   end
 end
 
+TRUSTED_SITES.each do |site|
+  unless site[:domain] && site[:passkey] && site[:api_url]
+    raise InvalidTrustedSiteFormat, "Site must have keys 'domain', 'passkey' and 'api_url' : #{site.inspect}"
+  end
+end
+
 BASE_URL = "http://#{C[:domain_with_port]}/"
 
 class TorrentFileNotFoundError < StandardError; end

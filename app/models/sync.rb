@@ -3,14 +3,40 @@ class Sync
   
   def self.first_sync
     TRUSTED_SITES.each do |site|
-      unless site[:domain] && site[:passkey] && site[:api_url]
-        raise InvalidTrustedSiteFormat, "Site must have keys 'domain', 'passkey' and 'api_url' : #{site.inspect}"
-      end
       puts "Testing if we can connect to #{site[:domain]}:"
       t = Sync.time(site)
       puts "\t#{t}"
       Sync.sync_users(site, -1)
       Sync.sync_torrents(site, -1)
+    end
+  end
+  
+  def self.sync_every_five
+    since = 5.minutes
+    TRUSTED_SITES.each do |site|
+      begin
+        puts "Testing if we can connect to #{site[:domain]}:"
+        t = Sync.time(site)
+        puts "\tRemote Time: #{t.inspect}"
+        Sync.sync_users(site, since)
+        Sync.sync_torrents(site, since)
+      rescue StandardError => e
+         Mailer.deliver_notice("[#{C[:domain]}] Error in Sync.sync_every_five", "Site: #{site.inspect}\nError: #{e.to_s}")
+      end
+    end
+  end
+  
+  # Sync Transfer Stats daily since there's more overhead
+  def self.sync_daily
+    TRUSTED_SITES.each do |site|
+      begin
+        puts "Testing if we can connect to #{site[:domain]}:"
+        t = Sync.time(site)
+        puts "Site: #{site.inspect}\n\t#{t.inspect}"
+        Sync.sync_transfer_stats(site)
+      rescue StandardError => e
+         Mailer.deliver_notice("[#{C[:domain]}] Error in Sync.sync_daily", "Site: #{site.inspect}\nError: #{e.to_s}")
+      end
     end
   end
   
