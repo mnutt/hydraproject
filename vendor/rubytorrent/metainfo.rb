@@ -166,11 +166,15 @@ class MetaInfo
   def multiple?; info.multiple?; end
 
   def check
+    
+=begin
+    # Disabled because this was poorly implemented -- you can have an Array of Arrays for the announce-list
     if @s.announce_list
       @s.announce_list.each do |tier|
         tier.each { |track| raise MetaInfoFormatError, "expecting HTTP URL in announce-list, got #{track} instead" unless track.is_a? URI::HTTP }
       end
     end
+=end
   end
 
   def self.from_bstream(bs)
