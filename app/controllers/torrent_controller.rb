@@ -15,7 +15,7 @@ class TorrentController < AuthenticatedController
 
     # Here's where the announce-list magic happens
     # Set not only this announce URL, but announce URLs for all trackers in the federation
-    @announce_list = [@announce_url]
+    @announce_urls = [@announce_url]
     TRUSTED_SITES.each do |site|
       announce_url = site[:announce_url].gsub('{{passkey}}', current_user.passkey)
       # IMPORTANT - each 'announce_url' must be enclosed in an Array.
@@ -27,9 +27,10 @@ class TorrentController < AuthenticatedController
       #
       # Instead, what we want is for the torrent client to connect to *ALL* of the trackers.
       #
-      @announce_list << [URI.parse(announce_url)]
+      @announce_urls << URI.parse(announce_url)
     end
     #puts "\n\n #{@announce_list.inspect}\n\n"
+    @announce_list = @announce_urls.collect { |url| [url] }
     @meta_info.announce_list = [@announce_list]
     @bencoded = @meta_info.to_bencoding
     #logger.warn "\n\nDownload: #{@torrent.id} ::  #{@torrent.filename}\n\n\tBencoding:\n#{@bencoded}\n\n"

@@ -4,6 +4,7 @@ shantibraford - 12/12/2007:
 * Sync.sync_transfer_stats getting close
 * RatioSync IDs cannot be auto-generated, need to be shared between sites -- added migration, changes for this
 * basic Transfer Stat syncing now appears to be working; needs some more testing though
+* More robust RubyTorrent MetaInfo parsing around announce-list
 
 shantibraford - 12/12/2007:
 * fixed a nasty bug that was causing signups to fail silently (fixed by doing a @user.reload to get the generated remember_token)

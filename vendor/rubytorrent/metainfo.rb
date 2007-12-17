@@ -152,7 +152,7 @@ class MetaInfo
       s.coerce :info => lambda { |x| MetaInfoInfo.new(x) },
                :creation_date => lambda { |x| Time.at(x) },
                :announce => lambda { |x| URI.parse(x) },
-               :announce_list => lambda { |x| x.map { |y| y.map { |z| URI.parse(z) } } }
+               :announce_list => lambda { |x| x.map { |y| y.map { |z| z.is_a?(Array) ? (z.map { |w| URI.parse(w) }) : URI.parse(z) } } }
     end
 
     @dict = dict
