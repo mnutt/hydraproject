@@ -14,15 +14,15 @@ class Sync
   def self.sync_every_five(since = 10.minutes)
     # We set the default to 10 minutes to ensure no torrents are missed due to overlap
     TRUSTED_SITES.each do |site|
-      begin
+#      begin
         puts "Testing if we can connect to #{site[:domain]}:"
         t = Sync.time(site)
         puts "\tRemote Time: #{t.inspect}"
         Sync.sync_users(site, since)
         Sync.sync_torrents(site, since)
-      rescue StandardError => e
-         Mailer.deliver_notice("[#{C[:domain]}] Error in Sync.sync_every_five", "Site: #{site.inspect}\nError: #{e.to_s}")
-      end
+#      rescue StandardError => e
+#         Mailer.deliver_notice("[#{C[:domain]}] Error in Sync.sync_every_five", "Site: #{site.inspect}\nError: #{e.to_s}")
+#      end
     end
   end
   
