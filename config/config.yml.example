@@ -12,3 +12,5 @@ num_max_peers: 10
 num_announce_interval_minutes: 30
 num_dead_torrent_hours: 24
 num_torrent_days_to_live: 28
+num_memcached_port: 11211
+num_memcached_memory: 10

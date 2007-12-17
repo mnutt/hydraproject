@@ -51,16 +51,6 @@ require 'rubytorrent'
 require 'rubygems'
 gem 'memcache-client'
 
-CACHE = MemCache.new 'localhost:11211', :namespace => 'hydra'
-
-# Ensure memcached is running
-begin
-  CACHE.get('foo')
-rescue MemCache::MemCacheError
-  puts "\nStarting memcached...\n"
-  system("memcached -d -m 64 -p 11211")
-end
-
 ## Load global C (for Config) constant via config/config.yml and environment dependent YMLs
 
 config_file = File.join(RAILS_ROOT, 'config', 'config.yml')
@@ -76,6 +66,16 @@ end
 
 c.symbolize_keys!
 C = c
+
+CACHE = MemCache.new "localhost:#{C[:num_memcached_port]}", :namespace => 'hydra'
+
+# Ensure memcached is running
+begin
+  CACHE.get('foo')
+rescue MemCache::MemCacheError
+  puts "\nStarting memcached...\n"
+  system("memcached -d -m #{C[:num_memcached_memory]} -p #{C[:num_memcached_port]}")
+end
 
 if 'test' != RAILS_ENV
   # For the Hydra Network; other trusted sites in this site's "federation"
