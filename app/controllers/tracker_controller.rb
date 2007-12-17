@@ -211,7 +211,7 @@ class TrackerController < ApplicationController
     
     @user = User.find(:first, :conditions => ["passkey = ?", @passkey])
     if @user.nil?
-      render_error("Invalid passkey: #{passkey}"); return false
+      render_error("Invalid passkey: #{@passkey}"); return false
     end
   end
   

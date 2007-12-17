@@ -36,7 +36,7 @@ class ApiController < ApplicationController
     if @first_load
       @users = User.find(:all, :conditions => ['is_admin = ?', false])  # Do not send admin accounts
       next_id = RatioSync.next_id(@domain)
-      next_id = (next_id.nil?) ? 1 : next_id.sync_id + 1
+      next_id = (next_id.nil?) ? 1 : next_id + 1
       @current_sync = RatioSync.create!(:domain => @domain, :sync_id => next_id)
       @snapshots = []
       @diffshots = []  # Used by the rxml
