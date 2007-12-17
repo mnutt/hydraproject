@@ -52,7 +52,7 @@ class HydraClient
   
   def list_torrents(since)
     return request('list_torrents', {'first_load' => 'true'}) if since <= 0
-    return request('list_users', {'since' => since})
+    return request('list_torrents', {'since' => since})
   end
   
   def get_torrent(info_hash, output_path)
