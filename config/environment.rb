@@ -41,9 +41,7 @@ Rails::Initializer.run do |config|
   
   # See Rails::Configuration for more options
 
-  if defined?(RAILS_GEM_VERSION) && RAILS_GEM_VERSION >= '2.0.0'
-    config.action_controller.session = { :session_key => "_hydra_session_id", :secret => 'hydra project super s3333kr333t session secret' }
-  end
+  config.action_controller.session = { :session_key => "_hydra_session_id", :secret => 'hydra project super s3333kr333t session secret' }
   
 end
 
