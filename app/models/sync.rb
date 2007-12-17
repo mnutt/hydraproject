@@ -118,8 +118,8 @@ class Sync
         puts "Processing: #{thash.inspect}"
         torrent = Torrent.find(:first, :conditions => ["info_hash = ?", thash['info_hash']])
         if torrent.nil?
-          torrent = Torrent.create!(:info_hash => thash['info_hash'], :name => thash['name'].unescape_xml,
-                                    :filename => thash['filename'].unescape_xml, :description => thash['description'].unescape_xml)
+          torrent = Torrent.create!(:info_hash => thash['info_hash'], :name => (thash['name'] || '(Untitled)').unescape_xml,
+                                    :filename => (thash['filename'] || '').unescape_xml, :description => (thash['description'] || '').unescape_xml)
           puts "\tCreated New Torrent: #{torrent.info_hash} -- #{torrent.name}"
           # Now we need to grab the actual .torrent file
           grabbed = Sync.grab_torrent(site, torrent)
