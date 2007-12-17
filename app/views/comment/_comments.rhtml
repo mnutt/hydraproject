@@ -1,0 +1,24 @@
+<center>
+	
+<%= render :partial => 'comment/comment_form', :locals => {:torrent => torrent} %>
+
+<% if !comments.empty? %>
+	<br/>
+	<% comments.each do |comment| %>
+		<table class="comment">
+				<tr>
+					<td class="comment_author">
+							<div class="comment_author_inner">
+							<%= comment.user.login %>:<br/>
+							<div class="comment_date"><%= comment.created_at.nice_print %></div>
+						</div>
+					</td>
+					<td class="comment_area">
+						<%= h comment.comment %>
+					</td>
+				</tr>
+		</table>
+	<% end %>
+	<div style="margin-top: 10px;"><small><%= will_paginate(comments, {:prev_label => '&laquo; Previous', :next_label => 'Next Comments &raquo;'}) %></small></div>
+<% end %>
+</center>

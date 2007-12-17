@@ -116,6 +116,7 @@ class TorrentController < AuthenticatedController
       redirect_to :back; return
     end
     @torrent.increment!(:views)
+    @comments = Comment.paginate(:conditions => ["torrent_id = ?", @torrent.id], :order => 'id ASC', :page => params[:page])
   end
   
   def file_list #AJAX

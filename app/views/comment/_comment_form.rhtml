@@ -1,0 +1,18 @@
+<% form_for :comment, Comment.new(:torrent_id => torrent.id), :url => {:controller => 'comment', :action => 'create'} do |f| %>
+	<%= f.hidden_field :torrent_id %>
+	<table class="comment">
+			<tr>
+				<td class="comment_author">
+					<div class="comment_author_inner">
+						<div><%= current_user.login %>:</div>
+						<div class="comment_date"><%= Time.now.nice_print %></div>
+					</div>
+				</td>
+				<td class="comment_area">
+					<div style="padding-left: 6px;"><small><i>Add your comment:</i></small></div>
+					<center><%= f.text_area :comment, :style => 'height: 90px; width: 96%;' %></center>
+					<div style="text-align: right; padding-right: 20px; padding-top: 6px;"><%= submit_tag 'Submit' %></div>
+				</td>
+			</tr>
+	</table>
+<% end %>

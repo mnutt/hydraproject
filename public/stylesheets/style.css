@@ -139,6 +139,25 @@ color:#FFFFFF;
   padding-right: 66px;
 }
 
+.comment {
+width: 500px;
+border: 1px solid black;
+}
+.comment_author {
+  width: 100px;
+}
+.comment_area {
+}
+.comment_date {
+  font-size: .8em;
+  padding-top: 4px;
+  font-style: italic;
+  padding-right: 2px;
+}
+.comment_author_inner {
+  text-align: right; width: 100%;
+}
+
 /*  Table Styling */
 
 table,td,th{

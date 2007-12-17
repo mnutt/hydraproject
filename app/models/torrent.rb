@@ -9,6 +9,7 @@ class Torrent < ActiveRecord::Base
   before_destroy :cleanup
   
   serialize :orig_announce_list  # An Array of announce URLs
+  has_many :comments, :dependent => :destroy, :include => :user, :order => 'comments.id ASC'
   
   # For the will_paginate plugin.  See: http://plugins.require.errtheblog.com/browser/will_paginate/README
   cattr_reader :per_page

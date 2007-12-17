@@ -31,7 +31,7 @@
 		</tr>
 		<tr>
 			<td class="tlabel">Activity</td>
-			<td><%= pluralize(@torrent.seeders, 'seeder') %> | <%= pluralize(@torrent.leechers, 'leecher') %></td>
+			<td><%= pluralize(@torrent.seeders, 'seeder') %>, <%= pluralize(@torrent.leechers, 'leecher') %></td>
 		</tr>
 		<tr>
 			<td class="tlabel">Snatched</td>
@@ -39,9 +39,17 @@
 		</tr>
 		<tr>
 			<td class="tlabel">Files</td>
-			<td><%= pluralize(@torrent.numfiles, 'file') %> <i><%= link_to_remote('[See full list]', :update => 'file_list', :url => {:action => 'file_list', :id => @torrent.id}) %></i> 
+			<td><%= pluralize(@torrent.numfiles, 'file') %>
+				
+				<div id="show_files_link"><i><%= link_to_function('[Show full list]', "showFileList(#{@torrent.id})") %></i></div>
+				<div id="hide_files_link" style="display: none;"><i><%= link_to_function('[Hide full list]', "toggleFileListOff()") %></i></div>
+				
 				<div id="file_list" style="margin-top: 5px; margin-bottom: 5px;"></div>
+			
 			</td>
 		</tr>
 </table>
 <br/><br/>
+<%= render :partial => 'comment/comments', :locals => {:comments => @comments, :torrent => @torrent} %>
+<br/><br/>
+

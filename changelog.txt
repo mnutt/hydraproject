@@ -1,5 +1,8 @@
+shantibraford - 12/17/2007:
+* show/hide full file list
+* comments (with pagination)
 
-shantibraford - 12/12/2007:
+shantibraford - 12/16/2007:
 * fixes in Sync.sync_users
 * Sync.sync_transfer_stats getting close
 * RatioSync IDs cannot be auto-generated, need to be shared between sites -- added migration, changes for this
