@@ -18,7 +18,16 @@ class TorrentController < AuthenticatedController
     @announce_list = [@announce_url]
     TRUSTED_SITES.each do |site|
       announce_url = site[:announce_url].gsub('{{passkey}}', current_user.passkey)
-      @announce_list << URI.parse(announce_url)
+      # IMPORTANT - each 'announce_url' must be enclosed in an Array.
+      #    See: http://wiki.depthstrike.com/index.php/P2P:Protocol:Specifications:Multitracker
+      #    And: http://bittornado.com/docs/multitracker-spec.txt
+      #
+      # When there are multiple announce_urls in the first tier (i.e. all in a single array), then clients will simply
+      #   shuffle that array and connect to the first random announce_url.
+      #
+      # Instead, what we want is for the torrent client to connect to *ALL* of the trackers.
+      #
+      @announce_list << [URI.parse(announce_url)]
     end
     #puts "\n\n #{@announce_list.inspect}\n\n"
     @meta_info.announce_list = [@announce_list]

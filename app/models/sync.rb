@@ -113,6 +113,7 @@ class Sync
     hc = Sync.new_hydra_client(site)
     t = hc.list_torrents(since)
     puts t.inspect
+    return if t['torrents'].nil?
     if t['torrents']['torrent'] && !t['torrents']['torrent'].empty?
       t['torrents']['torrent'].each do |thash|
         puts "Processing: #{thash.inspect}"

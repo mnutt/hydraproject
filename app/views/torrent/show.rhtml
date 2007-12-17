@@ -30,6 +30,10 @@
 			<td><%= @torrent.views %></td>
 		</tr>
 		<tr>
+			<td class="tlabel">Activity</td>
+			<td><%= pluralize(@torrent.seeders, 'seeder') %> | <%= pluralize(@torrent.leechers, 'leecher') %></td>
+		</tr>
+		<tr>
 			<td class="tlabel">Snatched</td>
 			<td><%= pluralize(@torrent.times_completed, 'time') %></td>
 		</tr>
