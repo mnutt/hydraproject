@@ -11,8 +11,8 @@ class Sync
     end
   end
   
-  def self.sync_every_five
-    since = 5.minutes
+  def self.sync_every_five(since = 10.minutes)
+    # We set the default to 10 minutes to ensure no torrents are missed due to overlap
     TRUSTED_SITES.each do |site|
       begin
         puts "Testing if we can connect to #{site[:domain]}:"
