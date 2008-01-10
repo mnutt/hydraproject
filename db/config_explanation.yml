@@ -1,0 +1,19 @@
+webmaster_email: Email address of the webmaster.
+layout: Application layout - default is 'application'.
+app_name: The application name
+domain_with_port: The domain of the app, including the port.
+domain: The domain of the app, without the port.
+notifiction_email: Sender of notification emails
+webmaster_name: Webmaster name
+auto_add_categories: Should this tracker auto-add categories it sees from Partner Hydra Sites?  (true or false)
+enable_rss: Allow users to subscribe to RSS feeds of torrents, authenticated via HTTP Basic Auth
+invite_only: Is this site invitation only? (true or false)
+invite_wait_period: Number of days a *new* user must wait before they receive invites (only applicable to invite only)
+invites_granted_per_month: Number of invites issued to users per month
+num_items_per_page: Number of torrents to display per page
+num_max_peers: The maximum number of peers shown
+num_announce_interval_minutes: The number of minutes in between tracker requests (per torrent) the client should wait
+num_dead_torrent_hours: The number of hours after which (with no seeds) a torrent should be declared dead
+num_torrent_days_to_live: (not used?)
+num_memcached_port: Memcached port (default is 11211)
+num_memcached_memory: Megabytes of memory memcached should use (default is 10)

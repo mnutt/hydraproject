@@ -3,6 +3,7 @@ class AdminController < ApplicationController
   
   def index
     config_file = File.join(RAILS_ROOT, 'config', 'config.yml')
+    @explanation =  YAML.load(IO.read(File.join(RAILS_ROOT, 'db', 'config_explanation.yml')))
     @config = YAML.load(IO.read(config_file)).sort
   end
   

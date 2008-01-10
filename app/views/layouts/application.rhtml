@@ -33,7 +33,9 @@
 					<ul>
 						<li class="<%= navclass('home', 'index') %>"><a href="/">Home</a></li>
 						<% if !user_logged_in? %>
-							<li class="<%= navclass('account', 'signup') %>"><a href="/account/signup" title="Signup">Signup</a></li>
+							<% if !C[:invite_only] %>
+								<li class="<%= navclass('account', 'signup') %>"><a href="/account/signup" title="Signup">Signup</a></li>
+							<% end %>
 							<li class="<%= navclass('account', 'login') %>"><a href="/account/login" title="Login">Login</a></li>
 						<% else %>
 							<li class="<%= navclass('torrent', 'browse') %>"><a href="/torrent/browse" title="Browse">Browse</a></li>

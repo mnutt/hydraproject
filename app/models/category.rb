@@ -1,6 +1,10 @@
 class Category < ActiveRecord::Base
   has_many :torrents
   
+  def self.all
+    Category.find(:all, :order => 'name DESC')
+  end
+  
   # helper method to remove all categories - do not run this if torrents already belong to live data
   def self.clear
     Category.delete_all

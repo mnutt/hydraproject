@@ -41,7 +41,6 @@ module LoginSystem
   #   def authorize?(user)
   # 
   def login_required(the_action = nil)
-    logger.info "In login_required. @_current_user =  #{@_current_user} \n\n current_user = #{current_user}"
     if not protect?(action_name)
       return true  
     end

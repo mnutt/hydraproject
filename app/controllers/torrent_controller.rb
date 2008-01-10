@@ -5,7 +5,35 @@ class TorrentController < ApplicationController
   
   def browse
     params[:page] ||= 1
-    @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
+    @in_category = false
+    @categories = []
+    @title = "Browse Torrents"
+    if params[:cat]
+      @in_category = true
+      @category = Category.find(params[:cat])
+      @categories = [@category.id]
+      @title = "Browse Torrents &raquo; #{@category.name}"
+      @torrents = Torrent.paginate(:conditions => ["category_id = ?", @category.id], :order => 'created_at DESC', :page => params[:page])
+    elsif params[:categories] && !params[:query]
+      @in_category = true
+      @categories = params[:categories].keys
+      @torrents = Torrent.paginate(:conditions => ["category_id IN (?)", @categories], :order => 'created_at DESC', :page => params[:page])
+    elsif params[:query]
+      @in_category = true
+      @in_search = true
+      @query = params[:query]
+      @title = "Search &raquo; #{@query}"
+      if params[:categories]
+        @categories = params[:categories].keys
+        conditions = ["match(name,filename,description) against (?) AND category_id IN (?)", @query, @categories]
+      else
+        conditions = ["match(name,filename,description) against (?)", @query]
+      end
+      @torrents = Torrent.paginate(:conditions => conditions, :order => 'created_at DESC', :page => params[:page])
+    else
+      @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
+    end
+    
     @page_title = "Browse Latest (page #{params[:page]})"
   end
   
@@ -127,7 +155,7 @@ class TorrentController < ApplicationController
   end
   
   def show
-    @torrent = Torrent.find(params[:id]) rescue nil
+    @torrent = Torrent.find(:first, :conditions => ["torrents.id = ?", params[:id]], :include => :category) rescue nil
     if @torrent.nil?
       redirect_to :back; return
     end

@@ -1,3 +1,8 @@
+shantibraford - 1/10/2008:
+* ability to browse torrents by category (& multiple categories)
+* fix for a federation.yml file that is simply '---' (no sites)
+* ability to search torrents (MySQL Full Text)
+* configuration options explanations
 
 shantibraford - 12/17/2007:
 * show/hide full file list

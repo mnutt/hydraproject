@@ -18,8 +18,14 @@ class ApplicationController < ActionController::Base
   
   def check_logged_in
     return true if user_logged_in?
-    flash[:notice] = "#{C[:app_name]} is a private tracker.  Please <a href=\"/account/signup\">Signup</a> or <a href=\"/account/login\">Login</a> to continue."
-    redirect_to :controller => :account, :action => :signup
+    
+    if C[:invite_only]
+      flash[:notice] = "This website is currently invitation only.  You may login below if you already have an account."
+      redirect_to :controller => :account, :action => :login
+    else
+      flash[:notice] = "#{C[:app_name]} is a private tracker.  Please <a href=\"/account/signup\">Signup</a> or <a href=\"/account/login\">Login</a> to continue."
+      redirect_to :controller => :account, :action => :signup
+    end
     return false
   end
   

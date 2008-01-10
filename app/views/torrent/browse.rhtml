@@ -1,3 +1,16 @@
-<h1>Browse Torrents</h1>
+<h1><%= @title %></h1>
+
+<div style="margin: 10px;" class="toggle_links"><%= toggle_div('browse_cats', '+ Show Categories / Search', '- Hide Categories / Search', !@in_category) %></div>
+
+<div id="browse_cats" <%= hidden() if !@in_category %>>
+	<div style="margin-bottom: 4px;"><i>Select any number of categories and/or search terms to restrict your results by.</i></div>
+	<%= form_tag('/torrent/browse', :method => 'GET') %>
+		<% Category.all.each do |cat| %>
+			<%= check_box_tag("categories[#{cat.id}]", cat.id, @categories.include?(cat.id.to_s)) %>	<%= link_to(cat.name, {:controller => 'torrent', :action => 'browse', :cat => cat.id}) %> &nbsp;&nbsp;
+		<% end %> <br/>
+		<div style="margin-top: 6px;"><%= text_field_tag('query', @query || '') %> <%= submit_tag("GO") %></div>
+	</form>
+</div>
+	
 <%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
 <%= render :partial => 'torrent/list', :locals => {:torrents => @torrents, :paginate => true} %>

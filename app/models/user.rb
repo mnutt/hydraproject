@@ -1,4 +1,5 @@
 require 'digest/sha1'
+require 'digest/sha2'
 
 class User < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper

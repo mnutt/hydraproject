@@ -24,6 +24,10 @@ class AccountController < ApplicationController
   end
   
   def signup
+    if C[:invite_only]
+      flash[:notice] = "This website is currently invitation only.  You may login below if you already have an account."
+      redirect_to :controller => :account, :action => :login; return
+    end
     @user = User.new(params[:user])
     
     if request.post?
@@ -70,7 +74,7 @@ class AccountController < ApplicationController
       redirect_back_or_default '/' and return
     end      
   end  
-
+  
   def update
     if current_user.update_attributes(params[:user])
       flash[:notice] = 'Profile updated.'

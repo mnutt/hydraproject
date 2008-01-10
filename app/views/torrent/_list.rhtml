@@ -1,6 +1,6 @@
 <% paginate ||= false %>
 <% if torrents.empty? %>
-	<p>There are currently no torrents to display.
+	<p>No torrents found.</p>
 <% else %>
 	<%= will_paginate torrents if paginate %>
 	<table width="90%">

@@ -27,4 +27,8 @@ module ApplicationHelper
     "<a id=\"#{hide_link_id}\" href=\"#\" onclick=\"$('#{hide_link_id}').hide();$('#{show_link_id}').show();$('#{div_id}').hide();return(false);\" #{ initially_present_show_link ? "style=\"display:none;\"" : ''}>#{hide_text}</a>";
   end
   
+  def hidden
+    "style=\"display:none;\""
+  end
+  
 end
