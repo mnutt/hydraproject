@@ -19,7 +19,7 @@
 		</tr>
 		<tr>
 			<td class="tlabel">Category</td>
-			<td><%= link_to(@torrent.category.name, {:controller => 'torrents', :action => 'browse', :cat => @torrent.category_id}) %></td>
+			<td><%= link_to(@torrent.category.name, {:controller => 'torrent', :action => 'browse', :cat => @torrent.category_id}) %></td>
 		</tr>
 		<tr>
 			<td class="tlabel">Size</td>
