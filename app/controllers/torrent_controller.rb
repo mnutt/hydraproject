@@ -116,7 +116,7 @@ class TorrentController < ApplicationController
           flash[:notice] = "The uploaded file does not appear to be a valid .torrent file."
           return false
         rescue StandardError => e
-          flash[:notice] = "There was an error processing your upload.  Please contact the admins if this problem persists."
+          flash[:notice] = "There was an error processing your upload: #{$!}.  Please contact the admins if this problem persists."
           return false
         end
 
