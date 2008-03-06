@@ -14,6 +14,11 @@ class Torrent < ActiveRecord::Base
   # For the will_paginate plugin.  See: http://plugins.require.errtheblog.com/browser/will_paginate/README
   cattr_reader :per_page
   @@per_page = C[:num_items_per_page]
+
+  # pretty URLs
+  def to_param
+    "#{id}-#{name.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
+  end
   
   def connectable_peers
     Peer.find(:all, :conditions => ["torrent_id = ? AND connectable = ? ", self.id, true])
@@ -92,7 +97,7 @@ class Torrent < ActiveRecord::Base
       CACHE.set(self.tkey, {peer.id => remote_ip})
     elsif peers && !peers.has_key?(peer.id)
       # Add the peer
-      peers[peer.ip] = remote_ip
+      peers[peer.id] = remote_ip
       CACHE.set(self.tkey, peers)
     end
   end
@@ -146,7 +151,7 @@ class Torrent < ActiveRecord::Base
     if !mi.announce_list.nil?
       #puts "Announce List class: #{mi.announce_list.class}"
       #puts "Announce List: #{mi.announce_list.inspect}"
-      self.orig_announce_list = mi.anounce_list
+      self.orig_announce_list = mi.announce_list
     end
     self.created_by = mi.created_by unless mi.created_by.nil?
     if self.name.nil? || self.name.blank?
