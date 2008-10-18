@@ -1,5 +1,5 @@
 # This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of ActiveRecord to incrementally modify your database, and
+# please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
 # Note that this schema.rb definition is the authoritative source for your database schema. If you need
@@ -92,14 +92,14 @@ ActiveRecord::Schema.define(:version => 9) do
   end
 
   add_index "torrents", ["info_hash"], :name => "index_torrents_on_info_hash"
-  add_index "torrents", ["name", "filename", "description"], :name => "ft_idx_torrents"
+  add_index "torrents", ["name", "filename"], :name => "ft_idx_torrents"
 
   create_table "users", :force => true do |t|
     t.string   "login"
     t.string   "hashed_password"
     t.string   "salt"
     t.boolean  "is_admin",               :default => false
-    t.boolean  "is_moderator"
+    t.boolean  "is_moderator",           :default => false
     t.string   "remember_token"
     t.datetime "remember_token_expires"
     t.datetime "created_at"

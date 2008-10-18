@@ -1,7 +1,7 @@
 class FullTextSearch < ActiveRecord::Migration
   def self.up
     execute 'ALTER TABLE torrents ENGINE = MyISAM'
-    execute 'CREATE FULLTEXT INDEX ft_idx_torrents ON torrents(name,filename,description)'
+    execute 'CREATE FULLTEXT INDEX ft_idx_torrents ON torrents(name,filename)'
   end
 
   def self.down
