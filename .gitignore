@@ -3,3 +3,4 @@ config/federation.yml
 config/config.yml
 log/*.log
 tmp/**
+torrents/*.torrent
