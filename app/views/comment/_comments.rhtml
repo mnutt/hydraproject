@@ -1,6 +1,10 @@
 <center>
-	
-<%= render :partial => 'comment/comment_form', :locals => {:torrent => torrent} %>
+
+<% if current_user -%>	
+  <%= render :partial => 'comment/comment_form', :locals => {:torrent => torrent} %>
+<% else -%>
+  <p><%= link_to "Log in", login_path -%> to comment</p>
+<% end -%>
 
 <% if !comments.empty? %>
 	<br/>
