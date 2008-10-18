@@ -19,3 +19,25 @@ end
 TRUSTED_SITES = [{'domain' => 'foo.org', 'passkey' => 'foo123', 'api_url' => 'http://foo.org/api'}]
 
 require File.expand_path(File.dirname(__FILE__) + "/factories.rb")
+
+# Mock out MemCache
+class MemCacheMock
+  @@cache = {}
+
+  class << self
+    def get(key)
+      @cache[key] if @cache.has_key?(key)
+    end
+    def set(key, value)
+      @cache[key] = value
+    end
+    def delete(key)
+      @cache.delete(key)
+    end
+    def reset
+      @cache = {}
+    end
+  end
+end
+Object.send(:remove_const, :CACHE)
+CACHE = MemCacheMock
