@@ -51,51 +51,6 @@ require 'rubytorrent'
 require 'rubygems'
 gem 'memcache-client'
 
-## Load global C (for Config) constant via config/config.yml and environment dependent YMLs
-
-config_file = File.join(RAILS_ROOT, 'config', 'config.yml')
-raise "Please copy config.yml.example to config.yml and modify per site." unless File.exist?(config_file)
-c = YAML.load(IO.read(config_file))
-
-# Convert any items prefixed with 'num_' to integer values.
-c.each_pair do |k, v|
-  if k[0..2] == 'num'
-    c[k] = v.to_i
-  end
-end
-
-c.symbolize_keys!
-C = c
-
-CACHE = MemCache.new "localhost:#{C[:num_memcached_port]}", :namespace => 'hydra'
-
-# Ensure memcached is running
-begin
-  CACHE.get('foo')
-rescue MemCache::MemCacheError
-  puts "\nStarting memcached...\n"
-  system("memcached -d -m #{C[:num_memcached_memory]} -p #{C[:num_memcached_port]}")
-end
-
-if 'test' != RAILS_ENV
-  # For the Hydra Network; other trusted sites in this site's "federation"
-  fed_file = File.join(RAILS_ROOT, 'config', 'federation.yml')
-  if File.exist?(config_file)
-    sites = YAML.load(IO.read(fed_file))
-    if sites.nil?
-      TRUSTED_SITES = []
-    else
-      symbolized = []
-      sites.each do |hash|
-        symbolized << hash.symbolize_keys
-      end
-      TRUSTED_SITES = symbolized.freeze
-    end
-  else
-    TRUSTED_SITES = []
-  end
-end
-
 TRUSTED_SITES.each do |site|
   unless site[:domain] && site[:passkey] && site[:api_url]
     raise InvalidTrustedSiteFormat, "Site must have keys 'domain', 'passkey' and 'api_url' : #{site.inspect}"
@@ -103,8 +58,3 @@ TRUSTED_SITES.each do |site|
 end
 
 BASE_URL = "http://#{C[:domain_with_port]}/"
-
-class TorrentFileNotFoundError < StandardError; end
-class InvalidTrustedSiteFormat < StandardError; end
-class ApiResponseMissingExpectedKeys < StandardError; end
-class SyncXmlToHashError < StandardError; end
