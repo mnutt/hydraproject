@@ -41,7 +41,7 @@
 							<li class="<%= navclass('torrent', 'browse') %>"><a href="/torrent/browse" title="Browse">Browse</a></li>
 							<li class="<%= navclass('torrent', 'upload') %>"><a href="/torrent/upload" title="Upload Torrent">Upload</a></li>
 							<li>&nbsp;&nbsp; Hi, <%= current_user.login %>.</li>
-							<li><span style="color: #ddd;">Ratio: <%= current_user.ratio_friendly %> <small> &nbsp; U/L: <%= current_user.uploaded_friendly %> &nbsp; D/L: <%= current_user.downloaded_friendly %> </small></span></li>
+							<li><span style="color: #ddd;">Ratio: <%= current_user.ratio_friendly %> <small> &nbsp; U/L: <%= number_to_human_size(current_user.uploaded) %> &nbsp; D/L: <%= number_to_human_size(current_user.downloaded) %> </small></span></li>
 							<% if admin_logged_in? %>
 								<li class="<%= navclass('admin', 'index') %>"><a href="/admin" title="Admin">Admin</a></li>
 							<% end %>

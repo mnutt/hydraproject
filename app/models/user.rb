@@ -1,9 +1,7 @@
 require 'digest/sha1'
 require 'digest/sha2'
 
-class User < ActiveRecord::Base
-  include ActionView::Helpers::NumberHelper
-  
+class User < ActiveRecord::Base  
   validates_presence_of       :login,       :on => :create
   validates_presence_of       :password,    :on => :create, :if => Proc.new { |user| user.hashed_password.nil? }
 
@@ -27,14 +25,6 @@ class User < ActiveRecord::Base
     r = self.ratio
     return "&#8734;" if r.zero?
     return number_with_precision(r, 2)
-  end
-  
-  def downloaded_friendly
-    number_to_human_size(self.downloaded)
-  end
-
-  def uploaded_friendly
-    number_to_human_size(self.uploaded)
   end
   
   def tracker_url
