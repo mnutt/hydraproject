@@ -1,7 +1,7 @@
 class TorrentController < ApplicationController
   include ApplicationHelper
   
-  before_filter :check_logged_in, :except => [:download]
+  before_filter :check_logged_in, :except => [:download, :show, :browse]
   
   def browse
     params[:page] ||= 1
