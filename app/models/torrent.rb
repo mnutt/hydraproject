@@ -29,7 +29,6 @@ class Torrent < ActiveRecord::Base
   end
   
   def meta_info
-    #puts "\n\nLooking for torrent in path: #{self.torrent_path}\n\n"
     raise TorrentFileNotFoundError unless File.exist?(self.torrent_path)
     RubyTorrent::MetaInfo.from_location(self.torrent_path)
   end
@@ -56,7 +55,7 @@ class Torrent < ActiveRecord::Base
     else
       if peers.has_key?(peer.id)
         # Maybe they've changed IPs
-        if !peers[peer.id] == remote_ip
+        if peers[peer.id] != remote_ip
           # they have, changed IPs
           peers.delete(peer.id)
           peers[peer.id] = remote_ip
