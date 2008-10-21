@@ -73,9 +73,6 @@ single = files.length == 1
 
 puts "Building #{(single ? 'single' : 'multi')}-file .torrent for #{files.length} file#{(single ? '' : 's')}."
 
-mi = RubyTorrent::MetaInfo.new
-mii = RubyTorrent::MetaInfoInfo.new
-
 maybe_name = if single
                ARGV[0]
              else
@@ -84,29 +81,29 @@ maybe_name = if single
 puts
 print %{Default output file/directory name (enter for "#{maybe_name}"): }
 name = $stdin.gets.chomp
-mii.name = (name == "" ? maybe_name : name)
-puts %{We'll use "#{mii.name}".}
+mii_name = (name == "" ? maybe_name : name)
+puts "We'll use \"#{mii_name}\"."
 
 puts
 puts "Measuring..."
-length = nil
+mii_length = nil
 if single
-  length = mii.length = files.inject(0) { |s, f| s + File.size(f) }
+  mii_length = files.inject(0) { |s, f| s + File.size(f) }
+  mii_files = [{'path' => files, 'length' => mii_length}]
 else
-  mii.files = []
-  length = files.inject(0) do |s, f|
-    miif = RubyTorrent::MetaInfoInfoFile.new
-    miif.length = File.size f
-    miif.path = f.split File::SEPARATOR
-    miif.path = miif.path[1, miif.path.length - 1] if miif.path[0] == mii.name
-    mii.files << miif
-    s + miif.length
+  mii_files = []
+  mii_length = files.inject(0) do |s, f|
+    mii_length = File.size f
+    path = f.split File::SEPARATOR
+    path = path[1, path.length - 1] if path[0] == mii_name
+    mii_files << {'path' => path, 'length' => mii_length}
+    s + mii_length
   end
 end
 
 puts <<EOS
 
-The file is #{length.to_size_s}. What piece size would you like? A smaller piece size
+The file is #{mii_length.to_size_s}. What piece size would you like? A smaller piece size
 will result in a larger .torrent file; a larger piece size may cause
 transfer inefficiency. Common sizes are 256, 512, and 1024kb.
 
@@ -115,7 +112,7 @@ EOS
 
 size = nil
 [64, 128, 256, 512, 1024, 2048, 4096].each do |size|
-  num_pieces = (length.to_f / size / 1024.0).ceil
+  num_pieces = (mii_length.to_f / size / 1024.0).ceil
   tsize = num_pieces.to_f * 20.0 + 100
   puts "  - piece size of #{size}kb => #{num_pieces} pieces and .torrent size of approx. #{tsize.to_size_s}."
   break if tsize < 10240
@@ -129,16 +126,16 @@ end while plen !~ /^\d*$/
 
 plen = (plen == "" ? maybe_plen : plen.to_i)
 
-mii.piece_length = plen * 1024
-num_pieces = (length.to_f / mii.piece_length.to_f).ceil
+mii_piece_length = plen * 1024
+num_pieces = (mii_length.to_f / mii_piece_length.to_f).ceil
 puts "Using piece size of #{plen}kb => .torrent size of approx. #{(num_pieces * 20.0).to_size_s}."
 
 print "Calculating #{num_pieces} piece SHA1s... " ; $stdout.flush
 
-mii.pieces = ""
+mii_pieces = ""
 i = 0
-read_pieces(files, mii.piece_length) do |piece|
-  mii.pieces += Digest::SHA1.digest(piece)
+read_pieces(files, mii_piece_length) do |piece|
+  mii_pieces += Digest::SHA1.digest(piece)
   i += 1
   if (i % 100) == 0
     print "#{(i.to_f / num_pieces * 100.0).round}%... "; $stdout.flush
@@ -146,7 +143,7 @@ read_pieces(files, mii.piece_length) do |piece|
 end
 puts "done"
 
-mi.info = mii
+# mi_info = mii
 puts <<EOS
 
 Enter the tracker URL or URLs that will be hosting the .torrent
@@ -176,8 +173,8 @@ begin
   tier += 1 unless these.length == 0
 end while (these.length != 0) || (tier == 0)
 
-mi.announce = URI.parse(trackers[0][0])
-mi.announce_list = trackers.map do |tier|
+mi_announce = URI.parse(trackers[0][0])
+mi_announce_list = trackers.map do |tier|
   tier.map { |x| URI.parse(x) }
 end unless (trackers.length == 1) && (trackers[0].length == 1)
 
@@ -191,16 +188,19 @@ while true
   break if s == ""
   comm += s + "\n"
 end
-mi.comment = comm.chomp unless comm == ""
+mi_comment = comm.chomp unless comm == ""
 
-mi.created_by = "RubyTorrent make-metainfo (http://rubytorrent.rubyforge.org)"
-mi.creation_date = Time.now
+mi_created_by = "RubyTorrent make-metainfo (http://rubytorrent.rubyforge.org)"
+mi_creation_date = Time.now
 
-maybe_name = "#{mii.name}.torrent"
+maybe_name = "#{mii_name}.torrent"
 begin
   print "Output filename (enter for #{maybe_name}): "
   name = $stdin.gets.chomp
 end while name.length == ""
+
+info = {'pieces' => mii_pieces, 'piece length' => mii_piece_length, 'name' => mii_name, 'files' => mii_files}
+mi = RubyTorrent::MetaInfo.new({'announce_list' => trackers, 'announce' => trackers[0][0], 'info' => info, 'creation date' => Time.now})
 
 name = (name == "" ? maybe_name : name)
 File.open(name, "w") do |f|
