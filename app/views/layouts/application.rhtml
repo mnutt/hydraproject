@@ -17,55 +17,55 @@
 	%>
 	
 	<% if user_logged_in? && C[:enable_rss] %>
-		<link rel="alternate" type="application/rss+xml" title="RSS Feed - Latest Torrents" href="<%= "http://#{current_user.login}:#{current_user.passkey}@#{C[:domain_with_port]}/feed" %>" />
+		<link rel="alternate" type="application/rss+xml" title="RSS Feed - Latest Torrents" href="<%= torrents_url(:user => current_user.login, :passkey => current_user.passkey, :format => :xml) %>" />
 	<% end %>
 	
 </head>
 <body>
 	
-	<div id="header">
-		
-		<div id="signin-bar">
-			
-			<div class="signin-bar-right">
-				
-				<div id="nav">
-					<ul>
-						<li class="<%= navclass('home', 'index') %>"><a href="/">Home</a></li>
-						<% if !user_logged_in? %>
-							<% if !C[:invite_only] %>
-								<li class="<%= navclass('account', 'signup') %>"><a href="/account/signup" title="Signup">Signup</a></li>
-							<% end %>
-							<li class="<%= navclass('account', 'login') %>"><a href="/account/login" title="Login">Login</a></li>
-						<% else %>
-							<li class="<%= navclass('torrent', 'browse') %>"><a href="/torrent/browse" title="Browse">Browse</a></li>
-							<li class="<%= navclass('torrent', 'upload') %>"><a href="/torrent/upload" title="Upload Torrent">Upload</a></li>
-							<li>&nbsp;&nbsp; Hi, <%= current_user.login %>.</li>
-							<li><span style="color: #ddd;">Ratio: <%= current_user.ratio_friendly %> <small> &nbsp; U/L: <%= number_to_human_size(current_user.uploaded) %> &nbsp; D/L: <%= number_to_human_size(current_user.downloaded) %> </small></span></li>
-							<% if admin_logged_in? %>
-								<li class="<%= navclass('admin', 'index') %>"><a href="/admin" title="Admin">Admin</a></li>
-							<% end %>
-							<li class="<%= navclass('account', 'index') %>"><a href="/account" title="My Home">My Account</a></li>
-							<li class="<%= navclass('account', 'logout') %>"><a href="/account/logout" title="My Home">Logout</a></li>
-						<% end %>
-					</ul>
-				</div>
-				
-			</div>
-		</div>
-		<div class="logo">
-			<a href="/" title="HydraProject"><img src="/images/logo.png" alt="The Hydra Project" width="436" height="66" border="0" /></a>
-		</div>
-		<h2 class="tagline">distributed private tracker framework</h2>
-	</div>
-	<div style="margin-left: 20px; margin-top: -10px;">
-		<%= yield  %>
+  <div id="header">
+    
+    <div id="signin-bar">
+      
+      <div class="signin-bar-right">
+	
+	<div id="nav">
+	  <ul>
+	    <li class="<%= navclass('home', 'index') %>"><a href="/">Home</a></li>
+	    <% if !user_logged_in? %>
+	      <% if !C[:invite_only] %>
+		<li class="<%= navclass('account', 'signup') %>"><a href="/account/signup" title="Signup">Signup</a></li>
+	      <% end %>
+	      <li class="<%= navclass('account', 'login') %>"><a href="/account/login" title="Login">Login</a></li>
+	    <% else %>
+	      <li class="<%= navclass('torrent', 'browse') %>"><a href="/torrents/browse" title="Browse">Browse</a></li>
+	      <li class="<%= navclass('torrent', 'upload') %>"><a href="/torrents/new" title="Upload Torrent">Upload</a></li>
+	      <li>&nbsp;&nbsp; Hi, <%= current_user.login %>.</li>
+	      <li><span style="color: #ddd;">Ratio: <%= current_user.ratio_friendly %> <small> &nbsp; U/L: <%= number_to_human_size(current_user.uploaded) %> &nbsp; D/L: <%= number_to_human_size(current_user.downloaded) %> </small></span></li>
+	      <% if admin_logged_in? %>
+		<li class="<%= navclass('admin', 'index') %>"><a href="/admin" title="Admin">Admin</a></li>
+	      <% end %>
+	      <li class="<%= navclass('account', 'index') %>"><a href="/account" title="My Home">My Account</a></li>
+	      <li class="<%= navclass('account', 'logout') %>"><a href="/account/logout" title="My Home">Logout</a></li>
+	    <% end %>
+	  </ul>
 	</div>
 	
-	<br/><br/>
-	<div style="clear: both;"></div>
-	<hr/>
-	<center><i><span style="font-size: .8em; color: #ccc;">powered by <a href="http://code.google.com/p/hydraproject/" style="color: #ccc;">the hydra project</a> on rails</span></i></center>
-	<br/>
+      </div>
+    </div>
+    <div class="logo">
+      <a href="/" title="HydraProject"><img src="/images/logo.png" alt="The Hydra Project" width="436" height="66" border="0" /></a>
+    </div>
+    <h2 class="tagline">distributed private tracker framework</h2>
+  </div>
+  <div style="margin-left: 20px; margin-top: -10px;">
+    <%= yield  %>
+  </div>
+  
+  <br/><br/>
+  <div style="clear: both;"></div>
+  <hr/>
+  <center><i><span style="font-size: .8em; color: #ccc;">powered by <a href="http://code.google.com/p/hydraproject/" style="color: #ccc;">the hydra project</a> on rails</span></i></center>
+  <br/>
 </body>
 </html>

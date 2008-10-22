@@ -1,0 +1,37 @@
+<% paginate ||= false %>
+<% if torrents.empty? %>
+  <p>No torrents found.</p>
+<% else %>
+  <%= will_paginate torrents if paginate %>
+  <table width="90%">
+    <tr>
+      <th>Torrent</th>
+      <th width="18px"></th>
+      <th width="60px"># Files</th>
+      <th width="80px">Size</th>
+      <th width="60px">Snatched</th>
+      <th width="60px">Seeders</th>
+      <th width="62px">Leechers</th>
+      <th width="100px">Added On</th>
+    </tr>
+    <% torrents.each do |t| %>
+      <tr>
+	<td><%= link_to(truncate(t.name, 80), torrent_url(t) ) %>  
+	  <% if moderator_logged_in? %>
+	    &nbsp;&nbsp;&nbsp;<%= link_to(image_tag('icons/trash.png', :border => '0'), torrent_url(t), :method => 'delete', :confirm => 'Are you sure?') %>
+	  <% end %>
+	</td>
+	<td width="18px"><%= link_to(image_tag('icons/arrow_down.png', :border => '0', :alt => 'Download'), torrent_dl(t), :title => "Download #{t.filename}") %></td>
+	<td><%= t.numfiles %></td>
+	<td width="80px"><%= number_to_human_size(t.size)%></td>
+	<td><%= t.times_completed %></td>
+	<td><%= t.seeders %></td>
+	<td><%= t.leechers %></td>
+	<td><%= t.created_at.nice_print %></td>
+      </tr>
+    <% end %>
+  </table>
+  <% if paginate %>
+    <%= will_paginate torrents %>
+  <% end %>
+<% end %>

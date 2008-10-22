@@ -1,8 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :torrents
 
-  map.with_options :controller => 'torrent', :action => 'download', :requirements => { :filename => /.*/ } do |m|
-    m.download          'download/:id/:filename'               
-    m.feed_download     'feed_download/:id/:passkey/:filename'
+  map.with_options :controller => 'torrents', :action => 'download', :requirements => { :filename => /.*/ } do |m|
+    m.download          'torrent/:id/download/:filename'               
+    m.feed_download     'torrent/:id/feed_download/:passkey/:filename'
   end
 
   map.with_options :controller => 'tracker' do |m|

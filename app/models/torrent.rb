@@ -14,6 +14,7 @@ class Torrent < ActiveRecord::Base
   # For the will_paginate plugin.  See: http://plugins.require.errtheblog.com/browser/will_paginate/README
   cattr_reader :per_page
   @@per_page = C[:num_items_per_page]
+  attr_accessor :the_torrent
 
   # pretty URLs
   def to_param
