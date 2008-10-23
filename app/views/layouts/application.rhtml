@@ -16,7 +16,7 @@
 	@action_name      = controller.action_name
 	%>
 	
-	<% if user_logged_in? && C[:enable_rss] %>
+	<% if current_user && C[:enable_rss] %>
 		<link rel="alternate" type="application/rss+xml" title="RSS Feed - Latest Torrents" href="<%= torrents_url(:user => current_user.login, :passkey => current_user.passkey, :format => :xml) %>" />
 	<% end %>
 	
@@ -32,11 +32,11 @@
 	<div id="nav">
 	  <ul>
 	    <li class="<%= navclass('home', 'index') %>"><a href="/">Home</a></li>
-	    <% if !user_logged_in? %>
+	    <% if current_user.nil? %>
 	      <% if !C[:invite_only] %>
-		<li class="<%= navclass('account', 'signup') %>"><a href="/account/signup" title="Signup">Signup</a></li>
+		<li class="<%= navclass('account', 'signup') %>"><a href="/signup" title="Signup">Signup</a></li>
 	      <% end %>
-	      <li class="<%= navclass('account', 'login') %>"><a href="/account/login" title="Login">Login</a></li>
+	      <li class="<%= navclass('account', 'login') %>"><a href="/login" title="Login">Login</a></li>
 	    <% else %>
 	      <li class="<%= navclass('torrent', 'browse') %>"><a href="/torrents/browse" title="Browse">Browse</a></li>
 	      <li class="<%= navclass('torrent', 'upload') %>"><a href="/torrents/new" title="Upload Torrent">Upload</a></li>
@@ -46,7 +46,7 @@
 		<li class="<%= navclass('admin', 'index') %>"><a href="/admin" title="Admin">Admin</a></li>
 	      <% end %>
 	      <li class="<%= navclass('account', 'index') %>"><a href="/account" title="My Home">My Account</a></li>
-	      <li class="<%= navclass('account', 'logout') %>"><a href="/account/logout" title="My Home">Logout</a></li>
+	      <li class="<%= navclass('account', 'logout') %>"><a href="/logout" title="My Home">Logout</a></li>
 	    <% end %>
 	  </ul>
 	</div>

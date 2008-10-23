@@ -1,21 +1,100 @@
 require 'digest/sha1'
-require 'digest/sha2'
 
-class User < ActiveRecord::Base  
-  validates_presence_of       :login,       :on => :create
-  validates_presence_of       :password,    :on => :create, :if => Proc.new { |user| user.hashed_password.nil? }
+class User < ActiveRecord::Base
+  include Authentication
+  include Authentication::ByPassword
+  include Authentication::ByCookieToken
 
-  validates_uniqueness_of     :login,       :on => :create
+  validates_presence_of     :login
+  validates_length_of       :login,    :within => 3..40
+  validates_uniqueness_of   :login
+  validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message
 
-  validates_length_of         :login,       :within => 3..20, :on => :create
-  validates_length_of         :password,    :within => 5..40, :on => :create, :if => Proc.new { |user| user.hashed_password.nil? }
-  
+  validates_format_of       :name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true
+  validates_length_of       :name,     :maximum => 100
+
+  if C[:require_email]
+    validates_presence_of     :email
+    validates_length_of       :email,    :within => 6..100 #r@a.wk
+    validates_uniqueness_of   :email
+    validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
+  end
+
+  before_create :make_activation_code 
   before_create :generate_passkey
-  
-  HARD_SALT = 'TheHydraProject--123456789@!#%@^^#@'
 
-  attr_accessor :password_confirmation
+  # HACK HACK HACK -- how to do attr_accessible from here?
+  # prevents a user from submitting a crafted form that bypasses activation
+  # anything else you want your user to change should be added here.
+  attr_accessible :login, :email, :name, :password, :password_confirmation
 
+
+  # Activates the user in the database.
+  def activate!
+    @activated = true
+    self.activated_at = Time.now.utc
+    self.activation_code = nil
+    save(false)
+  end
+
+  # Returns true if the user has just been activated.
+  def recently_activated?
+    @activated
+  end
+
+  def active?
+    # the existence of an activation code means they have not activated yet
+    activation_code.nil? or !C[:require_email]
+  end
+
+  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
+  #
+  # uff.  this is really an authorization, not authentication routine.  
+  # We really need a Dispatch Chain here or something.
+  # This will also let us return a human error message.
+  #
+  def self.authenticate(login, password)
+    return nil if login.blank? || password.blank?
+    if C[:require_email]
+      u = find :first, :conditions => ['login = ? and activated_at IS NOT NULL', login] # need to get the salt
+    else
+      u = find :first, :conditions => {:login => login}
+    end
+    u && u.authenticated?(password) ? u : nil
+  end
+
+  # Authenticate using the username & passkey
+  def self.feed_auth(login, passkey)
+    User.find(:first, :conditions => ["login = ? AND passkey = ?", login, passkey])
+  end
+
+  def self.admin_user
+    User.find_by_login('admin')
+  end
+
+  def friendly_name
+    return self.login if self.first_name.nil?
+    return self.login if self.first_name.blank?
+    return self.first_name
+  end  
+
+  def login=(value)
+    write_attribute :login, (value ? value.downcase : nil)
+  end
+
+  def email=(value)
+    write_attribute :email, (value ? value.downcase : nil)
+  end
+
+  def has_email?
+    !(self.email.nil? || self.email.blank?)
+  end
+
+  def moderator?
+    self.is_moderator? || self.is_admin?
+  end
+
+  # Bittorrent stuff
   def ratio
     return 0 if self.uploaded.zero? || self.downloaded.zero?
     return (self.uploaded.to_f / self.downloaded.to_f)
@@ -30,7 +109,7 @@ class User < ActiveRecord::Base
   def tracker_url
     "#{BASE_URL}tracker/#{self.passkey}/announce"
   end
-  
+
   def generate_passkey
     return unless self.passkey.nil?
     self.passkey = Digest::SHA1.hexdigest("#{self.login}--#{Time.now}--#{rand(10000)}").slice(0, 10)
@@ -40,99 +119,12 @@ class User < ActiveRecord::Base
     generate_passkey
     save!
   end
-  
-  def moderator?
-    self.is_moderator? || self.is_admin?
-  end
-  
-  def self.admin_user
-    User.find_by_login('admin')
-  end
-  
-  def set_password!(pass)
-    self.password = pass
-    save
-  end
-  
-  def remember_me
-    # First check to see if there is an existing auth token that has not yet expired.
-    #   That way two computers/browsers can share the same auth token until it expires.
-    if !self.remember_token.nil? && (Time.now < self.remember_token_expires)
-      # Reset the token expiration
-      self.remember_token_expires = 1.week.from_now
-      self.save_with_validation(false)
-    else
-      self.remember_token_expires = 1.week.from_now
-      self.remember_token = Digest::SHA1.hexdigest("#{self.login}--#{HARD_SALT}--#{self.remember_token_expires}")  # Just some pseudorandom string
-      self.save_with_validation(false)
+
+  protected
+    
+    def make_activation_code
+        self.activation_code = self.class.make_token
     end
-  end
 
-  def forget_me
-    self.remember_token_expires = nil
-    self.remember_token = nil
-    self.save_with_validation(false)
-  end
-  
-  def friendly_name
-    return self.login if self.first_name.nil?
-    return self.login if self.first_name.blank?
-    return self.first_name
-  end              
 
-  # Authenticate a user. 
-  #
-  # Example:
-  #   @user = User.authenticate('bob', 'bobpass')
-  #
-  def self.authenticate(login, pass)
-    user = User.find(:first, :conditions => ["login = ?", login]) rescue nil
-    return nil unless user
-    return nil unless user.passwords_match?(pass)
-    return user
-  end  
-  
-  # Authenticate using the username & passkey
-  def self.feed_auth(login, passkey)
-    User.find(:first, :conditions => ["login = ? AND passkey = ?", login, passkey])
-  end
-  
-  def passwords_match?(pass)
-    self.hashed_password == User.encrypted_password(pass, self.salt)
-  end
-  
-  def has_email?
-    return false if self.email.nil? || self.email.blank?
-    return true
-  end
-  
-  # Returns the user's raw password, only available when the user is first being created.
-  def password
-    @password
-  end
-
-  # Sets a users password by generating a random salt and encrypting it with
-  # the passed password.
-  def password=(pass)
-    @password = pass
-    create_new_salt
-    if @password && !@password.empty?
-      self.hashed_password = User.encrypted_password(self.password, self.salt)
-    else
-      self.hashed_password = nil
-    end
-  end
-
-protected
-
-  # Generates a random salt
-  def create_new_salt
-    self.salt = self.object_id.to_s + rand.to_s
-  end
-  
-  # One-way password encryption with random and hard coded salts
-  def self.encrypted_password(pass, salt)
-    Digest::SHA256.hexdigest(pass + HARD_SALT + salt)
-  end
-  
 end

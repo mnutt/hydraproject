@@ -41,3 +41,7 @@ class MemCacheMock
 end
 Object.send(:remove_const, :CACHE)
 CACHE = MemCacheMock
+
+mock_config = {:require_email => true}
+Object.send(:remove_const, :C)
+C = mock_config

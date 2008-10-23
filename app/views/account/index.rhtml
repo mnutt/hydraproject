@@ -13,10 +13,10 @@
 		</tr>
 		<tr>
 			<td class="tlabel">Uploaded</td>
-			<td><%= current_user.uploaded_friendly %></td>
+			<td><%= number_to_human_size current_user.uploaded %></td>
 		</tr>
 		<tr>
 			<td class="tlabel">Downloaded</td>
-			<td><%= current_user.downloaded_friendly %></td>
+			<td><%= number_to_human_size current_user.downloaded %></td>
 		</tr>
 </table>

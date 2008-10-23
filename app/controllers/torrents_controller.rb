@@ -60,7 +60,7 @@ class TorrentsController < ApplicationController
         set_current_user(user)
       end
     else
-      if !user_logged_in?
+      if current_user.nil?
         check_logged_in; return false
       end
     end
