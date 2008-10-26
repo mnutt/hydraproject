@@ -17,10 +17,12 @@
     <td class="tlabel">Description</td>
     <td><%= auto_link(simple_format(@torrent.description)) %></td>
   </tr>
-  <tr>
-    <td class="tlabel">Category</td>
-    <td><%= link_to(@torrent.category.name, torrents_url(:cat => @torrent.category_id)) %></td>
-  </tr>
+  <% if @torrent.category -%>
+    <tr>
+      <td class="tlabel">Category</td>
+      <td><%= link_to(@torrent.category.name, torrents_url(:cat => @torrent.category_id)) %></td>
+    </tr>
+  <% end -%>
   <tr>
     <td class="tlabel">Size</td>
     <td><%= number_to_human_size(@torrent.size)%> (<%= number_with_delimiter(@torrent.size) %> bytes)</td>
