@@ -144,10 +144,10 @@ class MetaInfo
     raise TypeError, "argument must be a Hash (maybe see MetaInfo.from_location)" unless dict.is_a? Hash
     @s = TypedStruct.new do |s|
       s.field :info => MetaInfoInfo, :announce => URI::HTTP,
-              :announce_list => Array, :creation_date => Time,
+              :announce_list => Array, :creation_date => Time, :url_list => String,
               :comment => String, :created_by => String, :encoding => String, :key => String
       s.label :announce_list => "announce-list", :creation_date => "creation date",
-              :created_by => "created by"
+              :created_by => "created by", :url_list => "url-list"
       s.array :announce_list
       s.coerce :info => lambda { |x| MetaInfoInfo.new(x) },
                :creation_date => lambda { |x| Time.at(x) },

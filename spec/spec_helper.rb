@@ -15,6 +15,8 @@ Spec::Runner.configure do |config|
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
 end
 
+include AuthenticatedTestHelper
+
 # Meta-fixture here
 TRUSTED_SITES = [{'domain' => 'foo.org', 'passkey' => 'foo123', 'api_url' => 'http://foo.org/api'}]
 

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081022043711) do
+ActiveRecord::Schema.define(:version => 20081025182003) do
 
   create_table "categories", :force => true do |t|
     t.string "name"
@@ -62,6 +62,16 @@ ActiveRecord::Schema.define(:version => 20081022043711) do
 
   add_index "ratio_syncs", ["domain", "sync_id"], :name => "rs_domain_sync_id", :unique => true
 
+  create_table "resources", :force => true do |t|
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+  end
+
   create_table "torrent_files", :force => true do |t|
     t.integer "torrent_id"
     t.text    "filename"
@@ -89,6 +99,8 @@ ActiveRecord::Schema.define(:version => 20081022043711) do
     t.integer  "seeders",            :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "resource_id"
+    t.string   "url_list"
   end
 
   add_index "torrents", ["info_hash"], :name => "index_torrents_on_info_hash"

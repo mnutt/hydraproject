@@ -1,0 +1,28 @@
+<h1>Editing resource</h1>
+
+<% form_for(@resource) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :file_file_name %><br />
+    <%= f.text_field :file_file_name %>
+  </p>
+  <p>
+    <%= f.label :file_content_type %><br />
+    <%= f.text_field :file_content_type %>
+  </p>
+  <p>
+    <%= f.label :file_file_size %><br />
+    <%= f.text_field :file_file_size %>
+  </p>
+  <p>
+    <%= f.label :file_updated_at %><br />
+    <%= f.datetime_select :file_updated_at %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @resource %> |
+<%= link_to 'Back', resources_path %>

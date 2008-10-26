@@ -1,0 +1,33 @@
+<p>
+  <b>File file name:</b>
+  <%=h @resource.file_file_name %>
+</p>
+
+<p>
+  <b>File content type:</b>
+  <%=h @resource.file_content_type %>
+</p>
+
+<p>
+  <b>File file size:</b>
+  <%=h @resource.file_file_size %>
+</p>
+
+<p>
+  <b>File updated at:</b>
+  <%=h @resource.file_updated_at %>
+</p>
+
+<p>
+  <b>Torrent:</b>
+  <%= link_to "Torrent", @resource.torrent %>
+</p>
+
+<p>
+  <b>Link:</b>
+  <%= link_to "Download", @resource.file.url(:original) -%>
+</p>
+
+
+<%= link_to 'Edit', edit_resource_path(@resource) %> |
+<%= link_to 'Back', resources_path %>

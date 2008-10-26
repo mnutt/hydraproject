@@ -1,6 +1,7 @@
 class Torrent < ActiveRecord::Base
   belongs_to :user  # This is only set for the first few days, so the administrator can police new uploads
   belongs_to :category
+  belongs_to :resource
   
   has_many :torrent_files, :dependent => :destroy
   has_many :peers, :dependent => :destroy
@@ -147,6 +148,7 @@ class Torrent < ActiveRecord::Base
     self.pieces = mii.pieces.length / 20
     self.size = total_size  # bytes
     self.torrent_comment = mi.comment
+    self.url_list = mi.url_list
     self.orig_announce_url = mi.announce.to_s
     if !mi.announce_list.nil?
       #puts "Announce List class: #{mi.announce_list.class}"
@@ -205,6 +207,7 @@ EOS
   creation date: #{mi.creation_date || "<not specified>"}
      created by: #{mi.created_by || "<not specified>"}
         comment: #{mi.comment || "<not specified>"}
+       url-list: #{mi.url_list || "<not specified>"}
 EOS
   end
   

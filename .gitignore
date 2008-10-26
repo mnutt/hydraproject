@@ -4,3 +4,4 @@ config/config.yml
 log/*.log
 tmp/**
 torrents/*.torrent
+public/files/*
