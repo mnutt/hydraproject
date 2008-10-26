@@ -16,7 +16,7 @@ Spec::Runner.configure do |config|
 end
 
 # Meta-fixture here
-TRUSTED_SITES = [{'domain' => 'foo.org', 'passkey' => 'foo123', 'api_url' => 'http://foo.org/api'}]
+TRUSTED_SITES = [{'domain' => 'foo.org', 'passkey' => 'foo123', 'api_url' => 'http://foo.org/api'}] unless defined?(TRUSTED_SITES)
 
 require File.expand_path(File.dirname(__FILE__) + "/factories.rb")
 
@@ -39,8 +39,7 @@ class MemCacheMock
     end
   end
 end
-Object.send(:remove_const, :CACHE)
-CACHE = MemCacheMock
+CACHE = MemCacheMock unless defined?(CACHE)
 
 mock_config = {:require_email => true}
 Object.send(:remove_const, :C)

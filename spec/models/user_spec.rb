@@ -6,7 +6,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 include AuthenticatedTestHelper
 
 describe User do
-  fixtures :users
 
   describe 'being created' do
     before do
@@ -140,13 +139,15 @@ describe User do
   end
 
   it 'resets password' do
-    users(:quentin).update_attributes(:password => 'new password', :password_confirmation => 'new password')
-    User.authenticate('quentin', 'new password').should == users(:quentin)
+    @user = Factory.create(:user)
+    @user.update_attributes(:password => 'new password', :password_confirmation => 'new password')
+    User.authenticate('quentin', 'new password').should == @user
   end
 
   it 'does not rehash password' do
-    users(:quentin).update_attributes(:login => 'quentin2')
-    User.authenticate('quentin2', 'monkey').should == users(:quentin)
+    @user = Factory.create(:user)
+    @user.update_attributes(:login => 'quentin2')
+    User.authenticate('quentin2', 'monkey').should == @user
   end
 
   #
@@ -154,7 +155,8 @@ describe User do
   #
 
   it 'authenticates user' do
-    User.authenticate('quentin', 'monkey').should == users(:quentin)
+    @user = Factory.create(:user)
+    User.authenticate('quentin', 'monkey').should == @user
   end
 
   it "doesn't authenticate user with bad password" do
@@ -164,16 +166,19 @@ describe User do
  if REST_AUTH_SITE_KEY.blank?
    # old-school passwords
    it "authenticates a user against a hard-coded old-style password" do
-     User.authenticate('old_password_holder', 'test').should == users(:old_password_holder)
+     @user = Factory.create(:user)
+     User.authenticate('old_password_holder', 'test').should == @user
    end
  else
    it "doesn't authenticate a user against a hard-coded old-style password" do
+     @user = Factory.create(:user)
      User.authenticate('old_password_holder', 'test').should be_nil
    end
 
    # New installs should bump this up and set REST_AUTH_DIGEST_STRETCHES to give a 10ms encrypt time or so
    desired_encryption_expensiveness_ms = 0.1
    it "takes longer than #{desired_encryption_expensiveness_ms}ms to encrypt a password" do
+     @user = Factory.create(:user)
      test_reps = 100
      start_time = Time.now; test_reps.times{ User.authenticate('quentin', 'monkey'+rand.to_s) }; end_time   = Time.now
      auth_time_ms = 1000 * (end_time - start_time)/test_reps
@@ -186,42 +191,47 @@ describe User do
   #
 
   it 'sets remember token' do
-    users(:quentin).remember_me
-    users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_token_expires_at.should_not be_nil
+    @user = Factory.create(:user)
+    @user.remember_me
+    @user.remember_token.should_not be_nil
+    @user.remember_token_expires_at.should_not be_nil
   end
 
   it 'unsets remember token' do
-    users(:quentin).remember_me
-    users(:quentin).remember_token.should_not be_nil
-    users(:quentin).forget_me
-    users(:quentin).remember_token.should be_nil
+    @user = Factory.create(:user)
+    @user.remember_me
+    @user.remember_token.should_not be_nil
+    @user.forget_me
+    @user.remember_token.should be_nil
   end
 
   it 'remembers me for one week' do
+    @user = Factory.create(:user)
     before = 1.week.from_now.utc
-    users(:quentin).remember_me_for 1.week
+    @user.remember_me_for 1.week
     after = 1.week.from_now.utc
-    users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_token_expires_at.should_not be_nil
-    users(:quentin).remember_token_expires_at.between?(before, after).should be_true
+    @user.remember_token.should_not be_nil
+    @user.remember_token_expires_at.should_not be_nil
+    @user.remember_token_expires_at.between?(before, after).should be_true
   end
 
   it 'remembers me until one week' do
+    @user = Factory.create(:user)
     time = 1.week.from_now.utc
-    users(:quentin).remember_me_until time
-    users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_token_expires_at.should_not be_nil
-    users(:quentin).remember_token_expires_at.should == time
+    @user.remember_me_until time
+    @user.remember_token.should_not be_nil
+    @user.remember_token_expires_at.should_not be_nil
+    @user.remember_token_expires_at.should == time
   end
 
   it 'remembers me default two weeks' do
+    @user = Factory.create(:user)
     before = 2.weeks.from_now.utc
-    users(:quentin).remember_me
+    @user.remember_me
     after = 2.weeks.from_now.utc
-    users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_token_expires_at.should_not be_nil
-    users(:quentin).remember_token_expires_at.between?(before, after).should be_true
+    @user.remember_token.should_not be_nil
+    @user.remember_token_expires_at.should_not be_nil
+    @user.remember_token_expires_at.between?(before, after).should be_true
   end
 
 protected

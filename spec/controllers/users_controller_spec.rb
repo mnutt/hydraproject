@@ -5,7 +5,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 include AuthenticatedTestHelper
 
 describe UsersController do
-  fixtures :users
 
   it 'allows signup' do
     lambda do
@@ -44,23 +43,15 @@ describe UsersController do
       response.should be_success
     end.should_not change(User, :count)
   end
-
-  it 'requires email on signup' do
-    lambda do
-      create_user(:email => nil)
-      assigns[:user].errors.on(:email).should_not be_nil
-      response.should be_success
-    end.should_not change(User, :count)
-  end
-  
   
   it 'activates user' do
+    @user = Factory.create(:unactivated_user)
     User.authenticate('aaron', 'monkey').should be_nil
-    get :activate, :activation_code => users(:aaron).activation_code
+    get :activate, :activation_code => @user.activation_code
     response.should redirect_to('/login')
     flash[:notice].should_not be_nil
     flash[:error ].should     be_nil
-    User.authenticate('aaron', 'monkey').should == users(:aaron)
+    User.authenticate('aaron', 'monkey').should == @user
   end
   
   it 'does not activate user without key' do

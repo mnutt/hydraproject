@@ -1,3 +1,5 @@
+require 'digest/sha1'
+
 Factory.define :torrent do |t|
   t.name "My Torrent"
   t.filename "mytorrent.torrent"
@@ -19,4 +21,24 @@ Factory.define :peer do |p|
   p.passkey "97e9092f4b"
   p.seeder true
   p.connectable true
+end
+
+Factory.define :user do |u|
+  u.login "quentin"
+  u.email "quentin@example.com"
+  u.salt { Digest::SHA1.hexdigest('0') }
+  u.crypted_password "f9c8634b5ef30b4047c4ce34bd703fafb3e6be9a" # monkey
+  u.created_at { 5.days.ago }
+  u.remember_token_expires_at { 1.days.from_now }
+  u.remember_token "77de68daecd823babbb58edb1c8e14d7106e83bb"
+  u.activated_at { 5.days.ago }
+end
+
+Factory.define :unactivated_user, :class => User do |u|
+  u.login "aaron"
+  u.email "aaron@example.com"
+  u.salt { Digest::SHA1.hexdigest('0') }
+  u.crypted_password "f9c8634b5ef30b4047c4ce34bd703fafb3e6be9a" # monkey
+  u.created_at { 1.days.ago }
+  u.activation_code "1b6453892473a467d07372d45eb05abc2031647a"
 end
