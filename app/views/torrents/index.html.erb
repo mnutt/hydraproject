@@ -15,5 +15,5 @@
    <% end -%>
 </div>
 	
-<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
+<%= render :partial => 'shared/notice_text' %>
 <%= render :partial => 'list', :locals => {:torrents => @torrents, :paginate => true} %>

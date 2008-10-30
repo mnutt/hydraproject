@@ -1,6 +1,6 @@
 <h1>Admin Config</h1>
 
-<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
+<%= render :partial => 'shared/notice_text' %>
 <%= render :partial => 'admin/menu' %>
 
 <% form_for :config, @config, :url => {:action => :update_config} do |c| %>

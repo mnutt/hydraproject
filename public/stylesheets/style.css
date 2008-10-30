@@ -10,8 +10,7 @@ body {
 
 #header {
   background: url(/images/header_back.gif) repeat-x;
-  height: 100px;
-  position: relative;
+  height: 140px;
   margin: 0px;
   padding: 0px;
 }
@@ -146,13 +145,12 @@ h1 {
 
 .highlight {
   color: #777;
-  padding:  4px;
-  margin:  1px ;
-  width: 60%;
+  padding:  1em;
+  margin:  1em auto ;
+  width: 470px;
   background-color: #ffc;
   border: 1px dotted #ccc;
   text-align: left;
-  margin-bottom: 8px;
 }
 
 .validation-advice {
@@ -263,6 +261,12 @@ table a:active{
   padding: 4px;
 }
 
+/* Torrents */
+
+#upload-form .submit-box {
+  margin: 0 auto;
+  display: block;
+}
 
 /* WILL PAGINATE PLUGIN - Digg Style */
 

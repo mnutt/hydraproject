@@ -4,7 +4,7 @@
 	<h2 class="title">Account Signup</h2>
 	
 	
-	<%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
+	<%= render :partial => 'shared/notice_text' %>
 
 	<form action="/account/signup" method="post" id="signup-form">
 			<% if not @invite.nil? %>

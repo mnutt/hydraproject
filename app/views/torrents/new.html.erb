@@ -1,49 +1,47 @@
 <h1>Upload a New Torrent</h1>
 
-<center>
-  <%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
+<%= render :partial => 'shared/notice_text' %>
   
-  <div class="highlight" style="width: 600px;">Please use your personalized tracker URL when creating the torrent: <br/>
-    <div style="padding-top: 5px;"><i><b><%= current_user.tracker_url %></i></b></div>
+<div class="highlight">
+  <div>Please use your personalized tracker URL when creating the torrent:</div>
+  <div style="font-weight: bold; font-style: italic">
+    <%= current_user.tracker_url %>
   </div>
-</center>
+</div>
+
 <% form_for @torrent, :html => { :multipart => true, :id => 'upload-form' } do |f| %>
   <center>
-    <%= render :partial => 'shared/notice_text', :locals => {:flash => flash} %>
+    <%= render :partial => 'shared/notice_text' %>
     <table cellspacing="2" cellpadding="2" width="500px" style="border: 1px dotted #ccc">
       <tr>
-	<td><label for="torrent_file">Torrent file:</label></td>
+	<td><%= f.label :the_torrent, "Torrent file:" -%></td>
 	<td>
 	  <%= f.file_field :the_torrent, :class => "required" -%>
 	</td>
       </tr>
       <tr>
-	<td><label for="torrent_name">Torrent name:</label></td>
+	<td><%= f.label :name, "Torrent name:" -%></td>
 	<td>
-	  <%= f.text_field :name, :size => 40, :maxlength => 90, :class => '' %> <br/>
-	  <i>(taken from filename if not specified)</i>
+	  <%= f.text_field :name, :size => 40, :maxlength => 90, :class => '' %>
+	  <div><i>(taken from filename if not specified)</i></div>
 	</td>
       </tr>
       <tr>
-	<td><label for="torrent_category">Category:</label></td>
+	<td><%= f.label :category, "Category:" -%></td>
 	<td>
 	  <input type="hidden" value="dummy" class="category-required-123">
 	  <%= f.select(:category_id, Category.all.map{|c| [c.name, c.id]}, :class => 'category-required') %>
 	</td>
       </tr>
       <tr>
-	<td><label for="torrent_description">Description:</label></td>
+	<td><%= f.label :description, "Description:" -%></td>
 	<td>
 	  <%= f.text_area :description, :style => 'width: 90%; height: 120px' %>
 	</td>
       </tr>
       <tr>
-	<td colspan="2">
-	  
-	  <%= hidden_field_tag 'user_id', current_user.id %>
-	  
-	  <div style="margin-left: 200px;"><input type="Submit" value="Upload It  &#187; " class="submit-box"><br/>
-	  </div>
+	<td colspan="2">	  
+	  <input type="Submit" value="Upload It  &#187; " class="submit-box">
 	</td>
       </tr>
     </table>
