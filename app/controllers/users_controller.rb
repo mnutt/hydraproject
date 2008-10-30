@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  # render new.rhtml
+  # render new.html.erb
   def new
     @user = User.new
   end

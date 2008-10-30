@@ -2,6 +2,7 @@ config/database.yml
 config/federation.yml
 config/config.yml
 log/*.log
+log/*.pid
 tmp/**
 torrents/*.torrent
 public/files/*

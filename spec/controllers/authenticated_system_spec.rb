@@ -7,7 +7,6 @@ include AuthenticatedSystem
 def action_name() end
 
 describe SessionsController do
-  fixtures :users
   
   before do
     # FIXME -- sessions controller not testing xml logins 
@@ -15,7 +14,7 @@ describe SessionsController do
   end    
   describe "logout_killing_session!" do
     before do
-      login_as :quentin
+      login_as :user
       stub!(:reset_session)
     end
     it 'resets the session'         do should_receive(:reset_session);         logout_killing_session! end
@@ -29,15 +28,15 @@ describe SessionsController do
     it 'forgets me' do    
       current_user.remember_me
       current_user.remember_token.should_not be_nil; current_user.remember_token_expires_at.should_not be_nil
-      User.find(1).remember_token.should_not be_nil; User.find(1).remember_token_expires_at.should_not be_nil
+      User.first.remember_token.should_not be_nil; User.first.remember_token_expires_at.should_not be_nil
       logout_killing_session!
-      User.find(1).remember_token.should     be_nil; User.find(1).remember_token_expires_at.should     be_nil
+      User.first.remember_token.should     be_nil; User.first.remember_token_expires_at.should     be_nil
     end
   end
 
   describe "logout_keeping_session!" do
     before do
-      login_as :quentin
+      login_as :user
       stub!(:reset_session)
     end
     it 'does not reset the session' do should_not_receive(:reset_session);   logout_keeping_session! end
@@ -51,9 +50,9 @@ describe SessionsController do
     it 'forgets me' do    
       current_user.remember_me
       current_user.remember_token.should_not be_nil; current_user.remember_token_expires_at.should_not be_nil
-      User.find(1).remember_token.should_not be_nil; User.find(1).remember_token_expires_at.should_not be_nil
+      User.first.remember_token.should_not be_nil; User.first.remember_token_expires_at.should_not be_nil
       logout_keeping_session!
-      User.find(1).remember_token.should     be_nil; User.find(1).remember_token_expires_at.should     be_nil
+      User.first.remember_token.should     be_nil; User.first.remember_token_expires_at.should     be_nil
     end
   end
   
@@ -73,7 +72,7 @@ describe SessionsController do
       @user.save!
     end    
     before do 
-      @user = User.find(:first); 
+      @user = Factory.create(:user)
       set_remember_token 'hello!', 5.minutes.from_now
     end    
     it 'logs in with cookie' do

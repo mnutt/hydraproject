@@ -35,14 +35,13 @@ ACCESS_CONTROL_FORMATS = [
   ['xml',  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  <success>xml</success>\n</hash>\n"],
   ['json', "{\"success\": \"json\"}"],]
 ACCESS_CONTROL_AM_I_LOGGED_IN = [
-  [:i_am_logged_in,     :quentin],
+  [:i_am_logged_in,     :user],
   [:i_am_not_logged_in, nil],]
 ACCESS_CONTROL_IS_LOGIN_REQD = [
   :login_not_required,
   :login_is_required,]
 
 describe AccessControlTestController do
-  fixtures        :users
   before do
     # is there a better way to do this?
     ActionController::Routing::Routes.add_route '/login_is_required',           :controller => 'access_control_test',   :action => 'login_is_required'

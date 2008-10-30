@@ -41,6 +41,14 @@
 	      <%= f.password_field :password_confirmation, :size => 10, :maxlength => 15, :class => 'nice-field required' %>
 	    </td>
 	  </tr>
+	  <% if C[:require_email] -%>
+	    <tr>
+	      <td><label for="user_email">Email:</label></td>
+	      <td>
+		<%= f.text_field :email, :size => 10, :maxlength => 100, :class => 'nice-field required' %>
+	      </td>
+	    </tr>
+	  <% end -%>
 	  <tr>
 	    <td colspan="2">
 	      <%= check_box_tag :ageverify, 'yes', :class => "validate-is-checked" -%> I am at least 13 years old.

@@ -4,7 +4,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 # Then, you can remove it from this and the units test.
 
 describe SessionsController do
-  fixtures        :users
   before do 
     @user  = mock_user
     @login_params = { :login => 'quentin', :password => 'test' }
@@ -72,10 +71,10 @@ describe SessionsController do
   describe "on failed login" do
     before do
       User.should_receive(:authenticate).with(anything(), anything()).and_return(nil)
-      login_as :quentin
+      login_as :user
     end
     it 'logs out keeping session'   do controller.should_receive(:logout_keeping_session!); do_create end
-    it 'flashes an error'           do do_create; flash[:error].should =~ /Couldn't log you in as 'quentin'/ end
+    it 'flashes an error'           do do_create; flash[:notice].should =~ /Couldn't log you in as 'quentin'/ end
     it 'renders the log in page'    do do_create; response.should render_template('new')  end
     it "doesn't log me in"          do do_create; controller.send(:logged_in?).should == false end
     it "doesn't send password back" do 
@@ -90,7 +89,7 @@ describe SessionsController do
       get :destroy
     end
     before do 
-      login_as :quentin
+      login_as :user
     end
     it 'logs me out'                   do controller.should_receive(:logout_killing_session!); do_destroy end
     it 'redirects me to the home page' do do_destroy; response.should be_redirect     end
