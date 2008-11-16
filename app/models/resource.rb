@@ -1,3 +1,18 @@
+# == Schema Information
+# Schema version: 20081025182003
+#
+# Table name: resources
+#
+#  id                :integer(4)      not null, primary key
+#  file_file_name    :string(255)
+#  file_content_type :string(255)
+#  file_file_size    :integer(4)
+#  file_updated_at   :datetime
+#  created_at        :datetime
+#  updated_at        :datetime
+#  user_id           :integer(4)
+#
+
 require 'make-torrent'
 
 class Resource < ActiveRecord::Base

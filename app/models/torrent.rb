@@ -1,3 +1,33 @@
+# == Schema Information
+# Schema version: 20081025182003
+#
+# Table name: torrents
+#
+#  id                 :integer(4)      not null, primary key
+#  info_hash          :string(255)
+#  name               :string(255)
+#  user_id            :integer(4)
+#  filename           :string(255)
+#  description        :text
+#  category_id        :integer(4)
+#  size               :integer(4)
+#  piece_length       :integer(4)
+#  pieces             :integer(4)
+#  orig_announce_url  :string(255)
+#  orig_announce_list :text
+#  created_by         :string(255)
+#  torrent_comment    :string(255)
+#  numfiles           :integer(4)
+#  views              :integer(4)      default(0)
+#  times_completed    :integer(4)      default(0)
+#  leechers           :integer(4)      default(0)
+#  seeders            :integer(4)      default(0)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  resource_id        :integer(4)
+#  url_list           :string(255)
+#
+
 class Torrent < ActiveRecord::Base
   belongs_to :user  # This is only set for the first few days, so the administrator can police new uploads
   belongs_to :category

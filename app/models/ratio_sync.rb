@@ -1,3 +1,13 @@
+# == Schema Information
+# Schema version: 20081025182003
+#
+# Table name: ratio_syncs
+#
+#  domain     :string(255)
+#  created_at :datetime
+#  sync_id    :integer(4)
+#
+
 class RatioSync < ActiveRecord::Base
   #has_many :ratio_snapshots
   

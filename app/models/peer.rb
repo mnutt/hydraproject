@@ -1,3 +1,28 @@
+# == Schema Information
+# Schema version: 20081025182003
+#
+# Table name: peers
+#
+#  id              :integer(4)      not null, primary key
+#  torrent_id      :integer(4)
+#  peer_id         :string(255)
+#  port            :integer(4)
+#  passkey         :string(255)
+#  uploaded        :integer(4)      default(0)
+#  downloaded      :integer(4)      default(0)
+#  to_go           :integer(4)      default(0)
+#  seeder          :boolean(1)
+#  connectable     :boolean(1)
+#  user_id         :integer(4)
+#  agent           :string(255)
+#  finished_at     :datetime
+#  download_offset :integer(4)      default(0)
+#  upload_offset   :integer(4)      default(0)
+#  last_action_at  :datetime
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+
 class Peer < ActiveRecord::Base
   belongs_to :torrent
   

@@ -1,3 +1,30 @@
+# == Schema Information
+# Schema version: 20081025182003
+#
+# Table name: users
+#
+#  id                        :integer(4)      not null, primary key
+#  login                     :string(40)
+#  crypted_password          :string(40)
+#  salt                      :string(40)
+#  is_admin                  :boolean(1)
+#  is_moderator              :boolean(1)
+#  remember_token            :string(40)
+#  remember_token_expires_at :datetime
+#  created_at                :datetime
+#  updated_at                :datetime
+#  passkey                   :string(255)
+#  uploaded                  :integer(4)      default(0)
+#  downloaded                :integer(4)      default(0)
+#  downloaded_local          :integer(4)      default(0)
+#  uploaded_local            :integer(4)      default(0)
+#  is_local                  :boolean(1)      default(TRUE)
+#  name                      :string(100)     default("")
+#  email                     :string(100)
+#  activation_code           :string(40)
+#  activated_at              :datetime
+#
+
 require 'digest/sha1'
 
 class User < ActiveRecord::Base
