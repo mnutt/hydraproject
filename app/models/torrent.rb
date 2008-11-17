@@ -35,12 +35,12 @@ class Torrent < ActiveRecord::Base
   
   has_many :torrent_files, :dependent => :destroy
   has_many :peers, :dependent => :destroy
+  has_many :comments, :dependent => :destroy, :include => :user, :order => 'comments.id ASC'
   
   before_save :ensure_non_negative
   before_destroy :cleanup
   
   serialize :orig_announce_list  # An Array of announce URLs
-  has_many :comments, :dependent => :destroy, :include => :user, :order => 'comments.id ASC'
   
   # For the will_paginate plugin.  See: http://plugins.require.errtheblog.com/browser/will_paginate/README
   cattr_reader :per_page
@@ -77,45 +77,18 @@ class Torrent < ActiveRecord::Base
   def tkey
     "torrent_#{self.id}"
   end
+
+  def add_peer_to_cache(peer, remote_ip)
+    peers = CACHE.get(self.tkey) || {}
+    original_peers = peers.clone
+    peers.merge!(peer.id => remote_ip) 
+    CACHE.set(self.tkey, peers) unless peers == original_peers # don't do unnecessary cache set
+  end
   
   def peer_started!(peer, remote_ip)
     peer.seeder? ? self.seeders +=1 : self.leechers += 1
     
-    peers = CACHE.get(self.tkey)
-    if peers.nil?
-      CACHE.set(self.tkey, {peer.id => remote_ip})
-    else
-      if peers.has_key?(peer.id)
-        # Maybe they've changed IPs
-        if peers[peer.id] != remote_ip
-          # they have, changed IPs
-          peers.delete(peer.id)
-          peers[peer.id] = remote_ip
-          CACHE.set(self.tkey, peers)
-        end
-      else
-        # IF the Peer IP does not already exists in the memcache
-        peers[peer.id] = remote_ip
-        CACHE.set(self.tkey, peers)
-      end
-    end
-  end
-
-  def peer_stopped!(peer, remote_ip)
-    peer.seeder? ? self.seeders -= 1 : self.leechers -= 1
-    
-    peers = CACHE.get(self.tkey)
-    if peers && peers.has_key?(peer.id)
-      # The MemCache does indeed have this Peer in its cache
-      peers.delete(peer.id)
-      if peers.empty?
-        CACHE.delete(self.tkey)
-      else
-        CACHE.set(self.tkey, peers)
-      end
-    end
-    # Destroy the peer (it's no longer active)
-    peer.destroy
+    add_peer_to_cache(peer, remote_ip)
   end
 
   def peer_completed!(peer, remote_ip)
@@ -123,15 +96,26 @@ class Torrent < ActiveRecord::Base
     self.leechers -= 1
     self.times_completed += 1
     
-    peers = CACHE.get(self.tkey)
-    if peers.nil?
-      CACHE.set(self.tkey, {peer.id => remote_ip})
-    elsif peers && !peers.has_key?(peer.id)
-      # Add the peer
-      peers[peer.id] = remote_ip
-      CACHE.set(self.tkey, peers)
-    end
+    add_peer_to_cache(peer_remote_ip)
   end
+
+  def peer_stopped!(peer, remote_ip)
+    peer.seeder? ? self.seeders -= 1 : self.leechers -= 1
+    
+    peers = CACHE.get(self.tkey)
+    
+    if peers.delete(peer.id)
+      if peers.empty?
+        CACHE.delete(self.tkey)
+      else
+        CACHE.set(self.tkey, peers)
+      end
+    end
+
+    # Destroy the peer (it's no longer active)
+    peer.destroy
+  end
+
  
   def num_peers
     self.seeders + self.leechers

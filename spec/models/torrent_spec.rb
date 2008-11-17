@@ -138,7 +138,7 @@ describe Torrent, "setting metainfo" do
 
   it "should work with multiple files" do
     @mi.info.pieces = [Digest::SHA1.digest("A"), Digest::SHA1.digest("B")].join
-    another_file = @mi.info.files.first.clone
+    another_file = @mi.info.files.first.dup
     @mi.info.files << another_file
     @torrent.set_metainfo!(@mi)
     
