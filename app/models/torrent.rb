@@ -153,53 +153,51 @@ class Torrent < ActiveRecord::Base
     if mi.nil?
       mi = self.meta_info
     end
-    
-    total_size = 0
-    mii = mi.info  # MetaInfoInfo
-    if mii.single?
-      self.size = total_size = mii.length
-      self.torrent_files << TorrentFile.create({:filename => mii.name, :size => mii.length})
-      self.numfiles = 1
-    else
-      # Increment total_size for each file
-      mii.files.each do |f|
-        total_size += f.length
-        if f.path.size == 1
-          path = f.path.to_s
-        else
-          path = f.path.join('\\')
-        end
-        self.torrent_files << TorrentFile.create({:filename => path, :size => f.length})
-      end
-      self.numfiles = mii.files.size
-    end
-    self.info_hash = mii.info_hash
-    self.piece_length = mii.piece_length
-    self.pieces = mii.pieces.length / 20
-    self.size = total_size  # bytes
-    self.torrent_comment = mi.comment
-    self.url_list = mi.url_list
-    self.orig_announce_url = mi.announce.to_s
-    if !mi.announce_list.nil?
-      #puts "Announce List class: #{mi.announce_list.class}"
-      #puts "Announce List: #{mi.announce_list.inspect}"
-      self.orig_announce_list = mi.announce_list
-    end
-    self.created_by = mi.created_by unless mi.created_by.nil?
-    if self.name.nil? || self.name.blank?
-      set_name_from_torrent_filename
-    end
+
+    mii = mi.info # MetaInfoInfo
+
+    create_torrent_files(mii)
+
+    self.numfiles           = mii.single? ? 1 : mii.files.size
+    self.size               = get_mii_file_size(mii) 
+    self.info_hash          = mii.info_hash
+    self.piece_length       = mii.piece_length
+    self.pieces             = mii.pieces.length / 20
+    self.torrent_comment    = mi.comment
+    self.url_list           = mi.url_list
+    self.orig_announce_url  = mi.announce.to_s
+    self.created_by         = mi.created_by              unless mi.created_by.nil?
+    self.orig_announce_list = mi.announce_list           unless mi.announce_list.nil?
+    self.name               = name_from_torrent_filename if self.name.blank?
     
     save!
   end
+
+  def get_mii_file_size(mii)
+    if mii.single? 
+      mii.length 
+    else
+      mii.files.inject(0) { |s, f| s + f.length } # sum of all file lengths, in bytes
+    end
+  end
+
+  def create_torrent_files(mii)
+    if mii.single?
+      self.torrent_files.create({:filename => mii.name, :size => mii.length})
+    else
+      mii.files.each do |f|
+        path = [f.path].flatten.join('\\')
+        self.torrent_files.create({:filename => path, :size => f.length})
+      end
+    end
+  end
   
-  def set_name_from_torrent_filename
+  def name_from_torrent_filename
     f = self.filename.dup
     # Underscores => spaces
-    f = f.gsub(/_/, ' ')
+    f.gsub!(/_/, ' ')
     # Now strip off ".torrent" from the end
-    f = f.gsub(/\.torrent$/, '')
-    self.name = f
+    f.gsub!(/\.torrent$/, '')
   end
   
   def self.clear_user_ids
