@@ -1,4 +1,24 @@
 require File.dirname(__FILE__) + '/../spec_helper'
+require 'ostruct'
+require 'digest/sha1'
+
+def mock_mi(options={}, mii_options={})
+  OpenStruct.new({ :comment => "comment",
+                   :url_list => "URL list",
+                   :announce => "http://torrent.example.com/announce",
+                   :announce_list => "http://torrent.example.com/announce,http://torrent2.example.com/announce",
+                   :created_by => "user",
+                   :info => mock_mii(mii_options) }.merge(options))
+end
+
+def mock_mii(options)
+  OpenStruct.new({ :name => "file.jpg",
+                   :length => 1024,
+                   :info_hash => Digest::SHA1.digest("infohash"),
+                   :piece_length => 256,
+                   :pieces => [Digest::SHA1.digest("A"), Digest::SHA1.digest("B")].join,
+                   :files => [OpenStruct.new(:path => "file.jpg".split("/"), :length => 1024)]}.merge(options))
+end
 
 describe Torrent do
   before do
@@ -66,5 +86,45 @@ describe Torrent, "stopping a peer" do
 
   it 'should remove the peer from the cache' do
     CACHE.get(@torrent.tkey).should == nil
+  end
+end
+
+describe Torrent, "setting metainfo" do
+  before do
+    @torrent = Factory.create(:torrent)
+    @mi = mock_mi
+  end
+
+  it "should set the correct filesize" do
+    @torrent.set_metainfo!(@mi)
+    @torrent.size.should == 1024
+  end
+
+  it "should set the correct name" do
+    @torrent.set_metainfo!(@mi)
+    @torrent.name.should == "My Torrent"
+  end
+
+  it "should have the right number of files" do
+    @torrent.set_metainfo!(@mi)
+    @torrent.torrent_files.count.should == 1
+    @torrent.numfiles.should == 1
+  end
+
+  it "should set the correct number of pieces" do
+    @torrent.set_metainfo!(@mi)
+    @torrent.pieces.should == 2
+  end
+
+  it "should work with just a single file" do
+    @mi = mock_mi
+    @mi.info.stub!(:single?).and_return(true)
+    @mi.info.length = 2048
+    @mi.info.name = "singlemii.txt"
+    @torrent.set_metainfo!(@mi)
+
+    @torrent.numfiles.should == 1
+    @torrent.torrent_files.first.filename.should == "singlemii.txt"
+    @torrent.torrent_files.first.size.should == 2048
   end
 end
