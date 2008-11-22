@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081025182003) do
+ActiveRecord::Schema.define(:version => 20081122190700) do
 
   create_table "categories", :force => true do |t|
     t.string "name"
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(:version => 20081025182003) do
   end
 
   add_index "torrents", ["info_hash"], :name => "index_torrents_on_info_hash"
-  add_index "torrents", ["name", "filename"], :name => "ft_idx_torrents"
+  add_index "torrents", ["name", "filename", "description"], :name => "ft_idx_torrents"
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
