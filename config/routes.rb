@@ -8,7 +8,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users
   map.resource  :session
 
-  map.resources :torrents
+  map.resources :torrents, :collection => {:search => :any}
   map.resources :resources
 
   map.with_options :controller => 'torrents', :action => 'download', :requirements => { :filename => /.*/ } do |m|

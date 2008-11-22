@@ -50,6 +50,22 @@ class TorrentsController < ApplicationController
       end
     end
   end
+
+  def search
+    @query = params[:query] unless params[:query].blank?
+    conditions = []
+    if params[:cat]
+      @categories = Category.find(params[:cat])
+      conditions << "category_id IN (?)"
+    end
+    if @query
+      conditions << "MATCH(name,filename,description) AGAINST (?)"
+    end
+
+    conditions = [conditions.join(" AND "), @categories, @query].compact
+    @torrents = Torrent.paginate(:conditions => conditions, :order => 'created_at DESC', :page => params[:page])
+  end
+    
   
   def download
     if params[:passkey]
