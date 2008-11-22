@@ -1,0 +1,12 @@
+<% @page_title = h(@category.name) -%>
+
+<h1>
+  <%= link_to "Browse Torrents", torrents_url -%> 
+  &raquo; 
+  <%= @category.name %>
+</h1>
+
+<%= render :partial => 'torrents/search_form' -%>
+	
+<%= render :partial => 'shared/notice_text' %>
+<%= render :partial => 'torrents/list', :locals => {:torrents => @torrents, :paginate => true} %>

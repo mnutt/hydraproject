@@ -1,0 +1,14 @@
+<div style="margin: 10px;" class="toggle_links">
+  <%= toggle_div('browse_cats', '+ Show Categories / Search', '- Hide Categories / Search', !@in_category) %>
+</div>
+
+<div id="browse_cats" <% unless @category or @categories -%>style="display:none;"<% end -%>>
+  <div style="margin-bottom: 4px;"><i>Select any number of categories and/or search terms to restrict your results by.</i></div>
+  <% form_for :torrents, :url => search_torrents_url, :html => {:method => 'GET'} do |f| %>
+    <% Category.all.each do |cat| %>
+      <%= check_box_tag("cat[]", cat.id, cat == @category || (@categories && @categories.include?(cat))) %>	
+      <%= link_to(cat.name, cat) %> &nbsp;&nbsp;
+    <% end %> <br/>
+    <div style="margin-top: 6px;"><%= text_field_tag('query', @query || '') %> <%= submit_tag("Search") %></div>
+   <% end -%>
+</div>

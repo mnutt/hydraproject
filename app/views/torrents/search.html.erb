@@ -1,0 +1,10 @@
+<% @page_title = h search_phrase(@query, @categories) -%>
+<h1>
+  Search &raquo;
+  <%=h search_phrase(@query, @categories) -%>
+</h1>
+
+<%= render :partial => 'torrents/search_form' -%>
+	
+<%= render :partial => 'shared/notice_text' %>
+<%= render :partial => 'torrents/list', :locals => {:torrents => @torrents, :paginate => true} %>

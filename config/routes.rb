@@ -10,6 +10,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :torrents, :collection => {:search => :any}
   map.resources :resources
+  map.resources :categories
 
   map.with_options :controller => 'torrents', :action => 'download', :requirements => { :filename => /.*/ } do |m|
     m.download          'torrent/:id/download/:filename'               
