@@ -30,5 +30,9 @@ module ApplicationHelper
   def hidden
     "style=\"display:none;\""
   end
-  
+
+  def search_phrase(query, categories)
+    phrase = "\"#{query}\"" || "All"
+    phrase << " in " + categories.map{|c| c.name}.join(', ') unless categories.blank?
+  end
 end

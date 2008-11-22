@@ -8,33 +8,8 @@ class TorrentsController < ApplicationController
       format.html do
         params[:page] ||= 1
         @in_category = false
-        @categories = []
         @title = "Browse Torrents"
-        if params[:cat]
-          @in_category = true
-          @category = Category.find(params[:cat])
-          @categories = [@category.id]
-          @title = "Browse Torrents &raquo; #{@category.name}"
-          @torrents = Torrent.paginate(:conditions => ["category_id = ?", @category.id], :order => 'created_at DESC', :page => params[:page])
-        elsif params[:categories] && !params[:query]
-          @in_category = true
-          @categories = params[:categories].keys
-          @torrents = Torrent.paginate(:conditions => ["category_id IN (?)", @categories], :order => 'created_at DESC', :page => params[:page])
-        elsif params[:query]
-          @in_category = true
-          @in_search = true
-          @query = params[:query]
-          @title = "Search &raquo; #{@query}"
-          if params[:categories]
-            @categories = params[:categories].keys
-            conditions = ["match(name,filename,description) against (?) AND category_id IN (?)", @query, @categories]
-          else
-            conditions = ["match(name,filename,description) against (?)", @query]
-          end
-          @torrents = Torrent.paginate(:conditions => conditions, :order => 'created_at DESC', :page => params[:page])
-        else
-          @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
-        end
+        @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
         
         @page_title = "Browse Latest (page #{params[:page]})"
       end
@@ -194,7 +169,6 @@ class TorrentsController < ApplicationController
     end
     @torrent.increment!(:views)
     @comments = Comment.paginate(:conditions => ["torrent_id = ?", @torrent.id], :order => 'id ASC', :page => params[:page])
-    @page_title = @torrent.name
   end
   
   def destroy #AJAX & ADMIN only
