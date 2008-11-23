@@ -6,12 +6,7 @@ class TorrentsController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        params[:page] ||= 1
-        @in_category = false
-        @title = "Browse Torrents"
         @torrents = Torrent.paginate :order => 'id DESC', :page => params[:page]
-        
-        @page_title = "Browse Latest (page #{params[:page]})"
       end
       format.xml do
         if @user = User.feed_auth(params[:user], params[:passkey])
@@ -123,7 +118,6 @@ class TorrentsController < ApplicationController
       begin
         meta_info = RubyTorrent::MetaInfo.from_location(tmp_path)
       rescue RubyTorrent::MetaInfoFormatError => e
-        raise "no"
         flash[:notice] = "The uploaded file does not appear to be a valid .torrent file."
         render :action => 'new'
         return

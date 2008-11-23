@@ -1,3 +1,5 @@
+<% @page_title = "Browse Torrents" -%>
+<% @page_title << " (page #{h(params[:page].to_i)})" if params[:page] && params[:page].to_i > 1 -%>
 <h1>Browse Torrents</h1>
 
 <%= render :partial => 'torrents/search_form' -%>
