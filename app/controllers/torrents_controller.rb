@@ -1,7 +1,7 @@
 class TorrentsController < ApplicationController
   include ApplicationHelper
   verify :only=>:destroy, :method=>:post
-  before_filter :check_logged_in, :except => [:download, :show, :browse]
+  before_filter :login_required, :except => [:show, :browse]
   
   def index
     respond_to do |format|
@@ -38,18 +38,6 @@ class TorrentsController < ApplicationController
     
   
   def download
-    if params[:passkey]
-      user = User.find(:first, :conditions => ["passkey = ?", params[:passkey]])
-      if user.nil?
-        check_logged_in; return false
-      else
-        set_current_user(user)
-      end
-    else
-      if current_user.nil?
-        check_logged_in; return false
-      end
-    end
     @torrent = Torrent.find(params[:id])
     @meta_info = @torrent.meta_info
     @meta_info.key = current_user.passkey # || params[:passk
