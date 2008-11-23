@@ -42,3 +42,7 @@ Factory.define :unactivated_user, :class => User do |u|
   u.created_at { 1.days.ago }
   u.activation_code "1b6453892473a467d07372d45eb05abc2031647a"
 end
+
+Factory.define :category do |c|
+  c.name "Files"
+end
