@@ -1,0 +1,17 @@
+This plug-in adds ActiveRecord support for MySQL Full Text Search.
+
+Use "execute" in Migrations to create the full text index. Name your
+index with the "FullText_" prefix and "ENGINE=MyISAM" option. For example:
+
+    create_table("stories", :force => true, :options => "ENGINE=MyISAM") do |t|
+      t.column("subject", :string, :limit => 150)
+      t.column("created_by_member_id", :integer, :limit => 10)
+      t.column("body", :text)
+    end  
+    add_index "stories", ["created_by_member_id"]
+
+    #Create MySQL specific full-text index
+    execute "CREATE FULLTEXT INDEX FullText_Stories ON stories (subject, body)"
+    
+Then simply use the standard Rake tasks db:schema:dump and dependent tasks (test clone, units, etc.)
+as you would.

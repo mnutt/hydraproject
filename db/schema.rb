@@ -104,7 +104,8 @@ ActiveRecord::Schema.define(:version => 20081122190700) do
   end
 
   add_index "torrents", ["info_hash"], :name => "index_torrents_on_info_hash"
-  add_index "torrents", ["name", "filename", "description"], :name => "ft_idx_torrents"
+  execute "ALTER TABLE torrents ENGINE = MyISAM"
+  execute "CREATE FULLTEXT INDEX FullText_torrents ON torrents (name,filename,description)"
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
