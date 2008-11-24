@@ -13,6 +13,8 @@ Factory.define :torrent do |t|
   t.description "Torrent description"
   t.seeders 4
   t.leechers 10
+  t.association :user
+  t.the_file { File.open("#{RAILS_ROOT}/spec/data/test.torrent") }
 end
 
 Factory.define :peer do |p|

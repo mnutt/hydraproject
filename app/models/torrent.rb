@@ -37,15 +37,20 @@ class Torrent < ActiveRecord::Base
   has_many :peers, :dependent => :destroy
   has_many :comments, :dependent => :destroy, :include => :user, :order => 'comments.id ASC'
   
+  before_save :get_meta_from_file
   before_save :ensure_non_negative
+  after_save :move!
+  after_save :create_torrent_files
   before_destroy :cleanup
+
+  validates_uniqueness_of :info_hash
   
   serialize :orig_announce_list  # An Array of announce URLs
   
   # For the will_paginate plugin.  See: http://plugins.require.errtheblog.com/browser/will_paginate/README
   cattr_reader :per_page
   @@per_page = C[:num_items_per_page]
-  attr_accessor :the_torrent
+  attr_accessor :the_file, :tmp_path
 
   # pretty URLs
   def to_param
@@ -67,6 +72,52 @@ class Torrent < ActiveRecord::Base
   
   def print_meta_info
     Torrent.dump_metainfo(self.meta_info)
+  end
+
+  def get_meta_from_file    
+    if self.the_file.nil?
+      self.errors.add_to_base("Please select a torrent file to upload.")
+      return false
+    end
+
+    contents = self.the_file.is_a?(String) ? the_file : the_file.read
+    
+    File.open(tmp_path, "w") { |f| f.write(contents) }
+    
+    if !File.exists?(tmp_path)
+      self.errors.add_to_base("There was a problem writing the file to the server.")
+    end
+
+    # Get the MetaInfo, confirm that it's a legit torrent
+    begin
+      meta_info = RubyTorrent::MetaInfo.from_location(tmp_path)
+    rescue RubyTorrent::MetaInfoFormatError => e
+      self.errors.add_to_base "The uploaded file does not appear to be a valid .torrent file."
+      return false
+    rescue StandardError => e
+      self.errors.add_to_base "There was an error processing your upload: #{$!}.  Please contact the admins if this problem persists."
+      return false
+    end
+    
+    self.filename = original_filename
+   
+    logger.warn Torrent.dump_metainfo(meta_info)
+
+    self.set_metainfo!(meta_info)
+  end
+
+  def original_filename
+    is_safari = self.the_file.is_a?(String)
+    safari_filename = self.name.blank? ? 'unknown.torrent' : "#{self.name.guidify}.torrent"
+    is_safari ? safari_filename : the_file.original_filename
+  end
+
+  def tmp_path
+    return @tmp_path if @tmp_path
+    begin
+      path = File.join(RAILS_ROOT, 'tmp', 'uploads', "#{self.user.id}_#{rand(1000)}_#{original_filename}")
+    end while File.exist?(path)
+    @tmp_path = path
   end
   
   def ensure_non_negative
@@ -125,8 +176,8 @@ class Torrent < ActiveRecord::Base
     File.join(RAILS_ROOT, 'torrents') # We keep torrent files outside of the web root
   end
   
-  def move!(from_path)
-    FileUtils.mv(from_path, self.torrent_path)
+  def move!
+    FileUtils.mv(tmp_path, self.torrent_path)
   end
   
   def torrent_path
@@ -140,8 +191,6 @@ class Torrent < ActiveRecord::Base
 
     mii = mi.info # MetaInfoInfo
 
-    create_torrent_files(mii)
-
     self.numfiles           = mii.single? ? 1 : mii.files.size
     self.size               = get_mii_file_size(mii) 
     self.info_hash          = mii.info_hash
@@ -153,8 +202,6 @@ class Torrent < ActiveRecord::Base
     self.created_by         = mi.created_by              unless mi.created_by.nil?
     self.orig_announce_list = mi.announce_list           unless mi.announce_list.nil?
     self.name               = name_from_torrent_filename if self.name.blank?
-    
-    save!
   end
 
   def get_mii_file_size(mii)
@@ -165,7 +212,9 @@ class Torrent < ActiveRecord::Base
     end
   end
 
-  def create_torrent_files(mii)
+  def create_torrent_files
+    mi = RubyTorrent::MetaInfo.from_location(torrent_path)
+    mii = mi.info
     if mii.single?
       self.torrent_files.create({:filename => mii.name, :size => mii.length})
     else
