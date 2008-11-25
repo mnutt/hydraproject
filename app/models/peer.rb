@@ -30,6 +30,8 @@ class Peer < ActiveRecord::Base
   before_save :ping
   before_destroy :cleanup
 
+  named_scope :connectable, :conditions => {:connectable => true}
+
   def ping
     self.last_action_at = Time.now
   end

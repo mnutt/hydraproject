@@ -57,10 +57,6 @@ class Torrent < ActiveRecord::Base
     "#{id}-#{name.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
   end
   
-  def connectable_peers
-    Peer.find(:all, :conditions => ["torrent_id = ? AND connectable = ? ", self.id, true])
-  end
-  
   def cleanup
     File.unlink(self.torrent_path) if File.exist?(self.torrent_path)
   end

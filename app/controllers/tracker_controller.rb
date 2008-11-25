@@ -9,7 +9,7 @@ class TrackerController < ApplicationController
     set_vars
     log_vars
 
-    @torrent = Torrent.find(:first, :conditions => ['info_hash = ?', @info_hash])
+    @torrent = Torrent.find(:first, :conditions => {:info_hash => @info_hash})
 
     if @torrent.nil?
       render_error("Could not find torrent with info_hash: #{@info_hash}"); return
@@ -21,7 +21,7 @@ class TrackerController < ApplicationController
     end
     logger.warn "\n\n"
     # Find the Peer.  If it's not in the DB yet, create the record.
-    @peer = @torrent.peers.find(:first, :conditions => ['peer_id = ?', @peer_id])
+    @peer = @torrent.peers.find_by_peer_id(@peer_id)
     if !@peer
       @peer = Peer.create(:torrent_id     => @torrent.id,
                           :peer_id        => @peer_id,
@@ -64,7 +64,7 @@ class TrackerController < ApplicationController
     end
     
     if !peer_ip_hash.nil? && !peer_ip_hash.empty?
-      @torrent.connectable_peers.each do |p|
+      @torrent.peers.connectable.each do |p|
         # Requesuting Peer ID check?
         if p.peer_id == @peer_id
           logger.warn "\n\n\t Found Requesting Peer ID: #{p.id} in Cache (#{@remote_ip}:#{@port}) --- NOT sending to this client\n"
