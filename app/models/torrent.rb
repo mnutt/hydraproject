@@ -67,17 +67,41 @@ class Torrent < ActiveRecord::Base
   
   def meta_info
     raise TorrentFileNotFoundError unless File.exist?(self.torrent_path)
-    RubyTorrent::MetaInfo.from_location(self.torrent_path)
+    @meta_info_cache ||= RubyTorrent::MetaInfo.from_location(self.torrent_path)
   end
   
   def print_meta_info
     Torrent.dump_metainfo(self.meta_info)
   end
 
+  def data_with_passkey(passkey)
+    @mi = meta_info
+    @mi.key = passkey
+    @mi.announce = URI.parse("#{BASE_URL}tracker/#{passkey}/announce")
+    
+    # Here's where the announce-list magic happens
+    # Set not only this announce URL, but announce URLs for all trackers in the federation
+    @announce_urls = [@mi.announce]
+    TRUSTED_SITES.each do |site|
+      announce_url = site[:announce_url].gsub('{{passkey}}', passkey)
+      # IMPORTANT - each 'announce_url' must be enclosed in an Array.
+      #    See: http://wiki.depthstrike.com/index.php/P2P:Protocol:Specifications:Multitracker
+      #    And: http://bittornado.com/docs/multitracker-spec.txt
+      #
+      # When there are multiple announce_urls in the first tier (i.e. all in a single array), then clients will simply
+      #   shuffle that array and connect to the first random announce_url.
+      #
+      # Instead, what we want is for the torrent client to connect to *ALL* of the trackers.
+      #
+      @announce_urls << URI.parse(announce_url)
+    end
+    @mi.announce_list = @announce_urls.collect { |url| [url] }
+    @mi.to_bencoding
+  end
+
   def get_meta_from_file
     if self.the_file.nil?
       self.errors.add_to_base("Please select a torrent file to upload.")
-      raise "no torrent"
       return false
     end
 
@@ -87,7 +111,6 @@ class Torrent < ActiveRecord::Base
     
     if !File.exists?(tmp_path)
       self.errors.add_to_base("There was a problem writing the file to the server.")
-      raise "couldn't write file"
       return false
     end
 
@@ -96,7 +119,6 @@ class Torrent < ActiveRecord::Base
       meta_info = RubyTorrent::MetaInfo.from_location(tmp_path)
     rescue RubyTorrent::MetaInfoFormatError => e
       self.errors.add_to_base "The uploaded file does not appear to be a valid .torrent file."
-      raise e.message
       return false
     rescue StandardError => e
       self.errors.add_to_base "There was an error processing your upload: #{$!}.  Please contact the admins if this problem persists."

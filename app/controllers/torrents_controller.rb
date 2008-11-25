@@ -39,32 +39,7 @@ class TorrentsController < ApplicationController
   
   def download
     @torrent = Torrent.find(params[:id])
-    @meta_info = @torrent.meta_info
-    @meta_info.key = current_user.passkey # || params[:passk
-    @announce_url = URI.parse("#{BASE_URL}tracker/#{current_user.passkey}/announce")
-    @meta_info.announce = @announce_url
-
-    # Here's where the announce-list magic happens
-    # Set not only this announce URL, but announce URLs for all trackers in the federation
-    @announce_urls = [@announce_url]
-    TRUSTED_SITES.each do |site|
-      announce_url = site[:announce_url].gsub('{{passkey}}', current_user.passkey)
-      # IMPORTANT - each 'announce_url' must be enclosed in an Array.
-      #    See: http://wiki.depthstrike.com/index.php/P2P:Protocol:Specifications:Multitracker
-      #    And: http://bittornado.com/docs/multitracker-spec.txt
-      #
-      # When there are multiple announce_urls in the first tier (i.e. all in a single array), then clients will simply
-      #   shuffle that array and connect to the first random announce_url.
-      #
-      # Instead, what we want is for the torrent client to connect to *ALL* of the trackers.
-      #
-      @announce_urls << URI.parse(announce_url)
-    end
-    #puts "\n\n #{@announce_list.inspect}\n\n"
-    @announce_list = @announce_urls.collect { |url| [url] }
-    @meta_info.announce_list = @announce_list
-    @bencoded = @meta_info.to_bencoding
-    #logger.warn "\n\nDownload: #{@torrent.id} ::  #{@torrent.filename}\n\n\tBencoding:\n#{@bencoded}\n\n"
+    @bencoded = @torrent.data_with_passkey(current_user.passkey)
     send_data @bencoded, :filename => @torrent.filename, :type => 'application/x-bittorrent'; return
   end
   
