@@ -80,6 +80,8 @@ end
 
 describe Torrent, "stopping a peer" do
   before do
+    # TODO: investigate why I have to do this:
+    Torrent.destroy_all
     CACHE.reset
     @torrent = Factory.create(:torrent)
     @peer = Factory.create(:peer, :torrent => @torrent)
@@ -99,48 +101,56 @@ describe Torrent, "setting metainfo" do
   end
 
   it "should set the correct filesize" do
-    @torrent.set_metainfo!(@mi)
+    @torrent.set_metainfo(@mi)
     @torrent.size.should == 1024
   end
 
   it "should set the correct name" do
-    @torrent.set_metainfo!(@mi)
+    @torrent.set_metainfo(@mi)
     @torrent.name.should == "My Torrent"
   end
 
   it "should have the right number of files" do
-    @torrent.set_metainfo!(@mi)
+    @torrent.set_metainfo(@mi)
     @torrent.torrent_files.count.should == 1
     @torrent.numfiles.should == 1
   end
 
   it "should set the correct number of pieces" do
-    @torrent.set_metainfo!(@mi)
+    @torrent.set_metainfo(@mi)
     @torrent.pieces.should == 1
   end
 
   it "should work with a multi-directory path" do
     @mi.info.files.first.path = ["path", "to", "file.txt"]
-    @torrent.set_metainfo!(@mi)
-    @torrent.torrent_files.first.filename.should == "path\\to\\file.txt"
+    @torrent.set_metainfo(@mi)
+    @torrent.save!
+    RubyTorrent::MetaInfo.stub!(:from_location).and_return(@mi)
+    @torrent.create_torrent_files
+
+    @torrent.torrent_files.last.filename.should == "path\\to\\file.txt"
   end
 
   it "should work with just a single file" do
     @mi.info.stub!(:single?).and_return(true)
     @mi.info.length = 16384
-    @mi.info.name = "singlemii.txt"
-    @torrent.set_metainfo!(@mi)
+    @torrent.set_metainfo(@mi)
+    @torrent.save!
+    @torrent.create_torrent_files
 
     @torrent.numfiles.should == 1
-    @torrent.torrent_files.first.filename.should == "singlemii.txt"
-    @torrent.torrent_files.first.size.should == 16384
+    @torrent.torrent_files.first.filename.should == "wireboard-4.png"
+    @torrent.torrent_files.first.size.should == 67236
   end
 
   it "should work with multiple files" do
     @mi.info.pieces = [Digest::SHA1.digest("A"), Digest::SHA1.digest("B")].join
     another_file = @mi.info.files.first.dup
     @mi.info.files << another_file
-    @torrent.set_metainfo!(@mi)
+    @torrent.set_metainfo(@mi)
+    @torrent.save!
+    RubyTorrent::MetaInfo.stub!(:from_location).and_return(@mi)
+    @torrent.create_torrent_files
     
     @torrent.numfiles.should == 2
     @torrent.pieces.should == 2
@@ -152,7 +162,7 @@ describe Torrent, "setting metainfo" do
     # should not be here?
     @torrent.name = ""
     @torrent.filename = "my_filename.torrent"
-    @torrent.set_metainfo!(@mi)
+    @torrent.set_metainfo(@mi)
     @torrent.name.should == "my filename"
   end
 end

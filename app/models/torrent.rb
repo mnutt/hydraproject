@@ -37,10 +37,10 @@ class Torrent < ActiveRecord::Base
   has_many :peers, :dependent => :destroy
   has_many :comments, :dependent => :destroy, :include => :user, :order => 'comments.id ASC'
   
-  before_save :get_meta_from_file
+  before_create :get_meta_from_file
   before_save :ensure_non_negative
-  after_save :move!
-  after_save :create_torrent_files
+  after_create :move!
+  after_create :create_torrent_files
   before_destroy :cleanup
 
   validates_uniqueness_of :info_hash
@@ -74,9 +74,10 @@ class Torrent < ActiveRecord::Base
     Torrent.dump_metainfo(self.meta_info)
   end
 
-  def get_meta_from_file    
+  def get_meta_from_file
     if self.the_file.nil?
       self.errors.add_to_base("Please select a torrent file to upload.")
+      raise "no torrent"
       return false
     end
 
@@ -86,6 +87,8 @@ class Torrent < ActiveRecord::Base
     
     if !File.exists?(tmp_path)
       self.errors.add_to_base("There was a problem writing the file to the server.")
+      raise "couldn't write file"
+      return false
     end
 
     # Get the MetaInfo, confirm that it's a legit torrent
@@ -93,6 +96,7 @@ class Torrent < ActiveRecord::Base
       meta_info = RubyTorrent::MetaInfo.from_location(tmp_path)
     rescue RubyTorrent::MetaInfoFormatError => e
       self.errors.add_to_base "The uploaded file does not appear to be a valid .torrent file."
+      raise e.message
       return false
     rescue StandardError => e
       self.errors.add_to_base "There was an error processing your upload: #{$!}.  Please contact the admins if this problem persists."
@@ -103,7 +107,7 @@ class Torrent < ActiveRecord::Base
    
     logger.warn Torrent.dump_metainfo(meta_info)
 
-    self.set_metainfo!(meta_info)
+    self.set_metainfo(meta_info)
   end
 
   def original_filename
@@ -184,7 +188,7 @@ class Torrent < ActiveRecord::Base
     File.join(base_dir, "#{self.id}.torrent")
   end
     
-  def set_metainfo!(mi = nil)
+  def set_metainfo(mi = nil)
     if mi.nil?
       mi = self.meta_info
     end
@@ -202,6 +206,7 @@ class Torrent < ActiveRecord::Base
     self.created_by         = mi.created_by              unless mi.created_by.nil?
     self.orig_announce_list = mi.announce_list           unless mi.announce_list.nil?
     self.name               = name_from_torrent_filename if self.name.blank?
+    mi
   end
 
   def get_mii_file_size(mii)
@@ -216,13 +221,21 @@ class Torrent < ActiveRecord::Base
     mi = RubyTorrent::MetaInfo.from_location(torrent_path)
     mii = mi.info
     if mii.single?
-      self.torrent_files.create({:filename => mii.name, :size => mii.length})
+      @torrent_file = self.find_or_new_torrent_file(mii.name, mii.length)
+      @torrent_file.save
     else
       mii.files.each do |f|
         path = [f.path].flatten.join('\\')
-        self.torrent_files.create({:filename => path, :size => f.length})
+        @torrent_file = self.find_or_new_torrent_file(path, f.length)
+        @torrent_file.save
       end
     end
+  end
+
+  def find_or_new_torrent_file(filename, size)
+    torrent_file = self.torrent_files.find_or_create_by_filename(filename)
+    torrent_file.size = size
+    torrent_file
   end
   
   def name_from_torrent_filename

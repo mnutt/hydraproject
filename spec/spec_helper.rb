@@ -11,14 +11,15 @@ Spec::Runner.configure do |config|
   # lines, delete config/database.yml and disable :active_record
   # in your config/boot.rb
   config.use_transactional_fixtures = true
-  config.use_instantiated_fixtures  = false
-  config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
 end
 
 include AuthenticatedTestHelper
 
 # Meta-fixture here
-TRUSTED_SITES = [{'domain' => 'foo.org', 'passkey' => 'foo123', 'api_url' => 'http://foo.org/api'}] unless defined?(TRUSTED_SITES)
+TRUSTED_SITES = [{:domain => 'foo.org', 
+                  :passkey => 'foo123', 
+                  :api_url => 'http://foo.org/api', 
+                  :announce_url => 'http://foo.org/announce'}] unless defined?(TRUSTED_SITES)
 
 require File.expand_path(File.dirname(__FILE__) + "/factories.rb")
 
