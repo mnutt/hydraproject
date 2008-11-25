@@ -41,6 +41,7 @@ Rails::Initializer.run do |config|
   
   # See Rails::Configuration for more options
 
+  config.gem "rubytorrent", :version => '0.3'
   config.action_controller.session = { :session_key => "_hydra_session_id", :secret => 'hydra project super s3333kr333t session secret' }
   
 end
