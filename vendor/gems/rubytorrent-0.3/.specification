@@ -1,0 +1,78 @@
+--- !ruby/object:Gem::Specification 
+name: rubytorrent
+version: !ruby/object:Gem::Version 
+  version: "0.3"
+platform: ruby
+authors: 
+- William Morgan
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2008-01-12 00:00:00 -05:00
+default_executable: 
+dependencies: []
+
+description: A Bittorrent library.
+email: wmorgan-rubytorrent@masanjin.net
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- COPYING
+- README
+- doc/api.txt
+- doc/design.txt
+- ReleaseNotes.txt
+files: 
+- ./rtpeer.rb
+- ./rtpeer-ncurses.rb
+- ./lib/rubytorrent.rb
+- ./lib/rubytorrent/message.rb
+- ./lib/rubytorrent/peer.rb
+- ./lib/rubytorrent/metainfo.rb
+- ./lib/rubytorrent/controller.rb
+- ./lib/rubytorrent/util.rb
+- ./lib/rubytorrent/package.rb
+- ./lib/rubytorrent/tracker.rb
+- ./lib/rubytorrent/typedstruct.rb
+- ./lib/rubytorrent/bencoding.rb
+- ./lib/rubytorrent/server.rb
+- ./dump-peers.rb
+- ./dump-metainfo.rb
+- ./make-metainfo.rb
+- COPYING
+- README
+- doc/api.txt
+- doc/design.txt
+- ReleaseNotes.txt
+has_rdoc: true
+homepage: http://rubytorrent.rubyforge.org
+post_install_message: 
+rdoc_options: 
+- --main
+- README
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+requirements: []
+
+rubyforge_project: rubytorrent
+rubygems_version: 1.3.1
+signing_key: 
+specification_version: 2
+summary: A Bittorrent librar.y
+test_files: []
+
