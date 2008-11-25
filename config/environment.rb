@@ -42,6 +42,7 @@ Rails::Initializer.run do |config|
   # See Rails::Configuration for more options
 
   config.gem "rubytorrent", :version => '0.3'
+  config.gem "memcache-client", :version => '1.5.0', :lib => "memcache"
   config.action_controller.session = { :session_key => "_hydra_session_id", :secret => 'hydra project super s3333kr333t session secret' }
   
 end
@@ -50,6 +51,6 @@ end
 require 'core_class_extensions'
 require 'rubytorrent'
 require 'rubygems'
-gem 'memcache-client'
+# gem 'memcache-client'
 
 BASE_URL = "http://#{C[:domain_with_port]}/"

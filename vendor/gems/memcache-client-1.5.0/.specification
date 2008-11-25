@@ -1,0 +1,105 @@
+--- !ruby/object:Gem::Specification 
+name: memcache-client
+version: !ruby/object:Gem::Version 
+  version: 1.5.0
+platform: ruby
+authors: 
+- Eric Hodel
+- Robert Cottrell
+autorequire: 
+bindir: bin
+cert_chain: 
+- |
+  -----BEGIN CERTIFICATE-----
+  MIIDNjCCAh6gAwIBAgIBADANBgkqhkiG9w0BAQUFADBBMRAwDgYDVQQDDAdkcmJy
+  YWluMRgwFgYKCZImiZPyLGQBGRYIc2VnbWVudDcxEzARBgoJkiaJk/IsZAEZFgNu
+  ZXQwHhcNMDcwODE0MDAwMjIzWhcNMDgwODEzMDAwMjIzWjBBMRAwDgYDVQQDDAdk
+  cmJyYWluMRgwFgYKCZImiZPyLGQBGRYIc2VnbWVudDcxEzARBgoJkiaJk/IsZAEZ
+  FgNuZXQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDVZUNKmnp8LrkM
+  bQd5ZrcTV1R7woai4clBLUjH3DL47r+f6d5dz+gJUegZ3RKWdSvOfaRmXFkr2+nv
+  vc6uzcxk9w1uN5Z3w+BCeKtsUR8EtUhH8b26HDNGDeuoTX1gEgm4DacBh1/Ib+SQ
+  PxLVkFnWiCekGvL7jzecw6UwADn49Ag4NxIvpN0ttsYCQFMDuqzdISjurbb3dZ2z
+  OsaDqdW29c3Jed816kVhOzRZ2EC4BExPtEN6xZCwab6f9tzJT+Atea7PRFLm/T7t
+  QFBPGC2XjPUXJxTyz+8PEDDb2PXeZwPSDIysq1tzB55A3rE1a5pLvnBfek5KjC25
+  0wuuKuxlAgMBAAGjOTA3MAkGA1UdEwQCMAAwCwYDVR0PBAQDAgSwMB0GA1UdDgQW
+  BBStuxfp/gfzqL+3k7tFe8gVU9zpvDANBgkqhkiG9w0BAQUFAAOCAQEAvnmUelUN
+  s9f/VasT9mZV4tIP3sKi0uqyq9i7vtDgCNFw0BAKNxa6ybO1CrBBnjDMa4hvhrW8
+  qCLkx7BFHGV/eWR3pdwcLAS8cLuEib75nuG1lbG2yIvGSYTyQ/oxbmuUAZxpavK2
+  101OludXvBC9hpA4Qz3UhJYBdtT8TuztiFGLzhCJusjUD7I6Y+TrrTPkBGceVVyY
+  hx8aJk+44+jvzgsTi4MyrRo4lAGsQxFa1f1IBuEgqNPdML31yGO0QKof+IqPiVNo
+  HsCQoSWkgfQE0DHTgx+hWkF2d10+54I4aM9tIROeGACQemcj0IRf3v7Au8I+6PWl
+  3E1oHz01aNcUFA==
+  -----END CERTIFICATE-----
+
+date: 2007-08-13 00:00:00 -04:00
+default_executable: 
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: ZenTest
+  type: :runtime
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 3.4.2
+    version: 
+- !ruby/object:Gem::Dependency 
+  name: hoe
+  type: :runtime
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 1.3.0
+    version: 
+description: memcache-client is a client for Danga Interactive's memcached.
+email: drbrain@segment7.net
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- History.txt
+- LICENSE.txt
+- Manifest.txt
+- README.txt
+files: 
+- History.txt
+- LICENSE.txt
+- Manifest.txt
+- README.txt
+- Rakefile
+- lib/memcache.rb
+- lib/memcache_util.rb
+- test/test_mem_cache.rb
+has_rdoc: true
+homepage: http://seattlerb.org/memcache-client
+post_install_message: 
+rdoc_options: 
+- --main
+- README.txt
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">"
+    - !ruby/object:Gem::Version 
+      version: 0.0.0
+  version: 
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">"
+    - !ruby/object:Gem::Version 
+      version: 0.0.0
+  version: 
+requirements: []
+
+rubyforge_project: seattlerb
+rubygems_version: 1.3.1
+signing_key: 
+specification_version: 1
+summary: A Ruby memcached client
+test_files: 
+- test/test_mem_cache.rb
