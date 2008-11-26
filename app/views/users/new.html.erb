@@ -1,7 +1,6 @@
 <% @page_title = 'Signup' %>
 <% @user.password = @user.password_confirmation = nil %>
 
-<div id="content">
   <h2 class="title">Account Signup</h2>
 	
   <%= render :partial => 'shared/notice_text' %>
@@ -70,8 +69,6 @@
     <li>thus if you cannot easily remember your password, it is highly recommended you use software like <a href="http://passwordsafe.sourceforge.net/" target="_blank">Password Safe</a> to store your passwords securely</li>
   </ul>
   
-</div>
-
 <script type="text/javascript">
   is_checked = function(value, element) {
     return element.checked;

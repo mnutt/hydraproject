@@ -9,14 +9,13 @@ body {
 }
 
 #header {
-  background: url(/images/header_back.gif) repeat-x;
-  height: 140px;
+  height: 90px;
   margin: 0px;
   padding: 0px;
 }
 
 #content {
-  margin: -10px 0px 15px 20px;
+  margin: 0 0 15px 20px;
 }
 
 .logo {
@@ -28,9 +27,9 @@ body {
 .logo a {
   display: block;
   text-indent: -10000px;
-  width: 436px;
-  height: 66px;
-  background: url(/images/logo.png) top left no-repeat;
+  width: 428px;
+  height: 48px;
+  background: url(/images/thehydraproject.png) top left no-repeat;
 }
 
 h1 {
@@ -39,13 +38,10 @@ h1 {
 }
 
 .tagline {
-  position: absolute;
-  left: 456px;
-  top: 60px;
   font-size: 1em !important;
   letter-spacing: 0px !important;
   color: #999;
-  margin: 0px 0px 8px 0px;
+  margin: 0px 0px 8px 445px;
   padding: 0px;
 }
 
@@ -57,9 +53,10 @@ h1 {
 
 #signin-bar {
   color:#CCCCCC;
+  background-color: #464646;
   font-family:"trebuchet ms",sans-serif;
   font-size:0.9em;
-  height:36px;
+  height:28px;
   padding:9px 6px 0px 12px;
   position:relative;
 }
