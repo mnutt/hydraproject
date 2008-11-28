@@ -8,9 +8,19 @@
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+
+CONFIG_EXISTS = File.exist?("#{RAILS_ROOT}/config/config.yml")
+DB_CONFIG_EXISTS = File.exist?("#{RAILS_ROOT}/config/database.yml")
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here
   
+  # Load up bare minimum if we don't have a db set up yet
+  unless DB_CONFIG_EXISTS
+    config.frameworks -= [ :active_record ]
+    config.plugins = []
+  end
+
   # Skip frameworks you're not going to use (only works if using vendor/rails)
   # config.frameworks -= [ :action_web_service, :action_mailer ]
 

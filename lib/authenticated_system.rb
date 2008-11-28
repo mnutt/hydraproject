@@ -117,6 +117,8 @@ module AuthenticatedSystem
 
     def login_from_passkey
       self.current_user = User.find_by_passkey(params[:passkey])
+    rescue
+      nil
     end
     
     #
