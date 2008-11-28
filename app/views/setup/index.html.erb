@@ -1,0 +1,68 @@
+<% @page_title = "Hydra Setup" -%>
+<h1>Hydra Setup</h1>
+
+<div class="progress">
+<span class="current">Configuration &rarr;</span>
+<span class="future">Database &rarr;</span>
+<span class="future">Restart</span>
+</div>
+
+<%= render :partial => 'shared/notice_text' %>
+
+<% form_for @conf, :url => {:controller => 'setup', :action => 'set_config'}, :html => {:id => "config_form"} do |f| -%>
+
+  <div class="field">
+    <%= f.label :app_name -%>
+    <%= f.text_field :app_name, :size => 14, :maxlength => 20, :class => 'nice-field required' %>
+    <p class="description">Name that will appear in the title bar of the site</p>
+  </div>
+  
+  <div class="field">
+    <%= f.label :domain -%>
+    <%= f.text_field :domain, :size => 14, :class => 'nice-field required' %>
+    <p class="description">The domain of the server that will run Hydra</p>
+  </div>
+  
+  <div class="field">
+    <%= f.label :webmaster_name -%>
+    <%= f.text_field :webmaster_name, :size => 14, :class => 'nice-field required' %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :webmaster_email -%>
+    <%= f.text_field :webmaster_email, :size => 14, :class => 'nice-field required' %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :notification_email -%>
+    <%= f.text_field :notification_email, :size => 14, :class => 'nice-field required' %>
+    <p class="description">Address that notification emails will be sent from</p>
+  </div>
+  
+  <div class="field check">
+    <%= f.check_box :invite_only, {}, "true", "false" -%>
+    <%= f.label :invite_only -%>
+    <p class="description">New users can only sign up if an existing user invited them</p>
+  </div>
+  
+  <div class="field check">
+    <%= f.check_box :enable_rss, {}, "true", "false" -%>
+    <%= f.label :enable_rss, "Enable RSS" -%>
+    <p class="description">Enable a site-wide RSS feed containing the latest torrents</p>
+  </div>
+  
+  <div class="field check">
+    <%= f.check_box :require_email, {}, "true", "false" -%>
+    <%= f.label :require_email -%>
+    <p class="description">Require an email for signup</p>
+  </div>
+  
+  <div class="field check">
+    <%= f.check_box :auto_add_categories, {}, "true", "false" -%>
+    <%= f.label :auto_add_categories, "Automatically add categories" -%>
+  </div>
+  
+  <div class="control">
+    <%= submit_tag "Save settings", :class => "submit-box" -%>
+  </div>
+<% end -%>

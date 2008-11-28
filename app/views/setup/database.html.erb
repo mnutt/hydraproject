@@ -1,0 +1,61 @@
+<% @page_title = "Hydra Setup :: Database" -%>
+<% javascript_include 'database_setup' -%>
+<h1>Database Setup</h1>
+
+<div class="progress">
+<span class="done">Configuration &rarr;</span>
+<span class="current">Database &rarr;</span>
+<span class="future">Restart</span>
+</div>
+
+<%= render :partial => 'shared/notice_text' -%>
+
+<% form_for :db, :url => {:controller => 'setup', :action => 'set_database'} do |f| -%>
+  <div class="field">
+    <%= f.label :adapter, "Database type" -%>
+    <%= f.select :adapter, [["MySQL", "mysql"], ["SQLite", "sqlite3"]], :value => @has_mysql ? "mysql" : "sqlite3" -%>
+    <p class="description">
+      <% if @has_sqlite && @has_mysql -%>
+	You appear to have both MySQL and SQLite.  MySQL is faster, but SQLite will work if you do not have a MySQL username and password. 
+      <% elsif @has_sqlite -%>
+	You appear to have SQLite.  MySQL may also work, but we couldn't locate it when we did a quick check.
+      <% elsif @has_mysql -%>
+	You appear to have MySQL.  SQLite may also work, but we couldn't locate it when we did a quick check.
+      <% else -%>
+	You appear to be missing both MySQL and SQLite.  This is somewhat unlikely, so go ahead and try with MySQL and contact your host if you have any issues.
+      <% end -%>
+    </p>
+  </div>
+
+  <div class="field">
+    <%= f.label :database, "Database name" -%>
+    <%= f.text_field :database, :value => "hydra" -%>
+    <p class="description">
+      On most hosting companies, the database name is supplied for you.  If you are running hydra locally and have permissions, you may set this to whatever you wish.<br><br>
+    </p>
+  </div>
+
+  <div class="no_sqlite" <% if !@has_mysql -%>style="display: none;"<% end -%>>
+    <div class="field">
+      <%= f.label :user, "Database user" -%>
+      <%= f.text_field :user -%>
+      <p class="description">User who has access to the database specified above.  If the database is not found and the user has database creation privileges, Hydra will try to create the database.</p>
+    </div>
+    
+    <div class="field">
+      <%= f.label :password, "Database password" -%>
+      <%= f.text_field :password -%>
+      <p class="description">Passwords are case-sensitive.</p>
+    </div>
+  
+    <div class="field">
+      <%= f.label :host, "Database host" -%>
+      <%= f.text_field :host, :value => "localhost" -%>
+      <p class="description">If unsure, this can probably be left as <i>localhost</i>. (meaning the same server as the website is on)</p>
+    </div>
+  </div>
+
+  <div class="control">
+    <%= submit_tag "Save settings", :class => "submit-box" -%>
+  </div>
+<% end -%>

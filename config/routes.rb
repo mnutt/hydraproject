@@ -7,6 +7,7 @@ ActionController::Routing::Routes.draw do |map|
   map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
   map.resources :users
   map.resource  :session
+  map.setup '/setup', :controller => 'setup', :action => 'index'
 
   map.resources :torrents, :collection => {:search => :any}
   map.resources :resources
