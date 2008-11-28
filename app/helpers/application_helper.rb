@@ -1,5 +1,9 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
+  def javascript_include(*scripts)
+    @javascript_includes ||= []
+    @javascript_includes << scripts
+  end
   
   def torrent_dl(torrent)
     download_url(torrent, :filename => torrent.filename)
