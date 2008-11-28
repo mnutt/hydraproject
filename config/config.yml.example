@@ -4,7 +4,7 @@ domain: change-me.org
 domain_with_port: change-me.org
 webmaster_email: webmaster@change-me.org
 webmaster_name: Webmaster
-notifiction_email: noreply@change-me.org
+notification_email: noreply@change-me.org
 auto_add_categories: false
 enable_rss: false
 invite_only: false
