@@ -5,7 +5,7 @@
 	
   <%= render :partial => 'shared/notice_text' %>
   
-  <% form_for :user, :url => users_path do |f| -%>
+  <% form_for :user, :url => users_path, :html => {:id => "signupform"} do |f| -%>
     <% if not @invite.nil? %>
       <input type="hidden" name="invite_id" value="<%= @invite.id %>" />
       Please complete the following form to signup.	
@@ -13,54 +13,39 @@
       (<i><%= @invite.user.first_name %></i>) 
       will automagically be added to your friends list.
     <% end %>
-
-    <center>
-      <div id="signupform" class="form" style="margin-right: 100px;">
 	
-	<%= error_messages_for :user %><br/>
+    <div><%= error_messages_for :user %></div>
 
-	<table cellspacing="2" cellpadding="2" width="400px">
-	  <tr>
-	    <td><label for="user_login">Username:</label></td>
-	    <td>
-	      <%= f.text_field :login, :size => 14, :maxlength => 20,	:class => 'validate-alphanum nice-field required' %>	 
-	    </td>
-	  </tr>
-	  <tr>
-	    <td>
-	      <input type="hidden" name="dummy" class="validate-match" />
-	      <label for="user_password">Password:</label></td>
-	    <td>
-	      <%= f.password_field :password, :size => 10, :maxlength => 15, :class => 'nice-field required' %>
-	    </td>
-	  </tr>
-	  <tr>
-	    <td><label for="user_password_confirmation">Password (confirm):</label></td>
-	    <td>
-	      <%= f.password_field :password_confirmation, :size => 10, :maxlength => 15, :class => 'nice-field required' %>
-	    </td>
-	  </tr>
-	  <% if C[:require_email] -%>
-	    <tr>
-	      <td><label for="user_email">Email:</label></td>
-	      <td>
-		<%= f.text_field :email, :size => 10, :maxlength => 100, :class => 'nice-field required' %>
-	      </td>
-	    </tr>
-	  <% end -%>
-	  <tr>
-	    <td colspan="2">
-	      <%= check_box_tag :ageverify, 'yes', :class => "validate-is-checked" -%> I am at least 13 years old.
-	    </td>
-	  </tr>
-	  <tr>
-	    <td colspan="2" class="submit_button">
-	      <%= submit_tag "Create Account", :class => "submit-box" -%>
-	    </td>
-	  </tr>
-	</table>
+    <div class="field">
+      <%= f.label :login, "Username" -%>
+      <%= f.text_field :login, :size => 14, :maxlength => 20,	:class => 'validate-alphanum nice-field required' %>	 
+    </div>
+    
+    <div class="field">
+      <%= f.label :password -%>
+      <%= f.password_field :password, :size => 10, :maxlength => 15, :class => 'nice-field required' %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :password_confirmation -%>
+      <%= f.password_field :password_confirmation, :size => 10, :maxlength => 15, :class => 'nice-field required' %>
+    </div>
+    
+    <% if C[:require_email] -%>
+      <div class="field">
+	<%= f.label :email -%>
+	<%= f.text_field :email, :size => 10, :maxlength => 100, :class => 'nice-field required' %>
       </div>
-    </center>
+    <% end -%>
+    
+    <div class="field check">
+      <%= check_box_tag :ageverify, 'yes', :class => "validate-is-checked" -%>
+      <label for="ageverify">I am at least 13 years old.</label>
+    </div>
+    
+    <div class="control">
+      <%= submit_tag "Create Account", :class => "submit-box" -%>
+    </div>
   <% end -%>
 
   <ul><b>Signup Notes</b>
