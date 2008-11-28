@@ -3,10 +3,11 @@ class Cleanup < ActiveRecord::Migration
     remove_column :torrents, :original_filename
     rename_column :users, :is_editor, :is_moderator
     add_column :users, :passkey, :string
-    
-    User.find(:all).each do |u|
-      u.generate_passkey!
-    end
+
+# Using models in migrations is a bad idea.    
+#    User.find(:all).each do |u|
+#      u.generate_passkey!
+#    end
     
     add_column :users, :uploaded, :integer, :default => 0
     add_column :users, :downloaded, :integer, :default => 0

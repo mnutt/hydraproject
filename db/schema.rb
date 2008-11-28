@@ -42,8 +42,8 @@ ActiveRecord::Schema.define(:version => 20081122190700) do
     t.datetime "updated_at"
   end
 
-  add_index "peers", ["torrent_id", "peer_id"], :name => "index_peers_on_torrent_id_and_peer_id", :unique => true
   add_index "peers", ["connectable"], :name => "index_peers_on_connectable"
+  add_index "peers", ["torrent_id", "peer_id"], :name => "index_peers_on_torrent_id_and_peer_id", :unique => true
 
   create_table "ratio_snapshots", :force => true do |t|
     t.integer  "ratio_sync_id"
@@ -104,8 +104,6 @@ ActiveRecord::Schema.define(:version => 20081122190700) do
   end
 
   add_index "torrents", ["info_hash"], :name => "index_torrents_on_info_hash"
-  execute "ALTER TABLE torrents ENGINE = MyISAM"
-  execute "CREATE FULLTEXT INDEX FullText_torrents ON torrents (name,filename,description)"
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
