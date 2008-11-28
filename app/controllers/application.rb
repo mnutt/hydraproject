@@ -1,5 +1,11 @@
 class ApplicationController < ActionController::Base
   include AuthenticatedSystem
+
+  before_filter :check_for_setup
+  def check_for_setup
+    redirect_to :controller => 'setup', :action => 'index' if !CONFIG_EXISTS or !DB_CONFIG_EXISTS
+  end
+
   # Pick a unique cookie name to distinguish our session data from others'
 #  session :session_key => '_hydra_session_id', :secret => 'hydra project super s3333kr333t session secret'
   
