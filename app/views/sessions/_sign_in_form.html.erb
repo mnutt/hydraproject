@@ -1,0 +1,20 @@
+<% form_tag session_path do %>
+  <div class="field">
+    <%= label_tag :login, "Username" -%>
+    <%= text_field_tag :login, "", :size => 14, :maxlength => 20, :class => 'validate-alphanum nice-field required' %>	 
+  </div>
+  
+  <div class="field">
+    <%= label_tag :password -%>
+    <%= password_field_tag :password, "", :size => 10, :maxlength => 15, :class => 'nice-field required' %>
+  </div>
+
+  <div class="field check">
+    <%= check_box_tag :remember_me, 'yes', :class => "validate-is-checked" -%>
+    <label for="remember_me">Remember me</label>
+  </div>
+
+  <div class="control">
+    <%= submit_tag "Sign In", :class => "submit-box" -%>
+  </div>
+<% end -%>

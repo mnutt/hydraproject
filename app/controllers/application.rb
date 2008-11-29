@@ -23,7 +23,6 @@ class ApplicationController < ActionController::Base
       flash[:notice] = "This website is currently invitation only.  You may login below if you already have an account."
       redirect_to login_url
     else
-      flash[:notice] = "#{C[:app_name]} is a private tracker.  Please <a href=\"/signup\">Signup</a> or <a href=\"/login\">Login</a> to continue."
       redirect_to signup_url
     end
     return false

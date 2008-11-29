@@ -15,7 +15,7 @@ body {
 }
 
 #content {
-  margin: 0 0 15px 20px;
+  margin: 0 20px 15px 20px;
 }
 
 .logo {
@@ -134,7 +134,9 @@ h1 {
 #notice {
   padding:  5px;
   margin:  1px ;
-  width: 60%;
+  width: 405px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
   background-color: #ff9;
   border: 1px solid #ccc;
   text-align: left;
@@ -316,6 +318,10 @@ table a:active{
 
 /* Form Fields */
 
+form {
+  margin-right: 20px;
+}
+
 form .field {
   width: 407px;
   display: table;
@@ -373,10 +379,15 @@ form .control input {
   margin: 0 10px;
 }
 
-form .field p.description {
+form .field p.description,
+form .field div.form_error {
   font-size: 0.7em;
   margin: 0 0 8px 10px;
   clear: both;
+}
+
+form .field div.form_error {
+  color: red;
 }
 
 /* Setup */

@@ -44,6 +44,7 @@ class User < ActiveRecord::Base
   validates_length_of       :email,    :within => 6..100, :allow_nil => true
   validates_uniqueness_of   :email, :if => Proc.new { C[:require_email] }
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message, :if => Proc.new { C[:require_email] }
+  validate                  :verify_age
 
   before_create :make_activation_code 
   before_create :generate_passkey
@@ -51,8 +52,8 @@ class User < ActiveRecord::Base
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :name, :password, :password_confirmation
-
+  attr_accessible :login, :email, :name, :password, :password_confirmation, :age_verify
+  attr_accessor :age_verify
 
   # Activates the user in the database.
   def activate!
@@ -70,6 +71,10 @@ class User < ActiveRecord::Base
   def active?
     # the existence of an activation code means they have not activated yet
     activation_code.nil? or !C[:require_email]
+  end
+
+  def verify_age
+    errors.add(:age_verify, "You must be at least 13 years old to sign up.") if self.new_record? && self.age_verify != "1"
   end
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.

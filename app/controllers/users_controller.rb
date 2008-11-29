@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  include AuthenticatedSystem
   # render new.html.erb
   def new
     @user = User.new
@@ -13,8 +14,7 @@ class UsersController < ApplicationController
 
     logout_keeping_session!
     @user = User.new(params[:user])
-    success = @user && @user.save
-    if success && @user.errors.empty?
+    if @user.save
       # If this is the first account created, make the user a sysop
       if 1 == @user.id
         @user.is_admin = true
@@ -24,9 +24,10 @@ class UsersController < ApplicationController
       else
         flash[:notice] = "Welcome, #{@user.login}."
       end
-      redirect_back_or_default('/')
+      self.current_user = @user
+      redirect_to root_path
     else
-      flash[:error]  = "We couldn't set up that account, sorry.  Please try again, or contact an admin (link is above)."
+      flash[:notice]  = "We couldn't set up that account, sorry.  Please try again, or contact an admin (link is above)."
       render :action => 'new'
     end
   end

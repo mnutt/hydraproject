@@ -1,11 +1,12 @@
 <% @page_title = 'Signup' %>
 <% @user.password = @user.password_confirmation = nil %>
-
-  <h2 class="title">Account Signup</h2>
 	
-  <%= render :partial => 'shared/notice_text' %>
+<p class="intro"><%= C[:app_name] -%> is a private tracker.  Please sign up or sign in to continue.</p>
   
-  <% form_for :user, :url => users_path, :html => {:id => "signupform"} do |f| -%>
+<div style="float: left;">
+  <h2 class="title">Create Account</h2>
+  
+  <% form_for @user, :url => users_path, :html => {:id => "signupform"} do |f| -%>
     <% if not @invite.nil? %>
       <input type="hidden" name="invite_id" value="<%= @invite.id %>" />
       Please complete the following form to signup.	
@@ -13,17 +14,17 @@
       (<i><%= @invite.user.first_name %></i>) 
       will automagically be added to your friends list.
     <% end %>
-	
-    <div><%= error_messages_for :user %></div>
-
+    
     <div class="field">
       <%= f.label :login, "Username" -%>
-      <%= f.text_field :login, :size => 14, :maxlength => 20,	:class => 'validate-alphanum nice-field required' %>	 
+      <%= f.text_field :login, :size => 14, :maxlength => 20,	:class => 'validate-alphanum nice-field required' %>
+      <%= f.error_message_on :login, :prepend_text => "This username ", :append_text => ".", :css_class => "form_error" -%>
     </div>
     
     <div class="field">
       <%= f.label :password -%>
       <%= f.password_field :password, :size => 10, :maxlength => 15, :class => 'nice-field required' %>
+      <%= f.error_message_on :password, :prepend_text => "This password ", :append_text => ".", :css_class => "form_error" -%>
     </div>
     
     <div class="field">
@@ -39,31 +40,25 @@
     <% end -%>
     
     <div class="field check">
-      <%= check_box_tag :ageverify, 'yes', :class => "validate-is-checked" -%>
-      <label for="ageverify">I am at least 13 years old.</label>
+      <%= f.check_box :age_verify -%>
+      <%= f.label :age_verify, "I am at least 13 years old." -%>
+      <%= f.error_message_on :age_verify, :prepend_text => "", :append_text => "", :css_class => "form_error" -%>
     </div>
-    
+
     <div class="control">
       <%= submit_tag "Create Account", :class => "submit-box" -%>
     </div>
   <% end -%>
+</div>
 
-  <ul><b>Signup Notes</b>
-    <li>cookies are required to signup and login</li>
-    <li>since we only collect your username and <i>never</i> your email address, there is <i>absolutely no way</i> for you to recover your password if you ever forget it or lose it</li>
-    <li>thus if you cannot easily remember your password, it is highly recommended you use software like <a href="http://passwordsafe.sourceforge.net/" target="_blank">Password Safe</a> to store your passwords securely</li>
-  </ul>
-  
-<script type="text/javascript">
-  is_checked = function(value, element) {
-    return element.checked;
-  }
-	passwords_must_match = function(value, element) {
-		return ($('user_password_confirmation').value == $('user_password').value)
-	}
+<div style="float: left;">
+  <h2 class="title">Sign In</h2>
 
-  new Validation('signup-form');
-  Validation.add('validate-is-checked', 'You must agree to this in order to signup.', is_checked);
-  Validation.add('validate-match', 'Passwords entered do not match.', passwords_must_match);
-</script>
+  <%= render :partial => 'sessions/sign_in_form' -%>
+</div>
 
+<ul style="clear: both; padding-top: 2em;"><b>Signup Notes</b>
+  <li>cookies are required to signup and login</li>
+  <li>since we only collect your username and <i>never</i> your email address, there is <i>absolutely no way</i> for you to recover your password if you ever forget it or lose it</li>
+  <li>thus if you cannot easily remember your password, it is highly recommended you use software like <a href="http://passwordsafe.sourceforge.net/" target="_blank">Password Safe</a> to store your passwords securely</li>
+</ul>
