@@ -1,6 +1,5 @@
 class TorrentsController < ApplicationController
   include ApplicationHelper
-  verify :only=>:destroy, :method=>:post
   before_filter :login_required, :except => [:show, :browse]
   
   def index
@@ -64,7 +63,7 @@ class TorrentsController < ApplicationController
   end
   
   def show
-    @torrent = Torrent.find(:first, :conditions => ["torrents.id = ?", params[:id]], :include => :category) rescue nil
+    @torrent = Torrent.find(params[:id]) rescue nil
     if @torrent.nil?
       redirect_to :back; return
     end
@@ -75,8 +74,13 @@ class TorrentsController < ApplicationController
   def destroy #AJAX & ADMIN only
     moderator_required
     @torrent = Torrent.find(params[:id])
-    @torrent.destroy
-    flash[:notice] = "Torrent removed."
+    if @torrent.destroy
+      flash[:notice] = "Torrent removed."
+    else
+      raise "There was a problem removing the torrent"
+      flash[:notice] = "There was a problem removing the torrent"
+    end
+
     redirect_to :back; return
   end
   
