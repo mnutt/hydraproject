@@ -3,6 +3,8 @@ config/federation.yml
 config/config.yml
 log/*.log
 log/*.pid
+tmp/uploads/*
+tmp/pids/*
 torrents/*.torrent
 public/files/*
 db/*.db
