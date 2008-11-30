@@ -10,42 +10,35 @@
 </div>
 
 <% form_for @torrent, :html => { :multipart => true, :id => 'upload-form' } do |f| %>
-  <center>
-    <%= render :partial => 'shared/notice_text' %>
-    <table cellspacing="2" cellpadding="2" width="500px" style="border: 1px dotted #ccc">
-      <tr>
-	<td><%= f.label :the_file, "Torrent file:" -%></td>
-	<td>
-	  <%= f.file_field :the_file, :class => "required" -%>
-	</td>
-      </tr>
-      <tr>
-	<td><%= f.label :name, "Torrent name:" -%></td>
-	<td>
-	  <%= f.text_field :name, :size => 40, :maxlength => 90, :class => '' %>
-	  <div><i>(taken from filename if not specified)</i></div>
-	</td>
-      </tr>
-      <tr>
-	<td><%= f.label :category, "Category:" -%></td>
-	<td>
-	  <input type="hidden" value="dummy" class="category-required-123">
-	  <%= f.select(:category_id, Category.all.map{|c| [c.name, c.id]}, :class => 'category-required') %>
-	</td>
-      </tr>
-      <tr>
-	<td><%= f.label :description, "Description:" -%></td>
-	<td>
-	  <%= f.text_area :description, :style => 'width: 90%; height: 120px' %>
-	</td>
-      </tr>
-      <tr>
-	<td colspan="2">	  
-	  <input type="Submit" value="Upload It  &#187; " class="submit-box">
-	</td>
-      </tr>
-    </table>
-  </center>
+
+  <div class="field">
+    <%= f.label :the_file, "Torrent file" -%>
+    <%= f.file_field :the_file, :size => 3 %>
+    <%= f.error_message_on :the_file, :prepend_text => "This file ", :append_text => ".", :css_class => "form_error" -%>
+  </div>
+
+  <div class="field">
+    <%= f.label :name, "Torrent name" -%>
+    <%= f.text_field :name, :size => 14, :maxlength => 20, :class => 'validate-alphanum nice-field required' %>
+    <%= f.error_message_on :name, :prepend_text => "This name ", :append_text => ".", :css_class => "form_error" -%>
+  </div>
+
+  <div class="field">
+    <%= f.label :category -%>
+    <%= f.select :category, Category.all.map{|c| [c.name, c.id]}  %>
+    <%= f.error_message_on :category, :prepend_text => "The category ", :append_text => ".", :css_class => "form_error" -%>
+  </div>
+
+  <div class="field">
+    <%= f.label :description -%>
+    <%= f.text_area :description, :rows => 12 %>
+    <%= f.error_message_on :description, :prepend_text => "The description ", :append_text => ".", :css_class => "form_error" -%>
+  </div>
+
+  <div class="control">
+    <%= submit_tag "Upload it &#187;", :class => "submit-box" -%>
+  </div>
+
 <% end -%>
 
 <script type="text/javascript">

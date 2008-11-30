@@ -3,6 +3,8 @@
 	
 <p class="intro"><%= C[:app_name] -%> is a private tracker.  Please sign up or sign in to continue.</p>
   
+<%= render :partial => 'shared/notice_text' -%>
+
 <div style="float: left;">
   <h2 class="title">Create Account</h2>
   
@@ -17,7 +19,7 @@
     
     <div class="field">
       <%= f.label :login, "Username" -%>
-      <%= f.text_field :login, :size => 14, :maxlength => 20,	:class => 'validate-alphanum nice-field required' %>
+      <%= f.text_field :login, :size => 14, :maxlength => 20, :class => 'validate-alphanum nice-field required' %>
       <%= f.error_message_on :login, :prepend_text => "This username ", :append_text => ".", :css_class => "form_error" -%>
     </div>
     
