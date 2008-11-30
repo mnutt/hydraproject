@@ -55,7 +55,7 @@ class TrackerController < ApplicationController
     # TODO: ratio throttling
     @peer_list = []
 
-    peer_ip_hash = CACHE.get(@torrent.tkey)
+    peer_ip_hash = (Rails.cache.read(@torrent.tkey) || {}).dup
 
     if peer_ip_hash.nil?
       logger.warn "\n\n\tpeer_ip_hash is NIL\n for: #{@torrent.tkey}\n\n"
