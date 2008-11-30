@@ -61,13 +61,13 @@ class Peer < ActiveRecord::Base
   private
   
   def remove_from_memcache
-    peers = CACHE.get(self.torrent.tkey)
+    peers = (Rails.cache.read(self.torrent.tkey) || {}).dup
     return if peers.nil? || peers.empty?
     peers.delete(self.id)
     if peers.empty?
-      CACHE.delete(self.torrent.tkey)
+      Rails.cache.delete(self.torrent.tkey)
     else
-      CACHE.set(self.torrent.tkey, peers)
+      Rails.cache.write(self.torrent.tkey, peers)
     end
   end
   

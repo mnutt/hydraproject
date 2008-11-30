@@ -48,7 +48,7 @@ end
 describe Torrent, "starting a peer" do
   describe "that is a regular seeder" do
     before do
-      CACHE.reset
+      Rails.cache.clear
       @torrent = Factory.create(:torrent)
       @peer = Factory.create(:peer, :torrent => @torrent)
       @torrent.peer_started!(@peer, '127.0.0.1')
@@ -59,13 +59,13 @@ describe Torrent, "starting a peer" do
     end
     
     it 'should put the peer in the cache' do
-      CACHE.get(@torrent.tkey).should == {@peer.id => '127.0.0.1'}
+      Rails.cache.read(@torrent.tkey).should == {@peer.id => '127.0.0.1'}
     end
   end
 
   describe "that switched IP addresses" do
     before do
-      CACHE.reset
+      Rails.cache.clear
       @torrent = Factory.create(:torrent)
       @peer = Factory.create(:peer, :torrent => @torrent)
       @torrent.peer_started!(@peer, '127.0.0.1')
@@ -73,7 +73,7 @@ describe Torrent, "starting a peer" do
     end
 
     it 'should update the cache with the second peer address' do
-      CACHE.get(@torrent.tkey).should == {@peer.id => '127.0.0.2'}
+      Rails.cache.read(@torrent.tkey).should == {@peer.id => '127.0.0.2'}
     end
   end
 end
@@ -82,7 +82,7 @@ describe Torrent, "stopping a peer" do
   before do
     # TODO: investigate why I have to do this:
     Torrent.destroy_all
-    CACHE.reset
+    Rails.cache.clear
     @torrent = Factory.create(:torrent)
     @peer = Factory.create(:peer, :torrent => @torrent)
     @torrent.peer_started!(@peer, '127.0.0.1')
@@ -90,7 +90,7 @@ describe Torrent, "stopping a peer" do
   end
 
   it 'should remove the peer from the cache' do
-    CACHE.get(@torrent.tkey).should == nil
+    Rails.cache.read(@torrent.tkey).should == nil
   end
 end
 

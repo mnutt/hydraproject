@@ -152,10 +152,10 @@ class Torrent < ActiveRecord::Base
   end
 
   def add_peer_to_cache(peer, remote_ip)
-    peers = CACHE.get(self.tkey) || {}
+    peers = (Rails.cache.read(self.tkey) || {}).dup
     original_peers = peers.clone
     peers.merge!(peer.id => remote_ip) 
-    CACHE.set(self.tkey, peers) unless peers == original_peers # don't do unnecessary cache set
+    Rails.cache.write(self.tkey, peers) unless peers == original_peers # don't do unnecessary cache set
   end
   
   def peer_started!(peer, remote_ip)
@@ -175,13 +175,13 @@ class Torrent < ActiveRecord::Base
   def peer_stopped!(peer, remote_ip)
     peer.seeder? ? self.seeders -= 1 : self.leechers -= 1
     
-    peers = CACHE.get(self.tkey)
+    peers = (Rails.cache.read(self.tkey) || {}).dup
     
     if peers.delete(peer.id)
       if peers.empty?
-        CACHE.delete(self.tkey)
+        Rails.cache.delete(self.tkey)
       else
-        CACHE.set(self.tkey, peers)
+        Rails.cache.write(self.tkey, peers)
       end
     end
 

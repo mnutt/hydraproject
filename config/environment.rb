@@ -8,9 +8,9 @@
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
-
 CONFIG_EXISTS = File.exist?("#{RAILS_ROOT}/config/config.yml")
 DB_CONFIG_EXISTS = File.exist?("#{RAILS_ROOT}/config/database.yml")
+HAS_MEMCACHE = `which memcached` != ""
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here
@@ -50,6 +50,11 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
   
   # See Rails::Configuration for more options
+  if HAS_MEMCACHE
+    config.cache_store = :mem_cache_store, 'localhost', 'localhost:11211', { :namespace => "hydra" }
+  else
+    config.cache_store = :memory_store
+  end
 
   config.gem "rubytorrent", :version => '0.3'
   config.gem "memcache-client", :version => '1.5.0', :lib => "memcache"

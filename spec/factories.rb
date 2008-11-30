@@ -38,6 +38,7 @@ Factory.define :user do |u|
   u.remember_token_expires_at { 1.days.from_now }
   u.remember_token "77de68daecd823babbb58edb1c8e14d7106e83bb"
   u.activated_at { 5.days.ago }
+  u.age_verify "1"
 end
 
 Factory.define :unactivated_user, :class => User do |u|
@@ -47,6 +48,7 @@ Factory.define :unactivated_user, :class => User do |u|
   u.crypted_password "f9c8634b5ef30b4047c4ce34bd703fafb3e6be9a" # monkey
   u.created_at { 1.days.ago }
   u.activation_code "1b6453892473a467d07372d45eb05abc2031647a"
+  u.age_verify "1"
 end
 
 Factory.define :category do |c|

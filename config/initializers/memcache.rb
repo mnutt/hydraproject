@@ -1,9 +1,7 @@
-unless ENV['RAILS_ENV'] == "test"
-  CACHE = MemCache.new "localhost:#{C[:num_memcached_port]}", :namespace => 'hydra'
-
+if ActiveSupport::Cache::MemCacheStore === ActionController::Base.cache_store
   # Ensure memcached is running
   begin
-    CACHE.get('foo')
+    Rails.cache.read('foo')
   rescue MemCache::MemCacheError
     puts "\nStarting memcached...\n"
     system("memcached -d -m #{C[:num_memcached_memory]} -p #{C[:num_memcached_port]}")

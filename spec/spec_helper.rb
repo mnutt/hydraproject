@@ -23,27 +23,6 @@ TRUSTED_SITES = [{:domain => 'foo.org',
 
 require File.expand_path(File.dirname(__FILE__) + "/factories.rb")
 
-# Mock out MemCache
-class MemCacheMock
-  @@cache = {}
-
-  class << self
-    def get(key)
-      @cache[key] if @cache.has_key?(key)
-    end
-    def set(key, value)
-      @cache[key] = value
-    end
-    def delete(key)
-      @cache.delete(key)
-    end
-    def reset
-      @cache = {}
-    end
-  end
-end
-CACHE = MemCacheMock unless defined?(CACHE)
-
 mock_config = {:require_email => true}
 Object.send(:remove_const, :C)
 C = mock_config
