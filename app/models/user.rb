@@ -49,6 +49,8 @@ class User < ActiveRecord::Base
   before_create :make_activation_code 
   before_create :generate_passkey
 
+  has_many :feeds, :dependent => :destroy
+
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081122190700) do
+ActiveRecord::Schema.define(:version => 20081210054856) do
 
   create_table "categories", :force => true do |t|
     t.string "name"
@@ -20,6 +20,14 @@ ActiveRecord::Schema.define(:version => 20081122190700) do
     t.integer  "torrent_id"
     t.integer  "user_id"
     t.datetime "created_at"
+  end
+
+  create_table "feeds", :force => true do |t|
+    t.string   "url"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "content"
   end
 
   create_table "peers", :force => true do |t|
@@ -42,8 +50,8 @@ ActiveRecord::Schema.define(:version => 20081122190700) do
     t.datetime "updated_at"
   end
 
-  add_index "peers", ["connectable"], :name => "index_peers_on_connectable"
   add_index "peers", ["torrent_id", "peer_id"], :name => "index_peers_on_torrent_id_and_peer_id", :unique => true
+  add_index "peers", ["connectable"], :name => "index_peers_on_connectable"
 
   create_table "ratio_snapshots", :force => true do |t|
     t.integer  "ratio_sync_id"
@@ -70,6 +78,7 @@ ActiveRecord::Schema.define(:version => 20081122190700) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.integer  "feed_id"
   end
 
   create_table "torrent_files", :force => true do |t|

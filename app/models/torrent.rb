@@ -132,6 +132,7 @@ class Torrent < ActiveRecord::Base
     logger.warn Torrent.dump_metainfo(meta_info)
 
     self.set_metainfo(meta_info)
+    true
   end
 
   def original_filename
@@ -151,6 +152,7 @@ class Torrent < ActiveRecord::Base
   def ensure_non_negative
     self.seeders = 0 if self.seeders < 0
     self.leechers = 0 if self.leechers < 0
+    true
   end
   
   def tkey
