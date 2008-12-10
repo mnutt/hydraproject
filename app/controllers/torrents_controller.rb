@@ -1,6 +1,8 @@
 class TorrentsController < ApplicationController
   include ApplicationHelper
-  before_filter :login_required, :except => [:show, :browse]
+  before_filter :authorize_view, :only => [:browse, :show, :index]
+  before_filter :authorize_download, :only => [:download]
+  before_filter :authorize_upload, :only => [:new, :create, :destroy]
   
   def index
     respond_to do |format|
@@ -38,7 +40,8 @@ class TorrentsController < ApplicationController
   
   def download
     @torrent = Torrent.find(params[:id])
-    @bencoded = @torrent.data_with_passkey(current_user.passkey)
+    passkey = logged_in? ? current_user.passkey : nil
+    @bencoded = @torrent.data_with_passkey(passkey)
     send_data @bencoded, :filename => @torrent.filename, :type => 'application/x-bittorrent'; return
   end
   

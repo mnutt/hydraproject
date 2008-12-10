@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_filter :check_logged_in
+  before_filter :authorize_view
 
   def index
     @active = Torrent.find_by_sql("SELECT torrents.*, (torrents.leechers + torrents.seeders) as active FROM torrents ORDER BY active DESC LIMIT 10")

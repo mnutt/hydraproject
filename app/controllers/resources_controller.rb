@@ -1,4 +1,5 @@
 class ResourcesController < ApplicationController
+  before_filter :authorize_web_seed
   # GET /resources
   # GET /resources.xml
   def index

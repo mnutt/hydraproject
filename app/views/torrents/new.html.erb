@@ -24,9 +24,9 @@
   </div>
 
   <div class="field">
-    <%= f.label :category -%>
-    <%= f.select :category, Category.all.map{|c| [c.name, c.id]}  %>
-    <%= f.error_message_on :category, :prepend_text => "The category ", :append_text => ".", :css_class => "form_error" -%>
+    <%= f.label :category_id -%>
+    <%= f.select :category_id, Category.all.map{|c| [c.name, c.id]}  %>
+    <%= f.error_message_on :category_id, :prepend_text => "The category ", :append_text => ".", :css_class => "form_error" -%>
   </div>
 
   <div class="field">

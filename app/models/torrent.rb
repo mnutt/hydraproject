@@ -70,29 +70,35 @@ class Torrent < ActiveRecord::Base
     Torrent.dump_metainfo(self.meta_info)
   end
 
-  def data_with_passkey(passkey)
-    @mi = meta_info
-    @mi.key = passkey
-    @mi.announce = URI.parse("#{BASE_URL}tracker/#{passkey}/announce")
+  def data_with_passkey(passkey=nil)
+    mi = meta_info
+    mi.key = passkey || ""
+    announce_url = passkey ? "#{BASE_URL}tracker/#{passkey}/announce" : "#{BASE_URL}tracker/announce"
+    mi.announce = URI.parse(announce_url)
     
     # Here's where the announce-list magic happens
     # Set not only this announce URL, but announce URLs for all trackers in the federation
-    @announce_urls = [@mi.announce]
-    TRUSTED_SITES.each do |site|
-      announce_url = site[:announce_url].gsub('{{passkey}}', passkey)
-      # IMPORTANT - each 'announce_url' must be enclosed in an Array.
-      #    See: http://wiki.depthstrike.com/index.php/P2P:Protocol:Specifications:Multitracker
-      #    And: http://bittornado.com/docs/multitracker-spec.txt
-      #
-      # When there are multiple announce_urls in the first tier (i.e. all in a single array), then clients will simply
-      #   shuffle that array and connect to the first random announce_url.
-      #
-      # Instead, what we want is for the torrent client to connect to *ALL* of the trackers.
-      #
-      @announce_urls << URI.parse(announce_url)
+    announce_urls = [mi.announce]
+
+    # Only add trusted sites if the user is logged in
+    if passkey
+      TRUSTED_SITES.each do |site|
+        announce_url = site[:announce_url].gsub('{{passkey}}', passkey)
+        # IMPORTANT - each 'announce_url' must be enclosed in an Array.
+        #    See: http://wiki.depthstrike.com/index.php/P2P:Protocol:Specifications:Multitracker
+        #    And: http://bittornado.com/docs/multitracker-spec.txt
+        #
+        # When there are multiple announce_urls in the first tier (i.e. all in a single array), then clients will simply
+        #   shuffle that array and connect to the first random announce_url.
+        #
+        # Instead, what we want is for the torrent client to connect to *ALL* of the trackers.
+        #
+        announce_urls << URI.parse(announce_url)
+      end
     end
-    @mi.announce_list = @announce_urls.collect { |url| [url] }
-    @mi.to_bencoding
+
+    mi.announce_list = announce_urls.collect { |url| [url] }
+    mi.to_bencoding
   end
 
   def get_meta_from_file

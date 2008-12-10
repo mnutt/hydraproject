@@ -124,6 +124,10 @@ class User < ActiveRecord::Base
     self.is_moderator? || self.is_admin?
   end
 
+  def role
+    role = (self.is_admin?) ? :admin : :user
+  end
+
   # Bittorrent stuff
   def ratio
     return 0 if self.uploaded.zero? || self.downloaded.zero?

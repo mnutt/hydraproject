@@ -5,7 +5,7 @@ xml.rss(:version => '2.0') do
     xml.description @description
     @torrents.each do |t|
       xml.item do
-        @download_url = torrent_dl_passkey(t, @user.passkey)
+        @download_url = current_user ? torrent_dl_passkey(t, current_user.passkey) : torrent_dl(t)
         xml.title t.name
         xml.guid @download_url, :isPermaLink => true
         xml.link @download_url

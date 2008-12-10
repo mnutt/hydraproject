@@ -1,7 +1,6 @@
 class FeedController < ApplicationController
   before_filter { C[:enable_rss] }
-  requires_authentication :using => Proc.new{ |username, passkey| @user = User.feed_auth(username, passkey) },
-                          :realm => "#{C[:app_name]} Feeds"
+  before_filter :authorize_download
                            
   def index
     @title = "#{C[:app_name]} RSS Feed - Latest Torrents"

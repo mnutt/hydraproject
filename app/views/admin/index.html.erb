@@ -4,16 +4,40 @@
 <%= render :partial => 'admin/menu' %>
 
 <% form_for :config, @config, :url => {:action => :update_config} do |c| %>
-	<div style="width: 630px; text-align: right;"><%= submit_tag "Save Changes" %></div>
-	<table width="98%" style="margin-top: 10px; margin-bottom: 10px;" cellpadding="0" cellspacing="0">
-		<% @config.each do |c| %>
-			<% k, v = *c %>
-			<tr>
-				<td width="140px;" class="tlabel" style="font-size: .8em;"><%= k %></td>
-				<td width="280px"><input class="" maxlength="255" name="config[<%= k %>]" value="<%= v %>" size="40" type="text" /> </td>
-				<td><%= @explanation[k] || '' %></td>
-			</tr>
-		<% end %>
-	</table>
-	<div style="width: 630px; text-align: right;"><%= submit_tag "Save Changes" %></div>
+  <div style="width: 630px; text-align: right;"><%= submit_tag "Save Changes" %></div>
+  <table width="98%" style="margin-top: 10px; margin-bottom: 10px;" cellpadding="0" cellspacing="0">
+    <% @config.each do |c| %>
+      <% k, v = *c %>
+      <tr>
+	<td width="140px;" class="tlabel" style="font-size: .8em;"><%= k %></td>
+	<td width="280px"><input class="" maxlength="255" name="config[<%= k %>]" value="<%= v %>" size="40" type="text" /> </td>
+	<td><%= @explanation[k] || '' %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td width="140px;" class="tlabel" style="font-size: .8em;">permissions</td>
+      <td colspan="2">
+	  <table width="400px">
+	    <tr>
+	      <th>Role</th>
+	      <th>View Torrents</th>
+	      <th>Download Torrents</th>
+	      <th>Upload Torrents</th>
+	      <th>Upload Files</th>
+	    </tr>
+	    <% AuthorizedSystem::ROLES.each do |role| -%>
+	      <tr>
+		<td><%= role -%></td>
+		<% AuthorizedSystem::ACTIONS.each do |action| -%>
+		  <td><%= check_box_tag "config[permissions][#{role.to_s}][]", 
+                                        action.to_s, 
+                                        (C[:permissions][role.to_sym].include?(action) rescue nil) -%></td>
+		<% end -%>
+	      </tr>
+	    <% end -%>
+	  </table>
+      </td>
+    </tr>
+  </table>
+  <div style="width: 630px; text-align: right;"><%= submit_tag "Save Changes" %></div>
 <% end %>

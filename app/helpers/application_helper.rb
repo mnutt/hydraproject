@@ -5,12 +5,12 @@ module ApplicationHelper
     @javascript_includes << scripts
   end
   
-  def torrent_dl(torrent)
-    download_url(torrent, :filename => torrent.filename)
-  end
-
-  def torrent_dl_passkey(torrent, passkey)
-    feed_download_url(torrent, :filename => torrent.filename, :passkey => passkey)
+  def torrent_dl(torrent, passkey=nil)
+    if passkey
+      feed_download_url(torrent, :filename => torrent.filename, :passkey => passkey)
+    else
+      download_url(torrent, :filename => torrent.filename)
+    end
   end
   
   def navclass(controller, action, except = '')

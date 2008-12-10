@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include AuthenticatedSystem
+  include AuthorizedSystem
 
   before_filter :check_for_setup
   def check_for_setup

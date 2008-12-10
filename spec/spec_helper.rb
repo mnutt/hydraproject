@@ -24,5 +24,9 @@ TRUSTED_SITES = [{:domain => 'foo.org',
 require File.expand_path(File.dirname(__FILE__) + "/factories.rb")
 
 mock_config = {:require_email => true}
+permissions = {:user      => [:view, :download, :upload],
+               :anonymous => [:view, :download],
+               :admin     => [:view, :download, :upload, :web_seed]}
+mock_config.merge!(:permissions => permissions)
 Object.send(:remove_const, :C)
 C = mock_config

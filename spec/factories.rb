@@ -51,6 +51,19 @@ Factory.define :unactivated_user, :class => User do |u|
   u.age_verify "1"
 end
 
+Factory.define :admin_user, :class => User do |u|
+  u.login "admin"
+  u.email "admin@example.com"
+  u.salt { Digest::SHA1.hexdigest('0') }
+  u.crypted_password "f9c8634b5ef30b4047c4ce34bd703fafb3e6be9a" # monkey
+  u.created_at { 5.days.ago }
+  u.remember_token_expires_at { 1.days.from_now }
+  u.remember_token "77de68daecd823babbb58edb1c8e14d7106e83bb"
+  u.activated_at { 5.days.ago }
+  u.age_verify "1"
+  u.is_admin true
+end
+
 Factory.define :category do |c|
   c.name "Files"
 end

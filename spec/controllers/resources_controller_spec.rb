@@ -10,6 +10,7 @@ describe ResourcesController do
 
     it "should expose all resources as @resources" do
       Resource.should_receive(:find).with(:all).and_return([mock_resource])
+      login_as(:admin_user)
       get :index
       assigns[:resources].should == [mock_resource]
     end
@@ -20,6 +21,7 @@ describe ResourcesController do
         request.env["HTTP_ACCEPT"] = "application/xml"
         Resource.should_receive(:find).with(:all).and_return(resources = mock("Array of Resources"))
         resources.should_receive(:to_xml).and_return("generated XML")
+        login_as(:admin_user)
         get :index
         response.body.should == "generated XML"
       end
@@ -32,6 +34,8 @@ describe ResourcesController do
 
     it "should expose the requested resource as @resource" do
       Resource.should_receive(:find).with("37").and_return(mock_resource)
+      login_as(:admin_user)
+      
       get :show, :id => "37"
       assigns[:resource].should equal(mock_resource)
     end
@@ -42,6 +46,7 @@ describe ResourcesController do
         request.env["HTTP_ACCEPT"] = "application/xml"
         Resource.should_receive(:find).with("37").and_return(mock_resource)
         mock_resource.should_receive(:to_xml).and_return("generated XML")
+        login_as(:admin_user)
         get :show, :id => "37"
         response.body.should == "generated XML"
       end
@@ -54,6 +59,7 @@ describe ResourcesController do
   
     it "should expose a new resource as @resource" do
       Resource.should_receive(:new).and_return(mock_resource)
+      login_as(:admin_user)
       get :new
       assigns[:resource].should equal(mock_resource)
     end
@@ -64,6 +70,7 @@ describe ResourcesController do
   
     it "should expose the requested resource as @resource" do
       Resource.should_receive(:find).with("37").and_return(mock_resource)
+      login_as(:admin_user)
       get :edit, :id => "37"
       assigns[:resource].should equal(mock_resource)
     end
@@ -80,6 +87,7 @@ describe ResourcesController do
       it "should expose a newly created resource as @resource" do
         Resource.should_receive(:new).with({'these' => 'params'}).and_return(mock_resource(:save => true))
         mock_resource.should_receive(:user=)
+        login_as(:admin_user)
         post :create, :resource => {:these => 'params'}
         assigns(:resource).should equal(mock_resource)
       end
@@ -87,6 +95,7 @@ describe ResourcesController do
       it "should redirect to the created resource" do
         Resource.stub!(:new).and_return(mock_resource(:save => true))
         mock_resource.should_receive(:user=)
+        login_as(:admin_user)
         post :create, :resource => {}
         response.should redirect_to(resource_url(mock_resource))
       end
@@ -98,6 +107,7 @@ describe ResourcesController do
       it "should expose a newly created but unsaved resource as @resource" do
         Resource.stub!(:new).with({'these' => 'params'}).and_return(mock_resource(:save => false))
         mock_resource.should_receive(:user=)
+        login_as(:admin_user)
         post :create, :resource => {:these => 'params'}
         assigns(:resource).should equal(mock_resource)
       end
@@ -105,6 +115,7 @@ describe ResourcesController do
       it "should re-render the 'new' template" do
         Resource.stub!(:new).and_return(mock_resource(:save => false))
         mock_resource.should_receive(:user=)
+        login_as(:admin_user)
         post :create, :resource => {}
         response.should render_template('new')
       end
@@ -116,6 +127,9 @@ describe ResourcesController do
   describe "responding to PUT udpate" do
 
     describe "with valid params" do
+      before do
+        login_as(:admin_user)
+      end
 
       it "should update the requested resource" do
         Resource.should_receive(:find).with("37").and_return(mock_resource)
@@ -138,6 +152,9 @@ describe ResourcesController do
     end
     
     describe "with invalid params" do
+      before do
+        login_as(:admin_user)
+      end
 
       it "should update the requested resource" do
         Resource.should_receive(:find).with("37").and_return(mock_resource)
@@ -162,6 +179,9 @@ describe ResourcesController do
   end
 
   describe "responding to DELETE destroy" do
+    before do
+      login_as(:admin_user)
+    end
 
     it "should destroy the requested resource" do
       Resource.should_receive(:find).with("37").and_return(mock_resource)

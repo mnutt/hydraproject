@@ -3,7 +3,7 @@ class TrackerController < ApplicationController
   before_filter :check_required_params, :only => :announce
   before_filter :check_remote_ip
   before_filter :port_allowed?
-  before_filter :check_passkey
+  before_filter :authorize_download
   
   def announce
     set_vars
