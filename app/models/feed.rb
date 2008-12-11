@@ -9,7 +9,7 @@ class Feed < ActiveRecord::Base
     fetch_content
     parse
     create_resources
-    update_feed
+    save
   end
 
   def fetch_content
@@ -41,12 +41,8 @@ class Feed < ActiveRecord::Base
       resource = self.resources.build(:file => file, :user_id => self.user_id)
       resource.save!
 
-      episode.enclosure.url = resource.url
+      self.content.gsub!(%r{#{episode.enclosure.url}}, "http://#{C[:domain_with_port]}/torrent/#{resource.torrent.id}/download/#{resource.torrent.filename}")
     end
-  end
-
-  def update_feed
-    update_attribute(:content, @feed.to_s)
   end
 
   def rfeed

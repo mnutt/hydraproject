@@ -17,7 +17,7 @@ class FeedsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @feed }
+      format.xml  { send_data(@feed.content, :type => "application/xml", :disposition => 'inline') }
     end
   end
 

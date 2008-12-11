@@ -67,3 +67,8 @@ end
 Factory.define :category do |c|
   c.name "Files"
 end
+
+Factory.define :feed do |f|
+  f.url "http://feeds.feedburner.com/AmbientOfficeNoises"
+  f.user { Factory.create(:user) }
+end

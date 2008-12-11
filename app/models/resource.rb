@@ -35,11 +35,13 @@ class Resource < ActiveRecord::Base
     torrent_data = MakeTorrent.new(self.file.path, 
                                    self.user.tracker_url, 
                                    self.url)
-    torrent = Torrent.new(:filename => self.torrent_filename,
-                          :resource => self)
+    file = StringIO.new(torrent_data.torrent.to_bencoding)
+    def file.original_filename=(name) @name = name; end
+    def file.original_filename; @name; end
+    file.original_filename = self.torrent_filename
+    torrent = Torrent.new(:user => self.user,
+                          :resource => self,
+                          :the_file => file)
     torrent.save!
-    torrent.set_metainfo(torrent_data.torrent)
-    torrent.save!
-    torrent_data.write(torrent.torrent_path)
   end
 end

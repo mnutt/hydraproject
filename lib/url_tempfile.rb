@@ -2,7 +2,6 @@ require 'mime/types'
 require 'openssl'
 require 'open-uri'
 
-
 # This class provides a Paperclip plugin compliant interface for an "upload" file
 # where that uploaded file is actually coming from a URL.  This class will download
 # the file from the URL and then respond to the necessary methods for the interface,
@@ -17,22 +16,14 @@ class URLTempfile < Tempfile
     
     # see if we can get a filename
     raise "Unable to determine filename for URL uploaded file." unless original_filename
-
-    begin
-      # HACK to get around inability to set VERIFY_NONE with open-uri
-      old_verify_peer_value = OpenSSL::SSL::VERIFY_PEER
-      OpenSSL::SSL.const_set("VERIFY_PEER", OpenSSL::SSL::VERIFY_NONE)
+ 
+    super('urlupload')
+    Kernel.open(url) do |file|
+      @content_type = file.content_type
+      raise "Unable to determine MIME type for URL uploaded file." unless content_type
       
-      super('urlupload')
-      Kernel.open(url) do |file|
-        @content_type = file.content_type
-        raise "Unable to determine MIME type for URL uploaded file." unless content_type
-      
-        self.write file.read
-        self.flush
-      end
-    ensure
-      OpenSSL::SSL.const_set("VERIFY_PEER", old_verify_peer_value)
+      self.write file.read
+      self.flush
     end
   end
   

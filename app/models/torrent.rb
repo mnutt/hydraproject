@@ -177,7 +177,7 @@ class Torrent < ActiveRecord::Base
     self.leechers -= 1
     self.times_completed += 1
     
-    add_peer_to_cache(peer_remote_ip)
+    add_peer_to_cache(peer, remote_ip)
   end
 
   def peer_stopped!(peer, remote_ip)
