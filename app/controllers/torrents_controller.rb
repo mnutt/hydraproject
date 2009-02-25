@@ -49,6 +49,7 @@ class TorrentsController < ApplicationController
     @page_title = "Upload"
     @categories = Category.find(:all, :order => 'name ASC')
     @torrent = Torrent.new
+    @resource = Resource.new
   end
 
   def create

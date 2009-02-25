@@ -1,45 +1,65 @@
-<h1>Upload a New Torrent</h1>
-
 <%= render :partial => 'shared/notice_text' %>
+
+<div style="float: left;">
+  <h2 class="title">Upload a New Torrent</h2>
   
-<div class="highlight">
-  <div>Please use your personalized tracker URL when creating the torrent:</div>
-  <div style="font-weight: bold; font-style: italic">
-    <%= current_user.tracker_url %>
+  <div class="highlight">
+    <div>Please use your personalized tracker URL when creating the torrent:</div>
+    <div style="font-weight: bold; font-style: italic">
+      <%= current_user.tracker_url %>
+    </div>
   </div>
+
+  <% form_for @torrent, :html => { :multipart => true, :id => 'upload-form' } do |f| %>
+  
+    <div class="field">
+      <%= f.label :the_file, "Torrent file" -%>
+      <%= f.file_field :the_file, :size => 3 %>
+      <%= f.error_message_on :the_file, :prepend_text => "This file ", :append_text => ".", :css_class => "form_error" -%>
+    </div>
+    
+    <div class="field">
+      <%= f.label :name, "Torrent name" -%>
+      <%= f.text_field :name, :size => 14, :maxlength => 20, :class => 'validate-alphanum nice-field required' %>
+      <%= f.error_message_on :name, :prepend_text => "This name ", :append_text => ".", :css_class => "form_error" -%>
+    </div>
+    
+    <div class="field">
+      <%= f.label :category_id -%>
+      <%= f.select :category_id, Category.all.map{|c| [c.name, c.id]}  %>
+      <%= f.error_message_on :category_id, :prepend_text => "The category ", :append_text => ".", :css_class => "form_error" -%>
+    </div>
+    
+    <div class="field">
+      <%= f.label :description -%>
+      <%= f.text_area :description, :rows => 12 %>
+      <%= f.error_message_on :description, :prepend_text => "The description ", :append_text => ".", :css_class => "form_error" -%>
+    </div>
+    
+    <div class="control">
+      <%= submit_tag "Upload it &#187;", :class => "submit-box" -%>
+    </div>
+    
+  <% end -%>
 </div>
 
-<% form_for @torrent, :html => { :multipart => true, :id => 'upload-form' } do |f| %>
+<div style="float:left;">
+  <h2 class="title">Seed a New File Directly</h2>
 
-  <div class="field">
-    <%= f.label :the_file, "Torrent file" -%>
-    <%= f.file_field :the_file, :size => 3 %>
-    <%= f.error_message_on :the_file, :prepend_text => "This file ", :append_text => ".", :css_class => "form_error" -%>
-  </div>
+  <% form_for(@resource, :html => {:multipart => true}) do |f| %>
+    <%= f.error_messages %>
 
-  <div class="field">
-    <%= f.label :name, "Torrent name" -%>
-    <%= f.text_field :name, :size => 14, :maxlength => 20, :class => 'validate-alphanum nice-field required' %>
-    <%= f.error_message_on :name, :prepend_text => "This name ", :append_text => ".", :css_class => "form_error" -%>
-  </div>
+    <div class="field">
+      <%= f.label :file -%>
+      <%= f.file_field :file, :size => 3 -%>
+      <%= f.error_message_on :file, :prepend_text => "This file ", :append_text => ".", :css_class => "form_error" -%>
+    </div>
 
-  <div class="field">
-    <%= f.label :category_id -%>
-    <%= f.select :category_id, Category.all.map{|c| [c.name, c.id]}  %>
-    <%= f.error_message_on :category_id, :prepend_text => "The category ", :append_text => ".", :css_class => "form_error" -%>
-  </div>
-
-  <div class="field">
-    <%= f.label :description -%>
-    <%= f.text_area :description, :rows => 12 %>
-    <%= f.error_message_on :description, :prepend_text => "The description ", :append_text => ".", :css_class => "form_error" -%>
-  </div>
-
-  <div class="control">
-    <%= submit_tag "Upload it &#187;", :class => "submit-box" -%>
-  </div>
-
-<% end -%>
+    <div class="control">
+      <%= f.submit "Create &#187;", :class => "submit-box" %>
+    </div>
+  <% end %>
+</div>
 
 <script type="text/javascript">
   category_selected = function(value, element) {

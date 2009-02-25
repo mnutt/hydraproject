@@ -45,6 +45,15 @@
     <td><%= pluralize(@torrent.times_completed, 'time') %></td>
   </tr>
   <tr>
+    <td class="tlabel">Seeded</td>
+    <td>
+      <%= @torrent.resource ? "Yes" : "No" -%>
+      <% if @torrent.resource && @torrent.resource.user == current_user -%>
+	: <%= link_to "Seeded File", @torrent.resource.file.url(:original) -%>
+      <% end -%>
+    </td>
+  </tr>
+  <tr>
     <td class="tlabel">Files</td>
     <td><%= pluralize(@torrent.numfiles, 'file') %>
       

@@ -46,8 +46,8 @@ class ResourcesController < ApplicationController
 
     respond_to do |format|
       if @resource.save
-        flash[:notice] = 'Resource was successfully created.'
-        format.html { redirect_to(@resource) }
+        flash[:notice] = 'Seeded torrent was successfully created.'
+        format.html { redirect_to(@resource.torrent) }
         format.xml  { render :xml => @resource, :status => :created, :location => @resource }
       else
         format.html { render :action => "new" }
