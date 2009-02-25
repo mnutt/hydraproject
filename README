@@ -1,5 +1,22 @@
 == Welcome to the Hydra Project - Rails App
 
+=== Install ===
+
+Get the source:
+  git clone git://github.com/mnutt/hydraproject.git
+
+Clone the default config files:
+  rake hydra:prepare
+
+Alter database.yml if you want to have a database other than hydra_dev.
+
+Set up the database:
+  rake db:create
+	rake db:migrate
+
+Start the server:
+  script/server start
+
 Please see the website for the latest documentation.
 
   http://code.google.com/p/hydraproject/
