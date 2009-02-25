@@ -23,7 +23,7 @@ describe Feed, "refreshing" do
       @feed.refresh
     }.should change(Resource, :count).by(3)
     resource = @feed.resources.first
-    resource.file.file_size.should be_greater_than(0)
-    resource.file.file_name.should == "episode3.mp3"
+    resource.file_file_size.should_not be_zero
+    resource.file_file_name.should == "episode3.mp3"
   end
 end

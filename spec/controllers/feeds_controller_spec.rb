@@ -41,7 +41,7 @@ describe FeedsController do
       it "should render the requested feed as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
         Feed.should_receive(:find).with("37").and_return(mock_feed)
-        mock_feed.should_receive(:to_xml).and_return("generated XML")
+        mock_feed.should_receive(:content).and_return("generated XML")
         get :show, :id => "37"
         response.body.should == "generated XML"
       end
@@ -75,15 +75,17 @@ describe FeedsController do
     describe "with valid params" do
       
       it "should expose a newly created feed as @feed" do
-        Feed.should_receive(:new).with({'these' => 'params'}).and_return(mock_feed(:save => true))
+        @feed = mock_feed(:save => false)
+        @feed.should_receive(:user=)
+        Feed.should_receive(:new).with({'these' => 'params'}).and_return(@feed)
         post :create, :feed => {:these => 'params'}
         assigns(:feed).should equal(mock_feed)
       end
 
       it "should redirect to the created feed" do
-        Feed.stub!(:new).and_return(mock_feed(:save => true))
-        post :create, :feed => {}
-        response.should redirect_to(feed_url(mock_feed))
+        post :create, :feed => {:url => "http://feeds.feedburner.com/AmbientOfficeNoises"}, :format => :html
+        assigns(:feed).should_not be_new_record
+        response.should redirect_to(feed_url(assigns(:feed)))
       end
       
     end
@@ -91,13 +93,17 @@ describe FeedsController do
     describe "with invalid params" do
 
       it "should expose a newly created but unsaved feed as @feed" do
-        Feed.stub!(:new).with({'these' => 'params'}).and_return(mock_feed(:save => false))
+        @feed = mock_feed(:save => false)
+        @feed.should_receive(:user=)
+        Feed.stub!(:new).with({'these' => 'params'}).and_return(@feed)
         post :create, :feed => {:these => 'params'}
         assigns(:feed).should equal(mock_feed)
       end
 
       it "should re-render the 'new' template" do
-        Feed.stub!(:new).and_return(mock_feed(:save => false))
+        @feed = mock_feed(:save => false)
+        @feed.should_receive(:user=)
+        Feed.stub!(:new).and_return(@feed)
         post :create, :feed => {}
         response.should render_template('new')
       end

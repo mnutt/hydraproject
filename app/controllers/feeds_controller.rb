@@ -43,15 +43,11 @@ class FeedsController < ApplicationController
     @feed = Feed.new(params[:feed])
     @feed.user = current_user
 
-    respond_to do |format|
-      if @feed.save
-        flash[:notice] = 'Feed was successfully created.'
-        format.html { redirect_to(@feed) }
-        format.xml  { render :xml => @feed, :status => :created, :location => @feed }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @feed.errors, :status => :unprocessable_entity }
-      end
+    if @feed.save
+      flash[:notice] = 'Feed was successfully created.'
+      redirect_to(@feed)
+    else
+      render :action => "new"
     end
   end
 

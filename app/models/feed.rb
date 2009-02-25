@@ -16,7 +16,7 @@ class Feed < ActiveRecord::Base
     raise InvalidAddressException unless self.url =~ %r{^([^/]*//)?([^/]+)}
 
     Timeout::timeout(5) do
-      OpenURI::open_uri(self.url) do |f|
+      OpenURI::open_uri(self.url, "User-Agent" => "Hydra/0.1") do |f|
         self.content = f.read
       end
     end
