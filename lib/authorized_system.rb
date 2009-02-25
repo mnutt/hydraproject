@@ -5,7 +5,7 @@ module AuthorizedSystem
   protected
     def authorize(action, user)
       role = (user.nil?) ? :anonymous : user.role
-      C[:permissions][role].include?(action)
+      C[:permissions][role].include?(action) rescue false
     end
 
     def authorize_view

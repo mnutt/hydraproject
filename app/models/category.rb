@@ -16,13 +16,7 @@ class Category < ActiveRecord::Base
   end
   
   def self.create_defaults
-    ['Television', 'Movies', 'Music', 'Anime', 'eBooks'].each do |name|
-      Category.create_cat(name)
-    end
-  end
-  
-  def self.create_music
-    ['Alternative', 'Blues', 'Classic Rock', 'Instrumental', 'Country', 'Dance', 'Trance', 'Hip-Hop', 'Latin', 'Pop', 'Emo', 'Rock'].each do |name|
+    ['Miscellaneous'].each do |name|
       Category.create_cat(name)
     end
   end
