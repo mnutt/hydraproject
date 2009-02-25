@@ -23,3 +23,8 @@ permissions:
   - :web_seed
   :anonymous:
   - :download
+  :admin:
+  - :view
+  - :download
+  - :web_seed
+  - :upload
