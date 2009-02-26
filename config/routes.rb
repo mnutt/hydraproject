@@ -21,9 +21,10 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.with_options :controller => 'tracker' do |m|
-    m.announce          'tracker/:passkey/announce',            :action => 'announce'
-    m.scrape            'tracker/:passkey/scrape',              :action => 'scrape'
-    m.open_announce     'tracker/announce',                     :action => 'announce'
+    m.announce          'tracker/:passkey/announce',  :action => 'announce'
+    m.scrape            'tracker/:passkey/scrape',    :action => 'scrape'
+    m.open_announce     'tracker/announce',           :action => 'announce'
+    m.open_scrape       'tracker/scrape',             :action => 'scrape'
   end
 
   map.root :controller => 'home', :action => 'index'
