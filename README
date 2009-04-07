@@ -4,6 +4,10 @@
 
 Get the source:
   git clone git://github.com/mnutt/hydraproject.git
+  cd hydraproject
+  git submodule update --init
+
+  Note: because hydraproject uses submodules, downloading the tarball will NOT work :(
 
 Clone the default config files:
   rake hydra:prepare
